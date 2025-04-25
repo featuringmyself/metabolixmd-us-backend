@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prescription Approved - MetabolixMD</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      color: #2d2d2d;
+      margin: 0;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      color: #2d6a4f;
+    }
+    a {
+      color: #2d6a4f;
+      text-decoration: none;
+    }
+    .logo {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .logo img {
+      width: 100px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Thank You for Choosing MetabolixMD</h1>
+    <p>Dear <%= name %>,</p>
+    <p>This email is to confirm your upcoming telehealth consultation. Please find the meeting details below:</p>
+    <p><strong>Meeting Date Time:</strong> <%= meetTime %></p>
+    <p><strong>Meeting Link:</strong> <a href="<%= meetLink %>" style="color: #4CAF50;">Join the Meeting</a></p>
+    <p>Our expert consultant will assist you during the session, providing personalized guidance and support in accordance with telehealth guidelines. Please ensure you are in a quiet and private space with a stable internet connection for the best consultation experience.</p>
+    <h3>How to Prepare for the Meeting:</h3>
+    <ul>
+        <li>Test your device and internet connection beforehand.</li>
+        <li>Have your medical records or questions ready for discussion.</li>
+        <li>Click the meeting link a few minutes before the scheduled time.</li>
+    </ul>
+    <p>If you have any questions or require assistance before the meeting, feel free to contact us at <a href="mailto:consultant@metabolixmd.com" style="color: #4CAF50;">consultant@metabolixmd.com</a>.</p>
+    <p>We look forward to serving you and helping you on your health journey.</p>
+    <p>Best regards,</p>
+    <p><strong>The MetabolixMD Team</strong></p>
+    <p style="font-size: 0.9em; color: #777;">We Care for Your Health</p>
+  
+    <div class="logo">
+      <img src="/image/3.png" alt="MetabolixMD Logo">
+    </div>
+  </div>
+</body>
+</html>
