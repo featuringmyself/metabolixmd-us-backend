@@ -6,7 +6,7 @@ const { sendEmail } = require("../microservices/mail.service");
 const ejs = require('ejs');
 const path = require('path');
 const config = require("../config/config");
-const { sendSMSToContacts } = require("../microservices/sms.service");
+const { sendOrderStatusUpdate } = require("../microservices/sms.service");
 const httpStatus = require("http-status");
 
 const handleStripeCheckoutSessionCompleted = async payload => {
@@ -127,11 +127,8 @@ const handleStripeCheckoutSessionCompleted = async payload => {
                 subject: `New Paid Order #${updatedOrder.orderNo} from ${user.name ?? ""} - $${amount}`,
                 html: adminHtml
             }),
-            // Send SMS notification to admin
-            sendSMSToContacts(
-                [{phone: config.clientPhone}, {phone: config.clientPhone2}],
-                `New paid order #${updatedOrder.orderNo} received from ${user.name ?? ""}. Amount: $${amount}`
-            )
+            // Send SMS notifications
+            sendOrderStatusUpdate(updatedOrder, user, 'paymentReceived')
         ]);
 
         console.log('Payment process completed successfully');

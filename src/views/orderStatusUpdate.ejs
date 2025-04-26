@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Status Update - MetabolixMD</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      color: #2d2d2d;
+      margin: 0;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+    .status-pending { background-color: #fff3cd; color: #856404; }
+    .status-placed { background-color: #d4edda; color: #155724; }
+    .status-processing { background-color: #cce5ff; color: #004085; }
+    .status-shipped { background-color: #e2e3e5; color: #383d41; }
+    .status-delivered { background-color: #d4edda; color: #155724; }
+    .status-cancelled { background-color: #f8d7da; color: #721c24; }
+    .status-scheduleMeet { background-color: #d1ecf1; color: #0c5460; }
+    .order-details {
+      background-color: #f8f9fa;
+      padding: 15px;
+      border-radius: 5px;
+      margin: 15px 0;
+    }
+    .footer {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+      font-size: 12px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Order Status Update</h1>
+    
+    <p>Dear <%= recipientName %>,</p>
+
+    <p>The status of your order #<%= order.orderNo %> has been updated:</p>
+
+    <div class="status-badge status-<%= order.status %>">
+      <%= order.status.charAt(0).toUpperCase() + order.status.slice(1) %>
+    </div>
+
+    <div class="order-details">
+      <h3>Order Details:</h3>
+      <p><strong>Order Number:</strong> <%= order.orderNo %></p>
+      <p><strong>Order Date:</strong> <%= new Date(order.createdAt).toLocaleDateString() %></p>
+      <p><strong>Total Amount:</strong> $<%= order.totalValue %></p>
+      <p><strong>Payment Status:</strong> <%= order.paymentStatus %></p>
+      <% if (order.meetLink) { %>
+        <p><strong>Meeting Link:</strong> <a href="<%= order.meetLink %>">Join Meeting</a></p>
+        <p><strong>Meeting Time:</strong> <%= order.meetTime %></p>
+      <% } %>
+    </div>
+
+    <p><%= statusMessage %></p>
+
+    <div class="footer">
+      <p>If you have any questions, please contact our support team at <a href="mailto:support@metabolixmd.com">support@metabolixmd.com</a></p>
+      <p>© 2024 MetabolixMD. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html> 
