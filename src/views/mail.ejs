@@ -4,124 +4,60 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MetabolixMD Confirmation</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            color: #2c665d;
-            background-color: #f9fafb;
-            margin: 0;
-            padding: 0;
-        }
-        .contain{
-            background-image: url("https://api.metabolixmd.com/image/2.png");
-        }
-        .container {
-            max-width: 600px;
-            margin: auto;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-        .logo {
-            width: 50px;
-            margin: 20px auto;
-        }
-        h1 {
-            color: #2c665d;
-            font-size: 1.5em;
-        }
-        p {
-            color: #333;
-            line-height: 1.6;
-        }
-        .highlight {
-            color: #FA812F;
-            font-weight: bold;
-        }
-        .tips {
-            text-align: left;
-            margin-top: 20px;
-            line-height: 1.6;
-        }
-        .tips h3 {
-            font-size: 1.1em;
-            color: #2c665d;
-            margin-top: 15px;
-            margin-bottom: 5px;
-        }
-        .tips p {
-            margin: 5px 0;
-            color: #333;
-        }
-        .contact-info {
-            color: #2c665d;
-            font-weight: bold;
-        }
-        hr {
-            border: none;
-            border-top: 1px solid #ddd;
-            margin: 20px 0;
-        }
-        .footer-logo {
-            width: 200px;
-            margin-top: 20px;
-        }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+
 </head>
-<body>
-    <div class="contain">
-    <div class="container">
-        <!-- Logo at the top -->
+<body style="font-family: Inter, sans-serif; color: #2c665d; background-color: #f9fafb; margin: 0; padding: 0;">
+    <div class="contain" style="background-image: url('https://api.metabolixmd.com/image/2.png');">
+    <div class="container" style="max-width: 600px; margin: auto; padding: 20px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); text-align: center;">
+        <h1 style="color: #2c665d; font-size: 1.5em;">Congratulations! Your order has been successfully placed.</h1>
+        <img src="https://api.metabolixmd.com/image/4.png" alt="MetabolixMD Logo" style="width: 50px; margin: 20px auto;">
 
-        <h1>Congratulations! Your order has been successfully placed.</h1>
-        <img src="https://api.metabolixmd.com/image/4.png" alt="MetabolixMD Logo" class="logo">
+        <p style="color: #333; line-height: 1.6;">Thank you <b> <%= customerName %></b> for reaching out to <span style="color: #FA812F; font-weight: bold;">MetabolixMD</span>! We're excited to help you on your path to a healthier you. Our personalized weight loss programs are designed to provide the guidance, support, and medical expertise you need to reach your goals. With options including medications like <em>semaglutide</em> and <em>tirzepatide</em>, tailored nutrition plans, and regular consultations, we're here to help you succeed safely and effectively.</p>
 
-        <p>Thank you <b> <%= customerName %></b> for reaching out to <span class="highlight">MetabolixMD</span>! We’re excited to help you on your path to a healthier you. Our personalized weight loss programs are designed to provide the guidance, support, and medical expertise you need to reach your goals. With options including medications like <em>semaglutide</em> and <em>tirzepatide</em>, tailored nutrition plans, and regular consultations, we’re here to help you succeed safely and effectively.</p>
+        <p style="color: #333; line-height: 1.6;">Our team will reach out soon to schedule your initial consultation. In the meantime, please feel free to email us for further queries at <span style="color: #2c665d; font-weight: bold;"><a href="mailto:consultant@metabolixmd.com">consultant@metabolixmd.com</a></span>.</p>
 
-        <p>Our team will reach out soon to schedule your initial consultation. In the meantime, please feel free to email us for further queries at <span class="contact-info"><a href="mailto:consultant@metabolixmd.com">consultant@metabolixmd.com</a></span>.</p>
+        <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
 
-        <hr>
+        <h2 style="color: #2c665d;">Here are a few tips to keep in mind while on medication</h2>
 
-        <h2>Here are a few tips to keep in mind while on medication</h2>
+        <div style="text-align: left; margin-top: 20px; line-height: 1.6;">
+            <h3 style="font-size: 1.1em; color: #2c665d; margin-top: 15px; margin-bottom: 5px;">Small, frequent meals</h3>
+            <p style="margin: 5px 0; color: #333;">Start with smaller portions spread throughout the day to ease nausea and digestion, common in the first month of tirzepatide use.</p>
 
-        <div class="tips">
-            <h3>Small, frequent meals</h3>
-            <p>Start with smaller portions spread throughout the day to ease nausea and digestion, common in the first month of tirzepatide use.</p>
+            <h3 style="font-size: 1.1em; color: #2c665d; margin-top: 15px; margin-bottom: 5px;">Focus on protein</h3>
+            <p style="margin: 5px 0; color: #333;">Prioritize lean proteins like chicken, fish, or tofu to maintain muscle mass and aid satiety while reducing overall calorie intake.</p>
 
-            <h3>Focus on protein</h3>
-            <p>Prioritize lean proteins like chicken, fish, or tofu to maintain muscle mass and aid satiety while reducing overall calorie intake.</p>
+            <h3 style="font-size: 1.1em; color: #2c665d; margin-top: 15px; margin-bottom: 5px;">Choose fiber-rich foods</h3>
+            <p style="margin: 5px 0; color: #333;">Incorporate vegetables, fruits, and whole grains to promote digestion and reduce constipation, a possible side effect of GLP-1 drugs.</p>
 
-            <h3>Choose fiber-rich foods</h3>
-            <p>Incorporate vegetables, fruits, and whole grains to promote digestion and reduce constipation, a possible side effect of GLP-1 drugs.</p>
+            <h3 style="font-size: 1.1em; color: #2c665d; margin-top: 15px; margin-bottom: 5px;">Stay hydrated</h3>
+            <p style="margin: 5px 0; color: #333;">Drink plenty of water (8-10 glasses a day) to help with digestion and manage potential side effects like nausea or bloating.</p>
 
-            <h3>Stay hydrated</h3>
-            <p>Drink plenty of water (8-10 glasses a day) to help with digestion and manage potential side effects like nausea or bloating.</p>
+            <h3 style="font-size: 1.1em; color: #2c665d; margin-top: 15px; margin-bottom: 5px;">Avoid greasy or fatty foods</h3>
+            <p style="margin: 5px 0; color: #333;">High-fat meals can increase nausea and stomach discomfort, so opt for lighter, low-fat options to reduce gastrointestinal issues.</p>
 
-            <h3>Avoid greasy or fatty foods</h3>
-            <p>High-fat meals can increase nausea and stomach discomfort, so opt for lighter, low-fat options to reduce gastrointestinal issues.</p>
+            <h3 style="font-size: 1.1em; color: #2c665d; margin-top: 15px; margin-bottom: 5px;">Limit sugar intake</h3>
+            <p style="margin: 5px 0; color: #333;">Avoid sugary foods and beverages as they can spike blood sugar and counteract the appetite-controlling effects of tirzepatide.</p>
 
-            <h3>Limit sugar intake</h3>
-            <p>Avoid sugary foods and beverages as they can spike blood sugar and counteract the appetite-controlling effects of tirzepatide.</p>
+            <h3 style="font-size: 1.1em; color: #2c665d; margin-top: 15px; margin-bottom: 5px;">Incorporate healthy fats</h3>
+            <p style="margin: 5px 0; color: #333;">Add small amounts of healthy fats like avocados, nuts, and olive oil to your meals to promote fullness without overwhelming digestion.</p>
 
-            <h3>Incorporate healthy fats</h3>
-            <p>Add small amounts of healthy fats like avocados, nuts, and olive oil to your meals to promote fullness without overwhelming digestion.</p>
+            <h3 style="font-size: 1.1em; color: #2c665d; margin-top: 15px; margin-bottom: 5px;">Monitor portion sizes</h3>
+            <p style="margin: 5px 0; color: #333;">Keep portions moderate to avoid overwhelming the stomach, which may already be slowed by tirzepatide, leading to discomfort.</p>
 
-            <h3>Monitor portion sizes</h3>
-            <p>Keep portions moderate to avoid overwhelming the stomach, which may already be slowed by tirzepatide, leading to discomfort.</p>
+            <h3 style="font-size: 1.1em; color: #2c665d; margin-top: 15px; margin-bottom: 5px;">Eat slowly and mindfully</h3>
+            <p style="margin: 5px 0; color: #333;">Chewing slowly and savoring meals can help prevent overeating and aid digestion, which is important while adjusting to GLP-1 medications.</p>
 
-            <h3>Eat slowly and mindfully</h3>
-            <p>Chewing slowly and savoring meals can help prevent overeating and aid digestion, which is important while adjusting to GLP-1 medications.</p>
-
-            <h3>Limit alcohol consumption</h3>
-            <p>Alcohol can irritate the stomach and interfere with blood sugar regulation, so limit intake to avoid worsening side effects.</p>
+            <h3 style="font-size: 1.1em; color: #2c665d; margin-top: 15px; margin-bottom: 5px;">Limit alcohol consumption</h3>
+            <p style="margin: 5px 0; color: #333;">Alcohol can irritate the stomach and interfere with blood sugar regulation, so limit intake to avoid worsening side effects.</p>
         </div>
 
-        <hr>
+        <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
 
-        <!-- Logo at the bottom -->
-        <img src="https://api.metabolixmd.com/image/3.png" alt="MetabolixMD Logo" class="footer-logo">
+        <img src="https://api.metabolixmd.com/image/3.png" alt="MetabolixMD Logo" style="width: 200px; margin-top: 20px;">
     </div>
     </div>
 </body>
