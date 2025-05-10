@@ -23,15 +23,13 @@ if (config.env !== "test") {
 
 // set security HTTP headers
 app.use(helmet());
-app.use(
-  express.json({
-    verify: (req, res, buf) => {
-      if (req.originalUrl.includes('webhook')) req.rawBody = buf.toString();
-    },
-  })
-);
+
 // parse json request body
-app.use(express.json());
+app.use(express.json({
+  verify: (req, res, buf) => {
+    if (req.originalUrl.includes('webhook')) req.rawBody = buf.toString();
+  },
+}));
 
 // parse urlencoded request body
 app.use(express.urlencoded({ extended: true }));
@@ -45,11 +43,20 @@ app.options("*", cors());
 
 const path = require('path');
 
+// Set content type for API routes
+app.use('/v1', (req, res, next) => {
+  res.setHeader('Content-Type', 'application/json');
+  next();
+});
+
 // Reroute all API request starting with "/v1" route
 app.use('/v1', routes);
 // Also make routes available without the v1 prefix for backward compatibility
 app.use('/', routes);
-app.use(express.static(path.join(__dirname, 'public')));
+
+// Serve static files and views only for specific routes
+app.use('/confirmation', express.static(path.join(__dirname, 'public')));
+app.use('/preview-email', express.static(path.join(__dirname, 'public')));
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
