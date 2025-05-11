@@ -6,6 +6,7 @@ const helmet = require("helmet");
 
 const httpStatus = require("http-status");
 const routes = require("./routes/v1");
+const testRoutes = require("./routes/test.routes");
 const morgan = require("./config/morgan");
 const config = require("./config/config");
 const ApiError = require("./utils/ApiError");
@@ -53,6 +54,8 @@ app.use('/v1', (req, res, next) => {
 app.use('/v1', routes);
 // Also make routes available without the v1 prefix for backward compatibility
 app.use('/', routes);
+// Add test routes
+app.use('/test', testRoutes);
 
 // Serve static files and views only for specific routes
 app.use('/confirmation', express.static(path.join(__dirname, 'public')));
