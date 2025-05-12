@@ -75,8 +75,8 @@ app.get('/confirmation', (req, res) => {
 // Add this route before error handlers
 app.get('/preview-email', (req, res) => {
   res.render('completePaymentMail', { 
-    link: 'https://example.com/approve-order',
-    name: 'John Doe'
+    link: 'https://www.metabolixmd.com/profile-details',
+    // name: 'John Doe'
   });
 });
 
