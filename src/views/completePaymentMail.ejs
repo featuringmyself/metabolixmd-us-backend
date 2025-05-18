@@ -284,12 +284,13 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="status-bar">
+    <div class="container" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; overflow: hidden;">
+        <div class="status-bar" style="background-color: #365D56; color: white; padding: 8px 16px; text-align: center; font-size: 14px;">
           ⚠️ Action Required: Approve your prescription to begin treatment.
         </div>
 
-        <div class="header">
+        <div class="header" style="padding: 15px; margin: 10px 0; text-align: center; background-color: #fff;">
+            <img src="https://metabolixmd.com/wp-content/uploads/2023/08/logo.png" alt="MetabolixMD Logo" style="width: 200px;">
           <svg width="190" height="27" viewBox="0 0 190 27" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M98.1902 9.25358C100.801 6.5584 105.094 5.1851 106.86 9.56954C107.012 9.94671 107.337 11.5331 107.647 11.5312C107.792 11.5304 109.089 9.55187 109.411 9.21316C114.349 3.99979 121.924 7.18637 120.692 14.6828C119.933 19.3 115.282 23.8038 110.458 21.7373C108.015 20.6906 107.175 18.7093 106.704 16.2343C106.499 16.175 105.459 18.5154 105.239 18.8467C103.21 21.892 99.4512 23.6774 96.424 20.7801L95.5221 21.8417L92.7908 21.9846L95.3788 0.131081L99.1993 0.124802L98.1906 9.25398L98.1902 9.25358ZM114.183 9.66805C110.232 10.0908 109.103 20.8562 114.143 19.1171C116.985 18.1363 118.737 9.18058 114.183 9.66805ZM101.073 9.74419C98.4402 10.1273 96.8216 15.8768 96.9272 18.0774C96.9762 19.101 98.7051 19.3581 99.4834 19.2906C102.585 19.0221 103.869 13.6376 103.112 11.1976C102.789 10.1583 102.222 9.57699 101.073 9.74419Z" fill="black"/>
             <path d="M146.77 22.0365L149.55 0.778365C150.457 0.759526 152.851 0.4424 153.514 0.984812C155.435 5.25661 156.625 9.91343 158.302 14.3155L158.58 14.5871L166.664 1.17517C166.855 0.962049 167.084 0.763451 167.377 0.710858C168.001 0.599 169.965 0.603318 170.667 0.620587C170.812 0.62412 170.958 0.650808 171.086 0.717138C170.913 2.97824 170.434 5.23463 170.158 7.49063C169.647 11.6729 169.365 16.024 168.731 20.1804C168.64 20.7813 168.587 21.4897 168.312 22.0361H164.977L166.238 8.42474L165.955 8.38588C165.602 8.87492 165.274 9.3824 164.944 9.88674C163.884 11.5101 160.247 18.4135 159.209 19.1341C158.545 19.5944 157.458 19.7448 156.798 19.2137C155.878 18.4735 153.48 10.1352 152.716 8.37018C152.663 8.24969 152.378 7.60876 152.303 7.60837L150.301 22.0361H146.77L146.77 22.0365Z" fill="black"/>
@@ -307,16 +308,16 @@
               
         </div>
 
-        <div class="content">
-            <h1 class="main-title"><span>Approve</span> Your Order to Start Treatment</h1>
-            
-            <p class="description">
+        <div class="content" style="padding: 0 32px 32px; background-color: #EDF4F2; border-radius: 50px 50px 0 0; padding-top: 80px;">
+            <h1 class="main-title" style="font-size: 24px;"><span style="color: #005041;">Approve</span> Your Order to Start Treatment</h1>
+
+            <p class="description" style="text-align: center; color: #4A4A4A; margin-top: 40px; margin-bottom: 32px; font-size: 16px; line-height: 1.6;">
                 Based on your consultation, your provider has recommended<br>
                 a personalized GLP-1 prescription to support your weight<br>
                 loss goals.
             </p>
 
-            <div class="action-section">
+            <div class="action-section" style="text-align: center; margin: 32px 0;">
                 <h2 style="font-size: 18px; margin-bottom: 16px;">Now it's your turn to take action:</h2>
                 <p style="color: #4A4A4A; font-size: 16px;">
                     Review your plan, confirm your payment method, and<br>
@@ -324,23 +325,23 @@
                 </p>
             </div>
 
-            <div class="warning-box">
+            <div class="warning-box" style="margin: 0px auto; border: 2px solid #FD7823; border-style: dashed; border-radius: 23px; padding: 16px; text-align: center; font-size: 14px; font-weight: bolder; max-width: 460px;">
                 Your order won't be processed until you approve<br>
                 it. You'll only be charged once it's confirmed.
             </div>
 
             <div style="text-align: center;">
-                <a href="<%= link %>" class="cta-button">Approve My Order</a>
+                <a href="https://www.metabolixmd.com/profile-details" class="cta-button" style="background-color: #005041; color: white; padding: 12px 24px; border-radius: 24px; text-decoration: none;">Approve My Order</a>
             </div>
         </div>
 
-        <div class="support-section">
-            <h3 class="support-title">We're here for you every step of the way.</h3>
-            <div class="support-grid">
-                <p class="support-text">
+        <div class="support-section" style="background-color: #365D56; color: white; padding: 40px 32px; padding-bottom: 50px;">
+            <h3 class="support-title" style="font-size: 24px; margin-bottom: 24px; font-weight: 500;">We're here for you every step of the way.</h3>
+            <div class="support-grid" style="display: flex; justify-content: space-between;">
+                <p class="support-text" style="width: 45%; font-size: 14px; color: rgba(255, 255, 255, 0.9);">
                     If you have questions about what happens next or need help with scheduling, our support team is ready to assist.
                 </p>
-                <div class="support-contact">
+                <div class="support-contact" style="text-align: right; font-size: 14px;">
                     <p>Email: <a href="mailto:support@metabolixmd.com">support@metabolixmd.com</a></p>
                     <p>Call or text us at: <a href="tel:+1555123456">(555) 123-4567</a></p>
                     <p>Visit our <a href="#">Help Center</a></p>
@@ -351,7 +352,12 @@
         <div class="whats-included">
             
 
-            <div class="rating-section">
+            <div class="rating-section" style="background-color: #005041; padding: 40px 30px; border-radius: 55px 55px 0 0; width: fit-content;">
+                <div class="rating-badge" style="width: 50px; height: 50px; border-radius: 50%; margin: 0 auto 35px; line-height: 50px; font-size: 22px; background-color: #fff;">
+                    <img src="https://metabolixmd.com/wp-content/uploads/2023/08/5-star.png" alt="5 Star Rating" style="width: 100%; height: auto;">
+                </div>
+                <h2 class="rating-title" style="color: #fff; font-size: 28px; margin-bottom: 20px; line-height: 110%; font-weight: 500; letter-spacing: -3%;">5-Star Rated Care</h2>
+                <p class="rating-description" style="color: #fff; font-size: 16px; line-height: 1.6;">Join thousands of satisfied patients who have transformed their lives with our personalized care.</p>
               <div class="rating-badge" style="position: relative;"><svg width="88" height="88" viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="position: absolute; top: -80px;">
                 <path d="M40.3783 2.85742C42.5021 1.18184 45.4979 1.18184 47.6217 2.85742C49.2201 4.11853 51.3594 4.45737 53.2693 3.75192C55.8069 2.81462 58.6562 3.74039 60.1582 5.99025C61.2887 7.68357 63.2186 8.66691 65.253 8.58618C67.956 8.47891 70.3797 10.2398 71.113 12.8437C71.6649 14.8035 73.1965 16.3351 75.1563 16.887C77.7602 17.6203 79.5211 20.044 79.4138 22.747C79.3331 24.7814 80.3164 26.7113 82.0098 27.8418C84.2596 29.3438 85.1854 32.1931 84.2481 34.7307C83.5426 36.6406 83.8815 38.7799 85.1426 40.3783C86.8182 42.5021 86.8182 45.4979 85.1426 47.6217C83.8815 49.2201 83.5426 51.3594 84.2481 53.2693C85.1854 55.8069 84.2596 58.6562 82.0098 60.1582C80.3164 61.2887 79.3331 63.2186 79.4138 65.253C79.5211 67.956 77.7602 70.3797 75.1563 71.113C73.1965 71.6649 71.6649 73.1965 71.113 75.1563C70.3797 77.7602 67.956 79.5211 65.253 79.4138C63.2186 79.3331 61.2887 80.3164 60.1582 82.0098C58.6562 84.2596 55.8069 85.1854 53.2693 84.2481C51.3594 83.5426 49.2201 83.8815 47.6217 85.1426C45.4979 86.8182 42.5021 86.8182 40.3783 85.1426C38.7799 83.8815 36.6406 83.5426 34.7307 84.2481C32.1931 85.1854 29.3438 84.2596 27.8418 82.0098C26.7113 80.3164 24.7814 79.3331 22.747 79.4138C20.044 79.5211 17.6203 77.7602 16.887 75.1563C16.3351 73.1965 14.8035 71.6649 12.8437 71.113C10.2398 70.3797 8.47891 67.956 8.58618 65.253C8.66691 63.2186 7.68357 61.2887 5.99025 60.1582C3.74039 58.6562 2.81462 55.8069 3.75192 53.2693C4.45737 51.3594 4.11853 49.2201 2.85742 47.6217C1.18184 45.4979 1.18184 42.5021 2.85742 40.3783C4.11853 38.7799 4.45737 36.6406 3.75192 34.7307C2.81462 32.1931 3.74039 29.3438 5.99025 27.8418C7.68357 26.7113 8.66691 24.7814 8.58618 22.747C8.47891 20.044 10.2398 17.6203 12.8437 16.887C14.8035 16.3351 16.3351 14.8035 16.887 12.8437C17.6203 10.2398 20.044 8.47891 22.747 8.58618C24.7814 8.66691 26.7113 7.68357 27.8418 5.99025C29.3438 3.74039 32.1931 2.81462 34.7307 3.75192C36.6406 4.45737 38.7799 4.11853 40.3783 2.85742Z" fill="#223D38"/>
                 <path d="M40.3783 2.85742C42.5021 1.18184 45.4979 1.18184 47.6217 2.85742C49.2201 4.11853 51.3594 4.45737 53.2693 3.75192C55.8069 2.81462 58.6562 3.74039 60.1582 5.99025C61.2887 7.68357 63.2186 8.66691 65.253 8.58618C67.956 8.47891 70.3797 10.2398 71.113 12.8437C71.6649 14.8035 73.1965 16.3351 75.1563 16.887C77.7602 17.6203 79.5211 20.044 79.4138 22.747C79.3331 24.7814 80.3164 26.7113 82.0098 27.8418C84.2596 29.3438 85.1854 32.1931 84.2481 34.7307C83.5426 36.6406 83.8815 38.7799 85.1426 40.3783C86.8182 42.5021 86.8182 45.4979 85.1426 47.6217C83.8815 49.2201 83.5426 51.3594 84.2481 53.2693C85.1854 55.8069 84.2596 58.6562 82.0098 60.1582C80.3164 61.2887 79.3331 63.2186 79.4138 65.253C79.5211 67.956 77.7602 70.3797 75.1563 71.113C73.1965 71.6649 71.6649 73.1965 71.113 75.1563C70.3797 77.7602 67.956 79.5211 65.253 79.4138C63.2186 79.3331 61.2887 80.3164 60.1582 82.0098C58.6562 84.2596 55.8069 85.1854 53.2693 84.2481C51.3594 83.5426 49.2201 83.8815 47.6217 85.1426C45.4979 86.8182 42.5021 86.8182 40.3783 85.1426C38.7799 83.8815 36.6406 83.5426 34.7307 84.2481C32.1931 85.1854 29.3438 84.2596 27.8418 82.0098C26.7113 80.3164 24.7814 79.3331 22.747 79.4138C20.044 79.5211 17.6203 77.7602 16.887 75.1563C16.3351 73.1965 14.8035 71.6649 12.8437 71.113C10.2398 70.3797 8.47891 67.956 8.58618 65.253C8.66691 63.2186 7.68357 61.2887 5.99025 60.1582C3.74039 58.6562 2.81462 55.8069 3.75192 53.2693C4.45737 51.3594 4.11853 49.2201 2.85742 47.6217C1.18184 45.4979 1.18184 42.5021 2.85742 40.3783C4.11853 38.7799 4.45737 36.6406 3.75192 34.7307C2.81462 32.1931 3.74039 29.3438 5.99025 27.8418C7.68357 26.7113 8.66691 24.7814 8.58618 22.747C8.47891 20.044 10.2398 17.6203 12.8437 16.887C14.8035 16.3351 16.3351 14.8035 16.887 12.8437C17.6203 10.2398 20.044 8.47891 22.747 8.58618C24.7814 8.66691 26.7113 7.68357 27.8418 5.99025C29.3438 3.74039 32.1931 2.81462 34.7307 3.75192C36.6406 4.45737 38.7799 4.11853 40.3783 2.85742Z" fill="url(#paint0_linear_12_222)" fill-opacity="0.2"/>
@@ -413,7 +419,7 @@
                     </span>
                   </div>
                   <div style="text-align: center; margin-top: 20px;">
-                      <a href="<%= link %>" class="cta-button">Approve My Order</a>
+                      <a href="https://www.metabolixmd.com/profile-details" class="cta-button">Approve My Order</a>
                   </div>
           </div>
           
@@ -460,21 +466,20 @@
                   </svg>
                   </a>
           </div>
-          
-          <div class="footer-buttons">
-              <a href="#" class="footer-button">Account Log In</a>
-              <a href="#" class="footer-button">Refill Prescription</a>
-              <a href="#" class="footer-button">Contact Support</a>
+
+          <div class="footer-buttons" style="display: flex; justify-content: space-between; margin-bottom: 30px;">
+              <a href="https://www.metabolixmd.com" class="footer-button" style="background-color: #365D56; color: white; padding: 10px 15px; border-radius: 25px; font-size: 12px; text-decoration: none; flex:  0 0 30%; text-align: center;">Account Log In</a>
+              <a href="https://www.metabolixmd.com/get-started" class="footer-button" style="background-color: #365D56; color: white; padding: 10px 15px; border-radius: 25px; font-size: 12px; text-decoration: none; flex:  0 0 30%; text-align: center;">Refill Prescription</a>
+              <a href="https://www.metabolixmd.com/contact-us" class="footer-button" style="background-color: #365D56; color: white; padding: 10px 15px; border-radius: 25px; font-size: 12px; text-decoration: none; flex:  0 0 30%; text-align: center;">Contact Support</a>
+          </div>
+
+          <p class="footer-address" style="font-size: 12px; line-height: 150px; margin-bottom: 30px;">MetabolixMD 2025.<br>4414 82nd St, Suite 212, Lubbock, TX 79424<br>info@metabolixmd.com</p>
+
+          <div class="footer-links" style="color: rgba(255, 255, 255, 0.6); margin: 0 5px;">
+              <a href="https://www.metabolixmd.com/Privacy-policy" class="footer-link">Privacy Policy</a>
           </div>
           
-          <p class="footer-address">MetabolixMD 2025.<br>Level 1, 17 Sample St, Some City NSW 2000<br>info@metabolixmd.com</p>
-          
-          <div class="footer-links">
-              <a href="#" class="footer-link">Privacy Policy</a>
-              <a href="#" class="footer-link">HIPAA Policy</a>
-          </div>
-          
-          <p class="footer-disclaimer">This email has been sent on behalf of MetabolixMD. Click here to manage your email preferences.</p>
+          <p class="footer-disclaimer" style="font-size: 10px; margin-top: 20px; color: #FFFFFFB2; width: 70%; display: flex; justify-content: center; align-items: center;">This email has been sent on behalf of MetabolixMD. Click here to manage your email preferences.</p>
       </div>
     </div>
 </body>
