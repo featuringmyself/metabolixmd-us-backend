@@ -7,290 +7,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', Arial, sans-serif;
-        }
-
-        body {
-            background-color: #f5f5f5;
-            color: #2E2E2E;
-            line-height: 1.5;
-        }
-
-        .header {
-            padding: 15px;
-            margin: 10px 0;
-            text-align: center;
-            background-color: #fff;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            border-radius: 16px;
-            overflow: hidden;
-        }
-
-        .status-bar {
-            background-color: #365D56;
-            color: white;
-            padding: 8px 16px;
-            text-align: center;
-            font-size: 14px;
-        }
-
-        .heart-icon {
-            display: flex;
-            justify-content: center;
-            margin: 24px 0;
-        }
-
-        .content {
-            padding: 0 32px 32px;
-            background-color: #EDF4F2;
-            border-radius: 50px 50px 0 0;
-            padding-top: 80px;
-        }
-
-        .main-title {
-            font-size: 50px;
-            line-height: 1.2;
-            color: #2E2E2E;
-            text-align: center;
-            width: 80%;
-            margin: 0 auto;
-            display: block;
-        }
-
-        .main-title span {
-            color: #005041;
-        }
-
-        .description {
-            text-align: center;
-            color: #4A4A4A;
-            margin-top: 40px;
-            margin-bottom: 32px;
-            font-size: 16px;
-            line-height: 1.6;
-        }
-
-        .action-section {
-            text-align: center;
-            margin: 32px 0;
-        }
-
-        .warning-box {
-          margin: 0px auto;
-            border: 2px solid #FD7823;
-            border-style: dashed;
-            border-radius: 23px;
-            padding: 16px;
-            text-align: center;
-            font-size: 14px;
-            font-weight: bolder;
-            max-width: 460px;
-        }
-
-        .cta-button {
-            display: inline-block;
-            background-color: #365D56;
-            color: white;
-            padding: 12px 32px;
-            border-radius: 100px;
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 16px;
-            margin: 16px 0;
-        }
-
-        .support-section {
-            background-color: #365D56;
-            color: white;
-            padding: 40px 32px;
-            /* margin-top: 48px; */
-            padding-bottom: 50px;
-        }
-
-        .support-title {
-            font-size: 24px;
-            margin-bottom: 24px;
-            font-weight: 500;
-        }
-
-        .support-grid {
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .support-text {
-            width: 45%;
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .support-contact {
-            text-align: right;
-            font-size: 14px;
-        }
-
-        .support-contact a {
-            color: white;
-            text-decoration: underline;
-        }
-
-
-        .included-title {
-            font-size: 32px;
-            margin-bottom: 24px;
-        }
-
-        .included-description {
-            color: #4A4A4A;
-            margin-bottom: 32px;
-            font-size: 16px;
-        }
-
-        .features-list {
-            list-style: none;
-        }
-
-        .feature-item {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 24px;
-        }
-
-        .feature-icon {
-            width: 32px;
-            height: 32px;
-            margin-right: 16px;
-            color: #FD7823;
-        }
-
-        .feature-text {
-            flex: 1;
-        }
-
-        .feature-text strong {
-            display: block;
-            margin-bottom: 4px;
-        }
-
-        .footer {
-            background-color: #223d38;
-            color: white;
-            padding: 40px 30px 20px;
-            text-align: center;
-        }
-        
-        .footer-logo {
-            margin-bottom: 20px;
-            width: 20%;
-
-        }
-        
-        .footer-tagline {
-            font-size: 18px;
-            margin-bottom: 30px;
-            font-weight: 300;
-        }
-        
-        .social-icons {
-            margin-bottom: 30px;
-        }
-        
-        .social-icon {
-            display: inline-block;
-            margin: 0 5px;
-        }
-        
-        .footer-buttons {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 30px;
-        }
-        
-        .footer-button {
-            background-color: #365D56;
-            color: white;
-            padding: 10px 15px;
-            border-radius: 25px;
-            font-size: 12px;
-            text-decoration: none;
-            flex: 0 0 30%;
-            text-align: center;
-        }
-        
-        .footer-address {
-            font-size: 12px;
-            line-height: 150%;
-            margin-bottom: 30px;
-        }
-        
-        .footer-links {
-            font-size: 12px;
-            margin-bottom: 20px;
-        }
-        
-        .footer-link {
-            color: rgba(255, 255, 255, 0.6);
-            
-            margin: 0 5px;
-        }
-        
-        .footer-disclaimer {
-            font-size: 10px;
-            margin-top: 20px;
-            color: #FFFFFFB2;
-            width: 70%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .rating-section {
-            background-color: #f1f5f3;
-            padding: 40px 30px;
-            /* text-align: center; */
-            border-radius: 55px 55px 0 0;
-            width: fit-content;
-        }
-        
-        .rating-badge {
-            width: 50px;
-            height: 50px;
-            border-radius: 50% ;
-            margin: 0 auto 35px;
-            line-height: 50px;
-            font-size: 22px;
-        }
-        
-        .rating-title {
-            color: #0a513a;
-            font-size: 28px;
-            margin-bottom: 20px;
-            line-height: 110%;
-            font-weight: 500;
-            letter-spacing: -3%;
-        }
-        
-        .
-    </style>
 </head>
-<body>
+<body style="margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', Arial, sans-serif; background-color: #f5f5f5; color: #2E2E2E; line-height: 1.5;">
     <div class="container" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; overflow: hidden;">
         <div class="status-bar" style="background-color: #365D56; color: white; padding: 8px 16px; text-align: center; font-size: 14px;">
           ⚠️ Action Required: Approve your prescription to begin treatment.
         </div>
 
         <div class="header" style="padding: 15px; margin: 10px 0; text-align: center; background-color: #fff;">
-            <img src="https://metabolixmd.com/wp-content/uploads/2023/08/logo.png" alt="MetabolixMD Logo" style="width: 200px;">
           <svg width="190" height="27" viewBox="0 0 190 27" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M98.1902 9.25358C100.801 6.5584 105.094 5.1851 106.86 9.56954C107.012 9.94671 107.337 11.5331 107.647 11.5312C107.792 11.5304 109.089 9.55187 109.411 9.21316C114.349 3.99979 121.924 7.18637 120.692 14.6828C119.933 19.3 115.282 23.8038 110.458 21.7373C108.015 20.6906 107.175 18.7093 106.704 16.2343C106.499 16.175 105.459 18.5154 105.239 18.8467C103.21 21.892 99.4512 23.6774 96.424 20.7801L95.5221 21.8417L92.7908 21.9846L95.3788 0.131081L99.1993 0.124802L98.1906 9.25398L98.1902 9.25358ZM114.183 9.66805C110.232 10.0908 109.103 20.8562 114.143 19.1171C116.985 18.1363 118.737 9.18058 114.183 9.66805ZM101.073 9.74419C98.4402 10.1273 96.8216 15.8768 96.9272 18.0774C96.9762 19.101 98.7051 19.3581 99.4834 19.2906C102.585 19.0221 103.869 13.6376 103.112 11.1976C102.789 10.1583 102.222 9.57699 101.073 9.74419Z" fill="black"/>
             <path d="M146.77 22.0365L149.55 0.778365C150.457 0.759526 152.851 0.4424 153.514 0.984812C155.435 5.25661 156.625 9.91343 158.302 14.3155L158.58 14.5871L166.664 1.17517C166.855 0.962049 167.084 0.763451 167.377 0.710858C168.001 0.599 169.965 0.603318 170.667 0.620587C170.812 0.62412 170.958 0.650808 171.086 0.717138C170.913 2.97824 170.434 5.23463 170.158 7.49063C169.647 11.6729 169.365 16.024 168.731 20.1804C168.64 20.7813 168.587 21.4897 168.312 22.0361H164.977L166.238 8.42474L165.955 8.38588C165.602 8.87492 165.274 9.3824 164.944 9.88674C163.884 11.5101 160.247 18.4135 159.209 19.1341C158.545 19.5944 157.458 19.7448 156.798 19.2137C155.878 18.4735 153.48 10.1352 152.716 8.37018C152.663 8.24969 152.378 7.60876 152.303 7.60837L150.301 22.0361H146.77L146.77 22.0365Z" fill="black"/>
@@ -309,178 +33,164 @@
         </div>
 
         <div class="content" style="padding: 0 32px 32px; background-color: #EDF4F2; border-radius: 50px 50px 0 0; padding-top: 80px;">
-            <h1 class="main-title" style="font-size: 24px;"><span style="color: #005041;">Approve</span> Your Order to Start Treatment</h1>
+            <h1 class="main-title" style="font-size: 4rem; text-align: center; line-height: 4.5rem; font-weight: 400; letter-spacing: -3px;"><span style="color: #005041;">Approve</span> Your Order to Start Treatment</h1>
 
-            <p class="description" style="text-align: center; color: #4A4A4A; margin-top: 40px; margin-bottom: 32px; font-size: 16px; line-height: 1.6;">
+            <p class="description" style="text-align: center; color: #000000; margin-top: 40px; margin-bottom: 32px; font-size: 16px; line-height: 1.6; opacity: 70%;">
                 Based on your consultation, your provider has recommended<br>
                 a personalized GLP-1 prescription to support your weight<br>
                 loss goals.
             </p>
 
-            <div class="action-section" style="text-align: center; margin: 32px 0;">
-                <h2 style="font-size: 18px; margin-bottom: 16px;">Now it's your turn to take action:</h2>
+            <div class="action-section" style="text-align: center;">
+                <h2 style="font-size: 18px; margin-bottom: 0px;">Now it's your turn to take action:</h2>
                 <p style="color: #4A4A4A; font-size: 16px;">
                     Review your plan, confirm your payment method, and<br>
                     approve your order so we can begin fulfillment.
                 </p>
             </div>
 
-            <div class="warning-box" style="margin: 0px auto; border: 2px solid #FD7823; border-style: dashed; border-radius: 23px; padding: 16px; text-align: center; font-size: 14px; font-weight: bolder; max-width: 460px;">
+            <div class="warning-box" style="margin: 2rem auto; border: 2px solid #FD7823; border-style: dashed; border-radius: 23px; padding: 16px; text-align: center; font-size: 14px; font-weight: bolder; max-width: 460px;">
                 Your order won't be processed until you approve<br>
                 it. You'll only be charged once it's confirmed.
             </div>
 
-            <div style="text-align: center;">
-                <a href="https://www.metabolixmd.com/profile-details" class="cta-button" style="background-color: #005041; color: white; padding: 12px 24px; border-radius: 24px; text-decoration: none;">Approve My Order</a>
+            <div style="text-align: center; margin-top: 3rem; margin-bottom: 5rem;">
+                <a href="https://www.metabolixmd.com/profile-details" class="cta-button" style="background-color: #365D56; color: white; padding: 18px 38px; border-radius:35px; text-decoration: none;">Approve My Order</a>
             </div>
         </div>
 
-        <div class="support-section" style="background-color: #365D56; color: white; padding: 40px 32px; padding-bottom: 50px;">
-            <h3 class="support-title" style="font-size: 24px; margin-bottom: 24px; font-weight: 500;">We're here for you every step of the way.</h3>
+        <div class="support-section" style="background-color: #365D56; color: white; padding: 40px 32px; padding-bottom: 120px;">
+            <h3 class="support-title" style="font-size: 24px; margin-bottom: 24px; font-weight: 500; ">We're here for you every step of the way.</h3>
             <div class="support-grid" style="display: flex; justify-content: space-between;">
                 <p class="support-text" style="width: 45%; font-size: 14px; color: rgba(255, 255, 255, 0.9);">
                     If you have questions about what happens next or need help with scheduling, our support team is ready to assist.
                 </p>
-                <div class="support-contact" style="text-align: right; font-size: 14px;">
-                    <p>Email: <a href="mailto:support@metabolixmd.com">support@metabolixmd.com</a></p>
-                    <p>Call or text us at: <a href="tel:+1555123456">(555) 123-4567</a></p>
-                    <p>Visit our <a href="#">Help Center</a></p>
+                <div class="support-contact" style="text-align: right; font-size: 14px; ">
+                    <p>Email: <a href="mailto:support@metabolixmd.com" style="color: white;">support@metabolixmd.com</a></p>
+                    <p>Call or text us at: <a href="tel:+1555123456" style="color: white;">(555) 123-4567</a></p>
+                    <p>Visit our <a href="https://www.metabolixmd.com/contact-us" style="color: white;">Help Center</a></p>
                 </div>
             </div>
         </div>
 
-        <div class="whats-included">
-            
-
-            <div class="rating-section" style="background-color: #005041; padding: 40px 30px; border-radius: 55px 55px 0 0; width: fit-content;">
-                <div class="rating-badge" style="width: 50px; height: 50px; border-radius: 50%; margin: 0 auto 35px; line-height: 50px; font-size: 22px; background-color: #fff;">
-                    <img src="https://metabolixmd.com/wp-content/uploads/2023/08/5-star.png" alt="5 Star Rating" style="width: 100%; height: auto;">
-                </div>
-                <h2 class="rating-title" style="color: #fff; font-size: 28px; margin-bottom: 20px; line-height: 110%; font-weight: 500; letter-spacing: -3%;">5-Star Rated Care</h2>
-                <p class="rating-description" style="color: #fff; font-size: 16px; line-height: 1.6;">Join thousands of satisfied patients who have transformed their lives with our personalized care.</p>
-              <div class="rating-badge" style="position: relative;"><svg width="88" height="88" viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="position: absolute; top: -80px;">
+        <div class="whats-included" style="background-color: #EDF4F2; padding: 40px 32px; padding-bottom: 50px; border-radius: 100px 100px 0 0; margin-top: -90px; position: relative; display: flex; flex-direction: column; justify-content: center;">
+            <svg width="88" height="88" viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="position: absolute; left:45%; top:-5%; margin: 0 auto">
                 <path d="M40.3783 2.85742C42.5021 1.18184 45.4979 1.18184 47.6217 2.85742C49.2201 4.11853 51.3594 4.45737 53.2693 3.75192C55.8069 2.81462 58.6562 3.74039 60.1582 5.99025C61.2887 7.68357 63.2186 8.66691 65.253 8.58618C67.956 8.47891 70.3797 10.2398 71.113 12.8437C71.6649 14.8035 73.1965 16.3351 75.1563 16.887C77.7602 17.6203 79.5211 20.044 79.4138 22.747C79.3331 24.7814 80.3164 26.7113 82.0098 27.8418C84.2596 29.3438 85.1854 32.1931 84.2481 34.7307C83.5426 36.6406 83.8815 38.7799 85.1426 40.3783C86.8182 42.5021 86.8182 45.4979 85.1426 47.6217C83.8815 49.2201 83.5426 51.3594 84.2481 53.2693C85.1854 55.8069 84.2596 58.6562 82.0098 60.1582C80.3164 61.2887 79.3331 63.2186 79.4138 65.253C79.5211 67.956 77.7602 70.3797 75.1563 71.113C73.1965 71.6649 71.6649 73.1965 71.113 75.1563C70.3797 77.7602 67.956 79.5211 65.253 79.4138C63.2186 79.3331 61.2887 80.3164 60.1582 82.0098C58.6562 84.2596 55.8069 85.1854 53.2693 84.2481C51.3594 83.5426 49.2201 83.8815 47.6217 85.1426C45.4979 86.8182 42.5021 86.8182 40.3783 85.1426C38.7799 83.8815 36.6406 83.5426 34.7307 84.2481C32.1931 85.1854 29.3438 84.2596 27.8418 82.0098C26.7113 80.3164 24.7814 79.3331 22.747 79.4138C20.044 79.5211 17.6203 77.7602 16.887 75.1563C16.3351 73.1965 14.8035 71.6649 12.8437 71.113C10.2398 70.3797 8.47891 67.956 8.58618 65.253C8.66691 63.2186 7.68357 61.2887 5.99025 60.1582C3.74039 58.6562 2.81462 55.8069 3.75192 53.2693C4.45737 51.3594 4.11853 49.2201 2.85742 47.6217C1.18184 45.4979 1.18184 42.5021 2.85742 40.3783C4.11853 38.7799 4.45737 36.6406 3.75192 34.7307C2.81462 32.1931 3.74039 29.3438 5.99025 27.8418C7.68357 26.7113 8.66691 24.7814 8.58618 22.747C8.47891 20.044 10.2398 17.6203 12.8437 16.887C14.8035 16.3351 16.3351 14.8035 16.887 12.8437C17.6203 10.2398 20.044 8.47891 22.747 8.58618C24.7814 8.66691 26.7113 7.68357 27.8418 5.99025C29.3438 3.74039 32.1931 2.81462 34.7307 3.75192C36.6406 4.45737 38.7799 4.11853 40.3783 2.85742Z" fill="#223D38"/>
-                <path d="M40.3783 2.85742C42.5021 1.18184 45.4979 1.18184 47.6217 2.85742C49.2201 4.11853 51.3594 4.45737 53.2693 3.75192C55.8069 2.81462 58.6562 3.74039 60.1582 5.99025C61.2887 7.68357 63.2186 8.66691 65.253 8.58618C67.956 8.47891 70.3797 10.2398 71.113 12.8437C71.6649 14.8035 73.1965 16.3351 75.1563 16.887C77.7602 17.6203 79.5211 20.044 79.4138 22.747C79.3331 24.7814 80.3164 26.7113 82.0098 27.8418C84.2596 29.3438 85.1854 32.1931 84.2481 34.7307C83.5426 36.6406 83.8815 38.7799 85.1426 40.3783C86.8182 42.5021 86.8182 45.4979 85.1426 47.6217C83.8815 49.2201 83.5426 51.3594 84.2481 53.2693C85.1854 55.8069 84.2596 58.6562 82.0098 60.1582C80.3164 61.2887 79.3331 63.2186 79.4138 65.253C79.5211 67.956 77.7602 70.3797 75.1563 71.113C73.1965 71.6649 71.6649 73.1965 71.113 75.1563C70.3797 77.7602 67.956 79.5211 65.253 79.4138C63.2186 79.3331 61.2887 80.3164 60.1582 82.0098C58.6562 84.2596 55.8069 85.1854 53.2693 84.2481C51.3594 83.5426 49.2201 83.8815 47.6217 85.1426C45.4979 86.8182 42.5021 86.8182 40.3783 85.1426C38.7799 83.8815 36.6406 83.5426 34.7307 84.2481C32.1931 85.1854 29.3438 84.2596 27.8418 82.0098C26.7113 80.3164 24.7814 79.3331 22.747 79.4138C20.044 79.5211 17.6203 77.7602 16.887 75.1563C16.3351 73.1965 14.8035 71.6649 12.8437 71.113C10.2398 70.3797 8.47891 67.956 8.58618 65.253C8.66691 63.2186 7.68357 61.2887 5.99025 60.1582C3.74039 58.6562 2.81462 55.8069 3.75192 53.2693C4.45737 51.3594 4.11853 49.2201 2.85742 47.6217C1.18184 45.4979 1.18184 42.5021 2.85742 40.3783C4.11853 38.7799 4.45737 36.6406 3.75192 34.7307C2.81462 32.1931 3.74039 29.3438 5.99025 27.8418C7.68357 26.7113 8.66691 24.7814 8.58618 22.747C8.47891 20.044 10.2398 17.6203 12.8437 16.887C14.8035 16.3351 16.3351 14.8035 16.887 12.8437C17.6203 10.2398 20.044 8.47891 22.747 8.58618C24.7814 8.66691 26.7113 7.68357 27.8418 5.99025C29.3438 3.74039 32.1931 2.81462 34.7307 3.75192C36.6406 4.45737 38.7799 4.11853 40.3783 2.85742Z" fill="url(#paint0_linear_12_222)" fill-opacity="0.2"/>
-                <mask id="mask0_12_222" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="26" y="24" width="35" height="39">
-                <path d="M43.4444 62H29.0556C28.5104 62 27.9875 61.7834 27.6021 61.3979C27.2166 61.0125 27 60.4896 27 59.9444V27.0556C27 26.5104 27.2166 25.9875 27.6021 25.6021C27.9875 25.2166 28.5104 25 29.0556 25H57.8333C58.3785 25 58.9013 25.2166 59.2868 25.6021C59.6723 25.9875 59.8889 26.5104 59.8889 27.0556V38.875" stroke="white" stroke-width="2" strokeLinecap="round" stroke-linejoin="round"/>
-                <path d="M35.2224 33.2223H51.6669" stroke="white" stroke-width="2" strokeLinecap="round"/>
+                <path d="M40.3783 2.85742C42.5021 1.18184 45.4979 1.18184 47.6217 2.85742C49.2201 4.11853 51.3594 4.45737 53.2693 3.75192C55.8069 2.81462 58.6562 3.74039 60.1582 5.99025C61.2887 7.68357 63.2186 8.66691 65.253 8.58618C67.956 8.47891 70.3797 10.2398 71.113 12.8437C71.6649 14.8035 73.1965 16.3351 75.1563 16.887C77.7602 17.6203 79.5211 20.044 79.4138 22.747C79.3331 24.7814 80.3164 26.7113 82.0098 27.8418C84.2596 29.3438 85.1854 32.1931 84.2481 34.7307C83.5426 36.6406 83.8815 38.7799 85.1426 40.3783C86.8182 42.5021 86.8182 45.4979 85.1426 47.6217C83.8815 49.2201 83.5426 51.3594 84.2481 53.2693C85.1854 55.8069 84.2596 58.6562 82.0098 60.1582C80.3164 61.2887 79.3331 63.2186 79.4138 65.253C79.5211 67.956 77.7602 70.3797 75.1563 71.113C73.1965 71.6649 71.6649 73.1965 71.113 75.1563C70.3797 77.7602 67.956 79.5211 65.253 79.4138C63.2186 79.3331 61.2887 80.3164 60.1582 82.0098C58.6562 84.2596 55.8069 85.1854 53.2693 84.2481C51.3594 83.5426 49.2201 83.8815 47.6217 85.1426C45.4979 86.8182 42.5021 86.8182 40.3783 85.1426C38.7799 83.8815 36.6406 83.5426 34.7307 84.2481C32.1931 85.1854 29.3438 84.2596 27.8418 82.0098C26.7113 80.3164 24.7814 79.3331 22.747 79.4138C20.044 79.5211 17.6203 77.7602 16.887 75.1563C16.3351 73.1965 14.8035 71.6649 12.8437 71.113C10.2398 70.3797 8.47891 67.956 8.58618 65.253C8.66691 63.2186 7.68357 61.2887 5.99025 60.1582C3.74039 58.6562 2.81462 55.8069 3.75192 53.2693C4.45737 51.3594 4.11853 49.2201 2.85742 47.6217C1.18184 45.4979 1.18184 42.5021 2.85742 40.3783C4.11853 38.7799 4.45737 36.6406 3.75192 34.7307C2.81462 32.1931 3.74039 29.3438 5.99025 27.8418C7.68357 26.7113 8.66691 24.7814 8.58618 22.747C8.47891 20.044 10.2398 17.6203 12.8437 16.887C14.8035 16.3351 16.3351 14.8035 16.887 12.8437C17.6203 10.2398 20.044 8.47891 22.747 8.58618C24.7814 8.66691 26.7113 7.68357 27.8418 5.99025C29.3438 3.74039 32.1931 2.81462 34.7307 3.75192C36.6406 4.45737 38.7799 4.11853 40.3783 2.85742Z" fill="url(#paint0_linear_68_2828)" fill-opacity="0.2"/>
+                <mask id="mask0_68_2828" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="26" y="24" width="35" height="39">
+                <path d="M43.4444 62H29.0556C28.5104 62 27.9875 61.7834 27.6021 61.3979C27.2166 61.0125 27 60.4896 27 59.9444V27.0556C27 26.5104 27.2166 25.9875 27.6021 25.6021C27.9875 25.2166 28.5104 25 29.0556 25H57.8333C58.3785 25 58.9013 25.2166 59.2868 25.6021C59.6723 25.9875 59.8889 26.5104 59.8889 27.0556V38.875" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M35.2224 33.2223H51.6669" stroke="white" stroke-width="2" stroke-linecap="round"/>
                 </mask>
-                <g mask="url(#mask0_12_222)">
+                <g mask="url(#mask0_68_2828)">
                 <path d="M19.8054 18.8333H69.1388V68.1666H19.8054V18.8333Z" fill="white"/>
                 </g>
                 <path d="M57.4592 46.5834C59.9362 46.5834 61.9444 48.5156 61.9444 50.9C61.9444 54.0039 58.9536 56.6556 57.4592 58.0945C56.463 59.0537 55.2173 60.013 53.7222 60.9722C52.2271 60.013 50.9815 59.0537 49.9852 58.0945C48.4898 56.6556 45.5 54.0039 45.5 50.9C45.5 48.5156 47.5083 46.5834 49.9852 46.5834C51.5444 46.5834 52.9185 47.3501 53.7222 48.5135C54.1422 47.9131 54.7017 47.4238 55.3527 47.0875C56.0036 46.7513 56.7266 46.5783 57.4592 46.5834Z" fill="#FD7823" stroke="white" stroke-width="2" stroke-linejoin="round"/>
                 <defs>
-                <linearGradient id="paint0_linear_12_222" x1="44" y1="0" x2="44" y2="88" gradientUnits="userSpaceOnUse">
+                <linearGradient id="paint0_linear_68_2828" x1="44" y1="0" x2="44" y2="88" gradientUnits="userSpaceOnUse">
                 <stop stop-opacity="0"/>
                 <stop offset="1"/>
                 </linearGradient>
                 </defs>
                 </svg>
                 
-                
-                  </div>
-                  <h3 class="included-title" style="text-align: center;">What's Included in Your Plan</h3>
-                  <p class="included-description" style="text-align: center;">
+                  <h3 class="included-title" style="text-align: center; font-size: 30px; font-weight: 400; ">What's Included in Your Plan</h3>
+                  <p class="included-description" style="text-align: center; font-size: 16px; margin-bottom: 30px; ">
                       When you approve your prescription, you're getting more<br>
                       than just medication. Here's what's included with your<br>
                       treatment:
                   </p>
-                  <div style="width: 80%; margin: 0 auto;">
-                    <span style="display: flex;">
+                  <div style="width: 80%; margin: 10px auto;">
+                    <span style="display: flex; align-items: center; justify-content: center;">
 
-                      <svg width="31" height="35" viewBox="0 0 31 35" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M9.43478 16.1538C7.64745 16.1538 5.93333 15.4447 4.6695 14.1824C3.40566 12.9202 2.69565 11.2082 2.69565 9.42308V4.03846C2.69565 3.68144 2.83765 3.33904 3.09042 3.08659C3.34319 2.83413 3.68601 2.69231 4.04348 2.69231H5.3913C5.74877 2.69231 6.09159 2.55048 6.34436 2.29803C6.59712 2.04558 6.73913 1.70318 6.73913 1.34615C6.73913 0.989132 6.59712 0.646732 6.34436 0.394279C6.09159 0.141826 5.74877 0 5.3913 0H4.04348C2.97108 0 1.94261 0.42548 1.18431 1.18284C0.426008 1.9402 0 2.9674 0 4.03846V9.42308C0.00173252 10.9439 0.37304 12.4415 1.08203 13.7874C1.79103 15.1333 2.81652 16.2872 4.07043 17.15C5.27637 18.2098 6.2542 19.5032 6.94463 20.9518C7.63506 22.4003 8.02369 23.9739 8.08695 25.5769C8.08695 28.0761 9.08097 30.4729 10.8503 32.24C12.6197 34.0072 15.0195 35 17.5217 35C20.024 35 22.4238 34.0072 24.1931 32.24C25.9625 30.4729 26.9565 28.0761 26.9565 25.5769V24.0423C28.2271 23.7147 29.3343 22.9355 30.0708 21.8508C30.8073 20.7661 31.1224 19.4503 30.957 18.1502C30.7917 16.8501 30.1572 15.6548 29.1726 14.7884C28.1881 13.922 26.9209 13.4441 25.6087 13.4441C24.2965 13.4441 23.0293 13.922 22.0447 14.7884C21.0601 15.6548 20.4257 16.8501 20.2604 18.1502C20.095 19.4503 20.4101 20.7661 21.1466 21.8508C21.883 22.9355 22.9903 23.7147 24.2609 24.0423V25.5769C24.2609 27.362 23.5508 29.074 22.287 30.3363C21.0232 31.5986 19.3091 32.3077 17.5217 32.3077C15.7344 32.3077 14.0203 31.5986 12.7564 30.3363C11.4926 29.074 10.7826 27.362 10.7826 25.5769C10.8493 23.9719 11.2421 22.3971 11.9372 20.9484C12.6324 19.4998 13.6152 18.2074 14.8261 17.15C16.075 16.2842 17.0953 15.129 17.7995 13.7833C18.5037 12.4376 18.8708 10.9415 18.8696 9.42308V4.03846C18.8696 2.9674 18.4436 1.9402 17.6853 1.18284C16.927 0.42548 15.8985 0 14.8261 0H13.4783C13.1208 0 12.778 0.141826 12.5252 0.394279C12.2724 0.646732 12.1304 0.989132 12.1304 1.34615C12.1304 1.70318 12.2724 2.04558 12.5252 2.29803C12.778 2.55048 13.1208 2.69231 13.4783 2.69231H14.8261C15.1835 2.69231 15.5264 2.83413 15.7791 3.08659C16.0319 3.33904 16.1739 3.68144 16.1739 4.03846V9.42308C16.1739 10.307 15.9996 11.1822 15.6609 11.9988C15.3222 12.8154 14.8258 13.5574 14.2001 14.1824C13.5743 14.8075 12.8314 15.3032 12.0137 15.6415C11.1961 15.9798 10.3198 16.1538 9.43478 16.1538ZM25.6087 21.5385C24.8938 21.5385 24.2081 21.2548 23.7026 20.7499C23.197 20.245 22.913 19.5602 22.913 18.8462C22.913 18.1321 23.197 17.4473 23.7026 16.9424C24.2081 16.4375 24.8938 16.1538 25.6087 16.1538C26.3236 16.1538 27.0093 16.4375 27.5148 16.9424C28.0203 17.4473 28.3043 18.1321 28.3043 18.8462C28.3043 19.5602 28.0203 20.245 27.5148 20.7499C27.0093 21.2548 26.3236 21.5385 25.6087 21.5385Z" fill="#FD7823"/>
-                      </svg>
-                      <div style="margin-left: 20px;">
-                        <h1 style="font-size: 14px; font-weight: bolder;">Personalized Doctor Review & Prescription</h1>
-                        <p style="font-size: 10px; font-weight: bold;">A licensed provider carefully reviews your health history and customizes your GLP-1 plan just for you.</p>
+                        <svg width="63" height="63" viewBox="0 0 31 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9.43478 16.1538C7.64745 16.1538 5.93333 15.4447 4.6695 14.1824C3.40566 12.9202 2.69565 11.2082 2.69565 9.42308V4.03846C2.69565 3.68144 2.83765 3.33904 3.09042 3.08659C3.34319 2.83413 3.68601 2.69231 4.04348 2.69231H5.3913C5.74877 2.69231 6.09159 2.55048 6.34436 2.29803C6.59712 2.04558 6.73913 1.70318 6.73913 1.34615C6.73913 0.989132 6.59712 0.646732 6.34436 0.394279C6.09159 0.141826 5.74877 0 5.3913 0H4.04348C2.97108 0 1.94261 0.42548 1.18431 1.18284C0.426008 1.9402 0 2.9674 0 4.03846V9.42308C0.00173252 10.9439 0.37304 12.4415 1.08203 13.7874C1.79103 15.1333 2.81652 16.2872 4.07043 17.15C5.27637 18.2098 6.2542 19.5032 6.94463 20.9518C7.63506 22.4003 8.02369 23.9739 8.08695 25.5769C8.08695 28.0761 9.08097 30.4729 10.8503 32.24C12.6197 34.0072 15.0195 35 17.5217 35C20.024 35 22.4238 34.0072 24.1931 32.24C25.9625 30.4729 26.9565 28.0761 26.9565 25.5769V24.0423C28.2271 23.7147 29.3343 22.9355 30.0708 21.8508C30.8073 20.7661 31.1224 19.4503 30.957 18.1502C30.7917 16.8501 30.1572 15.6548 29.1726 14.7884C28.1881 13.922 26.9209 13.4441 25.6087 13.4441C24.2965 13.4441 23.0293 13.922 22.0447 14.7884C21.0601 15.6548 20.4257 16.8501 20.2604 18.1502C20.095 19.4503 20.4101 20.7661 21.1466 21.8508C21.883 22.9355 22.9903 23.7147 24.2609 24.0423V25.5769C24.2609 27.362 23.5508 29.074 22.287 30.3363C21.0232 31.5986 19.3091 32.3077 17.5217 32.3077C15.7344 32.3077 14.0203 31.5986 12.7564 30.3363C11.4926 29.074 10.7826 27.362 10.7826 25.5769C10.8493 23.9719 11.2421 22.3971 11.9372 20.9484C12.6324 19.4998 13.6152 18.2074 14.8261 17.15C16.075 16.2842 17.0953 15.129 17.7995 13.7833C18.5037 12.4376 18.8708 10.9415 18.8696 9.42308V4.03846C18.8696 2.9674 18.4436 1.9402 17.6853 1.18284C16.927 0.42548 15.8985 0 14.8261 0H13.4783C13.1208 0 12.778 0.141826 12.5252 0.394279C12.2724 0.646732 12.1304 0.989132 12.1304 1.34615C12.1304 1.70318 12.2724 2.04558 12.5252 2.29803C12.778 2.55048 13.1208 2.69231 13.4783 2.69231H14.8261C15.1835 2.69231 15.5264 2.83413 15.7791 3.08659C16.0319 3.33904 16.1739 3.68144 16.1739 4.03846V9.42308C16.1739 10.307 15.9996 11.1822 15.6609 11.9988C15.3222 12.8154 14.8258 13.5574 14.2001 14.1824C13.5743 14.8075 12.8314 15.3032 12.0137 15.6415C11.1961 15.9798 10.3198 16.1538 9.43478 16.1538ZM25.6087 21.5385C24.8938 21.5385 24.2081 21.2548 23.7026 20.7499C23.197 20.245 22.913 19.5602 22.913 18.8462C22.913 18.1321 23.197 17.4473 23.7026 16.9424C24.2081 16.4375 24.8938 16.1538 25.6087 16.1538C26.3236 16.1538 27.0093 16.4375 27.5148 16.9424C28.0203 17.4473 28.3043 18.1321 28.3043 18.8462C28.3043 19.5602 28.0203 20.245 27.5148 20.7499C27.0093 21.2548 26.3236 21.5385 25.6087 21.5385Z" fill="#FD7823"/>
+                            </svg>
+                            
+                      <div style="margin-left: 10px;">
+                        <h1 style="font-size: 18px; font-weight: bolder;">Personalized Doctor Review & Prescription</h1>
+                        <p style="font-size: 14px; letter-spacing: 0px; margin-top: 0px;">A licensed provider carefully reviews your health history and customizes your GLP-1 plan just for you.</p>
                       </div>
                     </span>
 
-                    <span style="display: flex; margin-top: 20px;">
-                      <svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <span style="display: flex; margin-top: 10px; align-items: center; justify-content: center;">
+                      <svg width="62" height="62" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M18.131 26.75H13.4882V21.25H18.131V16.6667H23.7025V21.25H28.3453V26.75H23.7025V31.3333H18.131V26.75ZM33.9167 13.9167V34.0833C33.9167 36.1 32.2453 37.75 30.2025 37.75H11.631C9.58818 37.75 7.91675 36.1 7.91675 34.0833V13.9167C7.91675 11.9 9.58818 10.25 11.631 10.25H30.2025C32.2453 10.25 33.9167 11.9 33.9167 13.9167ZM30.2025 13.9167H11.631V34.0833H30.2025V13.9167ZM32.0596 4.75H9.77389V8.41667H32.0596V4.75Z" fill="#FD7823"/>
                       </svg>                        
-                      <div style="margin-left: 20px;">
-                        <h1 style="font-size: 14px; font-weight: bolder;">Pharmacy Fulfillment</h1>
-                        <p style="font-size: 10px; font-weight: bold;">We partner with trusted, U.S.-licensed pharmacies to safely dispense your medication.</p>
+                      <div style="margin-left: 10px;">
+                        <h1 style="font-size: 18px; font-weight: bolder;">Pharmacy Fulfillment</h1>
+                        <p style="font-size: 14px; letter-spacing: 0px; margin-top: 0px;">We partner with trusted, U.S.-licensed pharmacies to safely dispense your medication.</p>
                       </div>
                     </span>
 
-                    <span style="display: flex; margin-top: 20px;">
-                      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <span style="display: flex; margin-top: 20px; justify-content: center; align-items: center;">
+                      <svg width="65" height="65" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" clip-rule="evenodd" d="M29.7 15.27C29.235 10.5 26.415 3 17.7001 3C8.98504 3 6.16501 10.5 5.70004 15.27C4.06879 15.8891 2.99279 17.4553 3.00004 19.2V21.3C3.00004 23.6196 4.88047 25.5 7.20001 25.5C9.51962 25.5 11.4001 23.6196 11.4001 21.3V19.2C11.3925 17.4929 10.3561 15.9589 8.77501 15.315C9.07504 12.555 10.5451 6.00002 17.7001 6.00002C24.8551 6.00002 26.31 12.555 26.6101 15.315C25.0322 15.9604 24.001 17.4953 24.0001 19.2V21.3C24.0033 22.0903 24.2286 22.8638 24.6503 23.5322C25.072 24.2005 25.6731 24.7369 26.3851 25.08C25.7551 26.265 24.15 27.87 20.205 28.35C19.4165 27.1526 17.8907 26.6805 16.5637 27.2234C15.2367 27.7662 14.4792 29.1722 14.7559 30.579C15.0327 31.9858 16.2662 33 17.7001 33C18.2556 32.9969 18.7994 32.8396 19.2708 32.5456C19.7423 32.2516 20.1228 31.8325 20.37 31.335C26.805 30.6 28.8601 27.285 29.505 25.335C31.25 24.7697 32.4236 23.1341 32.4 21.3V19.2C32.4073 17.4553 31.3313 15.8891 29.7 15.27ZM8.40004 21.3C8.40004 21.9627 7.86278 22.5 7.20001 22.5C6.53725 22.5 6.00006 21.9628 6.00006 21.3V19.2C5.99885 19.0416 6.02899 18.8846 6.08875 18.738C6.14851 18.5913 6.23671 18.4579 6.34826 18.3455C6.45981 18.2331 6.59251 18.1439 6.7387 18.083C6.88489 18.0221 7.04169 17.9908 7.20005 17.9908C7.35841 17.9908 7.51521 18.0221 7.6614 18.083C7.80759 18.1439 7.94028 18.2331 8.05183 18.3455C8.16338 18.4579 8.25158 18.5913 8.31134 18.738C8.37111 18.8846 8.40125 19.0416 8.40004 19.2V21.3ZM27 19.2C27 18.5372 27.5373 18 28.2 18C28.8628 18 29.4001 18.5372 29.4001 19.2V21.3C29.4001 21.9627 28.8628 22.5 28.2 22.5C27.5373 22.5 27 21.9628 27 21.3V19.2Z" fill="#FD7823"/>
                         </svg>
                                              
-                      <div style="margin-left: 20px;">
-                        <h1 style="font-size: 14px; font-weight: bolder;">Ongoing Support from Our Care Team</h1>
-                        <p style="font-size: 10px; font-weight: bold;">You’ll have access to continued guidance and answers from the MetabolixMD team—before, during, and after treatment.</p>
+                      <div style="margin-left: 10px;">
+                        <h1 style="font-size: 18px; font-weight: bolder;">Ongoing Support from Our Care Team</h1>
+                        <p style="font-size: 14px; letter-spacing: 0px; margin-top: 0px;">You'll have access to continued guidance and answers from the MetabolixMD team—before, during, and after treatment.</p>
                       </div>
                     </span>
                   </div>
-                  <div style="text-align: center; margin-top: 20px;">
-                      <a href="https://www.metabolixmd.com/profile-details" class="cta-button">Approve My Order</a>
+                  <div style="text-align: center; margin-top: 40px; ">
+                      <a href="https://www.metabolixmd.com/profile-details" class="cta-button" style="background-color: #365D56; color: white; text-decoration: none; padding: 1rem 3rem; border-radius: 50px;">Approve My Order</a>
                   </div>
           </div>
           
 
+          
+                  <div class="footer" style="background-color: #223D38; display: flex; flex-direction: column; align-items: center; justify-content: center; padding-top: 80px;">
+                    <svg width="200" height="35" viewBox="0 0 190 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M98.1885 9.25378C100.799 6.5586 105.092 5.1853 106.858 9.56973C107.01 9.94691 107.335 11.5333 107.645 11.5314C107.791 11.5306 109.088 9.55207 109.409 9.21336C114.347 3.99999 121.922 7.18657 120.69 14.683C119.932 19.3002 115.28 23.8039 110.456 21.7375C108.013 20.6908 107.173 18.7095 106.702 16.2345C106.498 16.1752 105.458 18.5156 105.237 18.8469C103.209 21.8922 99.4495 23.6776 96.4223 20.7803L95.5204 21.8419L92.7891 21.9848L95.3771 0.131279L99.1975 0.125L98.1889 9.25418L98.1885 9.25378ZM114.181 9.66825C110.23 10.091 109.101 20.8564 114.141 19.1173C116.983 18.1365 118.735 9.18078 114.181 9.66825ZM101.072 9.74439C98.4385 10.1275 96.8199 15.877 96.9255 18.0776C96.9745 19.1012 98.7034 19.3583 99.4817 19.2908C102.583 19.0223 103.868 13.6378 103.11 11.1978C102.788 10.1585 102.22 9.57719 101.072 9.74439Z" fill="white"/>
+                        <path d="M146.77 22.0365L149.55 0.778365C150.457 0.759526 152.851 0.4424 153.514 0.984812C155.435 5.25661 156.625 9.91343 158.302 14.3155L158.58 14.5871L166.664 1.17517C166.855 0.962049 167.084 0.763451 167.377 0.710858C168.001 0.599 169.965 0.603318 170.667 0.620587C170.812 0.62412 170.958 0.650808 171.086 0.717138C170.913 2.97824 170.434 5.23463 170.158 7.49063C169.647 11.6729 169.365 16.024 168.731 20.1804C168.64 20.7813 168.587 21.4897 168.312 22.0361H164.977L166.238 8.42474L165.955 8.38588C165.602 8.87492 165.274 9.3824 164.944 9.88674C163.884 11.5101 160.247 18.4135 159.209 19.1341C158.545 19.5944 157.458 19.7448 156.798 19.2137C155.878 18.4735 153.48 10.1352 152.716 8.37018C152.663 8.24969 152.378 7.60876 152.303 7.60837L150.301 22.0361H146.77L146.77 22.0365Z" fill="white"/>
+                        <path d="M55.9471 21.9396L52.6702 21.9593L54.3967 7.29411L54.0478 7.45424C52.3272 9.37977 48.3796 18.2939 46.6389 19.2645C43.6808 20.9141 43.0234 15.5924 42.3907 13.8407C41.822 12.2669 40.7528 8.83264 40.0515 7.55158C40.0044 7.46523 39.8792 7.26114 39.7614 7.29254L38.0141 21.9381L37.8061 22.1096L34.5469 21.9534L37.1522 0.882489C37.3559 0.651708 40.1158 0.638757 40.5468 0.704301C41.4931 0.848343 41.9252 2.67614 42.2341 3.48858C43.5819 7.03311 44.5156 10.819 46.016 14.296C46.0627 14.4047 46.1134 14.5955 46.2735 14.5876L54.3206 1.13878C55.197 0.314958 57.5131 0.856193 58.6756 0.703124C58.7828 0.834999 58.7843 0.963341 58.7855 1.12347C58.7985 2.65691 58.1257 5.27242 57.9303 6.94205C57.5657 10.0552 57.1995 13.1056 56.7642 16.207C56.4965 18.1157 56.5417 20.0887 55.9471 21.9393V21.9396Z" fill="white"/>
+                        <path d="M76.4555 9.72936C76.1812 12.1227 75.5964 14.4788 75.5061 16.8969C75.4896 17.342 75.4103 18.6317 75.7243 18.9029C76.4712 19.5481 77.5753 18.5563 78.0192 18.7832L78.9505 20.7625C78.9764 21.3104 76.3491 22.2072 75.8554 22.2641C73.6339 22.5196 71.4486 21.1832 71.5004 18.7824L72.5279 9.9205L72.3984 9.73446L70.6428 9.60494C71.5534 13.6216 66.5826 14.9337 63.5977 15.5044C63.1727 15.5856 61.6914 15.5534 61.6177 15.9636C61.5584 16.294 61.8394 17.5076 61.996 17.855C62.6644 19.3385 64.2261 19.3939 65.6379 19.1113C66.5869 18.9213 68.3774 17.6834 69.1078 17.8047L70.2535 19.1804C70.2707 19.7809 68.231 20.9242 67.7145 21.186C59.165 25.5194 54.7786 15.8223 60.052 9.45148C62.6307 6.33634 68.1156 5.47287 70.5647 9.174C70.4273 6.98394 71.5863 7.51143 73.0817 6.84303C73.6579 6.02274 74.0523 3.19136 74.612 2.59165C74.979 2.19838 77.0144 2.11125 77.2417 2.4633L76.8782 6.90544C79.0734 7.17311 81.2281 6.50197 79.8517 9.63163L76.4559 9.72858L76.4555 9.72936ZM65.1308 9.43107C63.4427 9.66028 62.3072 11.5921 61.8716 13.0733L61.9662 13.2609C63.3728 13.0419 67.0057 12.6871 67.1894 10.8609C67.3248 9.51389 66.2348 9.28075 65.1308 9.43068V9.43107Z" fill="white"/>
+                        <path d="M174.141 0.648106C175.398 0.411046 180.669 0.589626 182.128 0.703054C190.684 1.36753 191.947 12.0011 187.455 17.7949C183.316 23.1327 177.188 21.8387 171.211 21.9635C171.144 21.8717 171.164 20.5098 171.179 20.2747C171.449 15.9334 172.404 11.0619 172.971 6.69471C173.223 4.75584 173.311 2.78832 173.649 0.863187C173.734 0.713258 173.984 0.678328 174.141 0.648891V0.648106ZM177.589 3.93673C177.327 4.02582 177.196 5.08631 177.151 5.38186C176.634 8.76153 176.247 12.5525 175.897 15.9703C175.854 16.3914 175.494 18.7891 175.854 18.8845C178.335 18.9163 180.71 19.0792 182.818 17.5532C185.861 15.3498 186.672 9.37656 184.952 6.19351C183.377 3.27853 180.388 3.99128 177.589 3.93673H177.589Z" fill="white"/>
+                        <path d="M28.6208 2.30694C33.2993 5.10652 33.8523 11.6229 30.3776 15.642C28.5278 17.7818 22.088 24.5251 19.9316 25.4368C16.7325 26.7897 13.3454 26.3281 10.6039 24.2303L10.7216 24.0725C15.276 25.0243 18.3409 22.1246 21.2787 19.2544C23.0107 17.5624 28.4226 12.2941 28.8532 10.3544C29.5067 7.4104 26.6058 4.42596 23.6701 4.78312C20.7343 5.14028 15.5778 12.4134 12.9584 14.3907C12.162 14.992 11.434 15.1934 10.5065 14.6615C10.2306 14.5034 7.1245 11.4652 6.88234 11.1284C5.33831 8.98191 7.73599 6.79107 9.85462 8.39358C10.3962 8.80333 11.1573 10.1287 11.8818 9.78572C16.2246 5.85421 19.4536 -0.445947 26.439 1.38892C27.1098 1.56514 28.0258 1.95056 28.6205 2.30654L28.6208 2.30694Z" fill="white"/>
+                        <path d="M14.4934 3.40567C14.7313 3.62114 15.2623 3.96496 15.119 4.31388C14.9746 4.66593 12.9411 6.22998 12.6672 6.73511L12.4431 6.67231C9.02808 2.29258 1.95827 6.89328 4.74844 11.7726C5.25906 12.6655 9.03005 16.4385 9.92295 16.9538C11.8524 18.0681 13.5126 17.4444 15.1234 16.1983C16.8122 14.8917 22.4181 8.23558 23.552 7.9573C25.1902 7.5554 26.7303 9.0174 25.9771 10.6764C25.5654 11.5835 19.2566 17.7105 18.1003 18.7455C15.07 21.4584 11.1973 22.2626 7.53311 20.1447C6.53346 19.567 2.59802 15.7756 1.82012 14.7591C-4.44628 6.57419 6.87413 -3.49263 14.4934 3.40567Z" fill="white"/>
+                        <path d="M87.5954 19.7628C86.0832 21.2072 84.3108 22.7378 82.0838 22.095C77.2319 20.6942 78.9223 12.9972 81.3989 10.0806C84.2201 6.75825 89.03 5.8728 92.9976 7.42469L91.1682 21.9599C90.9696 22.1664 88.6175 22.0345 88.2305 21.7562C87.7795 21.2036 87.5935 20.465 87.5954 19.7628ZM88.8526 9.41026C84.9678 9.16378 82.8197 12.6777 82.8849 16.1975C82.9547 19.9626 85.5922 19.7852 87.1661 17.0193C88.4562 14.7528 88.6057 11.9543 88.8522 9.41026H88.8526Z" fill="white"/>
+                        <path d="M146.848 6.58823L141.518 13.9979L145.671 22.0364L144.804 21.9783L140.842 14.8163C140.525 14.7782 139.694 15.9478 139.721 16.2539L142.692 22.0788L141.635 21.8751L138.883 17.0205L135.024 21.7891C134.235 22.2892 132.065 21.9705 131.074 22.1153L137.26 13.9014L133.618 6.58391C133.708 6.47009 134.099 6.4854 134.235 6.5274C134.866 6.72128 137.18 12.3495 138.029 13.0933L139.126 11.6042L136.41 6.43163C138.578 6.48226 138.749 9.49143 139.912 10.8184C140.43 10.8926 142.374 6.98111 143.197 6.58588C144.063 6.16945 145.863 6.58352 146.849 6.58902L146.848 6.58823Z" fill="white"/>
+                        <path d="M120.559 22.0368L123.168 0.294363L123.352 0.0156991L126.993 0L124.382 21.7405L124.208 22.0368H120.559Z" fill="white"/>
+                        <path d="M126.129 22.0369L127.864 6.91101L131.666 6.89648L129.876 21.9373L129.7 22.0369H126.129Z" fill="white"/>
+                        <path d="M130.23 4.87223C131.55 4.87223 132.62 3.80297 132.62 2.48397C132.62 1.16497 131.55 0.0957031 130.23 0.0957031C128.91 0.0957031 127.84 1.16497 127.84 2.48397C127.84 3.80297 128.91 4.87223 130.23 4.87223Z" fill="white"/>
+                        </svg>
+                                   
+                    <p class="footer-tagline" style="color: white; text-align: center; margin-top: 3rem; font-weight: lighter;">Clinically guided weight loss—fast, affordable,<br>and entirely online.</p>
+                    
+                    <div class="social-icons" style="margin: 30px 0px; ">
+                        <a href="https://www.facebook.com/metabolixmd" class="social-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M22 12.3038C22 6.74719 17.5229 2.24268 12 2.24268C6.47715 2.24268 2 6.74719 2 12.3038C2 17.3255 5.65684 21.4879 10.4375 22.2427V15.2121H7.89844V12.3038H10.4375V10.0872C10.4375 7.56564 11.9305 6.1728 14.2146 6.1728C15.3088 6.1728 16.4531 6.36931 16.4531 6.36931V8.84529H15.1922C13.95 8.84529 13.5625 9.6209 13.5625 10.4166V12.3038H16.3359L15.8926 15.2121H13.5625V22.2427C18.3432 21.4879 22 17.3257 22 12.3038Z" fill="white"/>
+                            </svg>
+                            
+                            </a>
+                        <a href="https://www.instagram.com/metabolixmd" class="social-icon" style="margin-left: 5px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M16 3.24268H8C5.23858 3.24268 3 5.48126 3 8.24268V16.2427C3 19.0041 5.23858 21.2427 8 21.2427H16C18.7614 21.2427 21 19.0041 21 16.2427V8.24268C21 5.48126 18.7614 3.24268 16 3.24268ZM19.25 16.2427C19.2445 18.0353 17.7926 19.4872 16 19.4927H8C6.20735 19.4872 4.75549 18.0353 4.75 16.2427V8.24268C4.75549 6.45003 6.20735 4.99817 8 4.99268H16C17.7926 4.99817 19.2445 6.45003 19.25 8.24268V16.2427ZM16.75 8.49268C17.3023 8.49268 17.75 8.04496 17.75 7.49268C17.75 6.9404 17.3023 6.49268 16.75 6.49268C16.1977 6.49268 15.75 6.9404 15.75 7.49268C15.75 8.04496 16.1977 8.49268 16.75 8.49268ZM12 7.74268C9.51472 7.74268 7.5 9.7574 7.5 12.2427C7.5 14.728 9.51472 16.7427 12 16.7427C14.4853 16.7427 16.5 14.728 16.5 12.2427C16.5027 11.0484 16.0294 9.90225 15.1849 9.05776C14.3404 8.21327 13.1943 7.74002 12 7.74268ZM9.25 12.2427C9.25 13.7615 10.4812 14.9927 12 14.9927C13.5188 14.9927 14.75 13.7615 14.75 12.2427C14.75 10.7239 13.5188 9.49268 12 9.49268C10.4812 9.49268 9.25 10.7239 9.25 12.2427Z" fill="white"/>
+                            </svg>
+                            
+                            </a>
+                        <a href="https://www.x.com/metabolixmd" class="social-icon" style="margin-left: 5px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17.1761 4.24268H19.9362L13.9061 11.0201L21 20.2427H15.4456L11.0951 14.6493L6.11723 20.2427H3.35544L9.80517 12.9935L3 4.24268H8.69545L12.6279 9.3553L17.1761 4.24268ZM16.2073 18.6181H17.7368L7.86441 5.78196H6.2232L16.2073 18.6181Z" fill="white"/>
+                            </svg>
+                            
+                            </a>
+                    </div>
+          
+                    <div class="footer-buttons" style="display: flex; justify-content: space-between; margin-bottom: 30px; width: 85%; ">
+                        <a href="https://www.metabolixmd.com/profile-details" class="footer-button" style="background-color: #365D56; color: white; padding: 10px 0px; border-radius: 25px; font-size: 12px; text-decoration: none; flex:  0 0 30%; text-align: center;">Account Log In</a>
+                        <a href="https://www.metabolixmd.com/get-started" class="footer-button" style="background-color: #365D56; color: white; padding: 10px 0px; border-radius: 25px; font-size: 12px; text-decoration: none; flex:  0 0 30%; text-align: center;">Refill Prescription</a>
+                        <a href="https://www.metabolixmd.com/contact-us" class="footer-button" style="background-color: #365D56; color: white; padding: 10px 0px; border-radius: 25px; font-size: 12px; text-decoration: none; flex:  0 0 30%; text-align: center;">Contact Support</a>
+                    </div>
+          
+                    <p class="footer-address" style="font-size: 12px; color:white; text-align: center; line-height: 150%;">MetabolixMD 2025.<br>4414 82nd St, Suite 212, Lubbock, TX 79424<br>info@metabolixmd.com</p>
+          
+                    <div class="footer-links" style="color: rgba(255, 255, 255, 0.6); margin: 10px 5px;">
+                        <a href="https://www.metabolixmd.com/privacy-policy" class="footer-link" style="color: white; opacity: 70%; font-size: 15px;">Privacy Policy</a>
+                    </div>
+                    
+                    <p class="footer-disclaimer" style="font-size: 10px; margin-top: 20px; color: #FFFFFFB2; width: 70%; display: flex; justify-content: center; align-items: center; text-align: center; margin-bottom: 80px;">This email has been sent on behalf of MetabolixMD. Click here to manage your email preferences.</p>
+                </div>
+              </div>
         </div>
-
-        <div class="footer">
-          <svg width="190" height="27" viewBox="0 0 190 27" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M98.1885 9.25378C100.799 6.5586 105.092 5.1853 106.858 9.56973C107.01 9.94691 107.335 11.5333 107.645 11.5314C107.791 11.5306 109.088 9.55207 109.409 9.21336C114.347 3.99999 121.922 7.18657 120.69 14.683C119.932 19.3002 115.28 23.8039 110.456 21.7375C108.013 20.6908 107.173 18.7095 106.702 16.2345C106.498 16.1752 105.458 18.5156 105.237 18.8469C103.209 21.8922 99.4495 23.6776 96.4223 20.7803L95.5204 21.8419L92.7891 21.9848L95.3771 0.131279L99.1975 0.125L98.1889 9.25418L98.1885 9.25378ZM114.181 9.66825C110.23 10.091 109.101 20.8564 114.141 19.1173C116.983 18.1365 118.735 9.18078 114.181 9.66825ZM101.072 9.74439C98.4385 10.1275 96.8199 15.877 96.9255 18.0776C96.9745 19.1012 98.7034 19.3583 99.4817 19.2908C102.583 19.0223 103.868 13.6378 103.11 11.1978C102.788 10.1585 102.22 9.57719 101.072 9.74439Z" fill="white"/>
-              <path d="M146.77 22.0365L149.55 0.778365C150.457 0.759526 152.851 0.4424 153.514 0.984812C155.435 5.25661 156.625 9.91343 158.302 14.3155L158.58 14.5871L166.664 1.17517C166.855 0.962049 167.084 0.763451 167.377 0.710858C168.001 0.599 169.965 0.603318 170.667 0.620587C170.812 0.62412 170.958 0.650808 171.086 0.717138C170.913 2.97824 170.434 5.23463 170.158 7.49063C169.647 11.6729 169.365 16.024 168.731 20.1804C168.64 20.7813 168.587 21.4897 168.312 22.0361H164.977L166.238 8.42474L165.955 8.38588C165.602 8.87492 165.274 9.3824 164.944 9.88674C163.884 11.5101 160.247 18.4135 159.209 19.1341C158.545 19.5944 157.458 19.7448 156.798 19.2137C155.878 18.4735 153.48 10.1352 152.716 8.37018C152.663 8.24969 152.378 7.60876 152.303 7.60837L150.301 22.0361H146.77L146.77 22.0365Z" fill="white"/>
-              <path d="M55.9471 21.9396L52.6702 21.9593L54.3967 7.29411L54.0478 7.45424C52.3272 9.37977 48.3796 18.2939 46.6389 19.2645C43.6808 20.9141 43.0234 15.5924 42.3907 13.8407C41.822 12.2669 40.7528 8.83264 40.0515 7.55158C40.0044 7.46523 39.8792 7.26114 39.7614 7.29254L38.0141 21.9381L37.8061 22.1096L34.5469 21.9534L37.1522 0.882489C37.3559 0.651708 40.1158 0.638757 40.5468 0.704301C41.4931 0.848343 41.9252 2.67614 42.2341 3.48858C43.5819 7.03311 44.5156 10.819 46.016 14.296C46.0627 14.4047 46.1134 14.5955 46.2735 14.5876L54.3206 1.13878C55.197 0.314958 57.5131 0.856193 58.6756 0.703124C58.7828 0.834999 58.7843 0.963341 58.7855 1.12347C58.7985 2.65691 58.1257 5.27242 57.9303 6.94205C57.5657 10.0552 57.1995 13.1056 56.7642 16.207C56.4965 18.1157 56.5417 20.0887 55.9471 21.9393V21.9396Z" fill="white"/>
-              <path d="M76.4555 9.72936C76.1812 12.1227 75.5964 14.4788 75.5061 16.8969C75.4896 17.342 75.4103 18.6317 75.7243 18.9029C76.4712 19.5481 77.5753 18.5563 78.0192 18.7832L78.9505 20.7625C78.9764 21.3104 76.3491 22.2072 75.8554 22.2641C73.6339 22.5196 71.4486 21.1832 71.5004 18.7824L72.5279 9.9205L72.3984 9.73446L70.6428 9.60494C71.5534 13.6216 66.5826 14.9337 63.5977 15.5044C63.1727 15.5856 61.6914 15.5534 61.6177 15.9636C61.5584 16.294 61.8394 17.5076 61.996 17.855C62.6644 19.3385 64.2261 19.3939 65.6379 19.1113C66.5869 18.9213 68.3774 17.6834 69.1078 17.8047L70.2535 19.1804C70.2707 19.7809 68.231 20.9242 67.7145 21.186C59.165 25.5194 54.7786 15.8223 60.052 9.45148C62.6307 6.33634 68.1156 5.47287 70.5647 9.174C70.4273 6.98394 71.5863 7.51143 73.0817 6.84303C73.6579 6.02274 74.0523 3.19136 74.612 2.59165C74.979 2.19838 77.0144 2.11125 77.2417 2.4633L76.8782 6.90544C79.0734 7.17311 81.2281 6.50197 79.8517 9.63163L76.4559 9.72858L76.4555 9.72936ZM65.1308 9.43107C63.4427 9.66028 62.3072 11.5921 61.8716 13.0733L61.9662 13.2609C63.3728 13.0419 67.0057 12.6871 67.1894 10.8609C67.3248 9.51389 66.2348 9.28075 65.1308 9.43068V9.43107Z" fill="white"/>
-              <path d="M174.141 0.648106C175.398 0.411046 180.669 0.589626 182.128 0.703054C190.684 1.36753 191.947 12.0011 187.455 17.7949C183.316 23.1327 177.188 21.8387 171.211 21.9635C171.144 21.8717 171.164 20.5098 171.179 20.2747C171.449 15.9334 172.404 11.0619 172.971 6.69471C173.223 4.75584 173.311 2.78832 173.649 0.863187C173.734 0.713258 173.984 0.678328 174.141 0.648891V0.648106ZM177.589 3.93673C177.327 4.02582 177.196 5.08631 177.151 5.38186C176.634 8.76153 176.247 12.5525 175.897 15.9703C175.854 16.3914 175.494 18.7891 175.854 18.8845C178.335 18.9163 180.71 19.0792 182.818 17.5532C185.861 15.3498 186.672 9.37656 184.952 6.19351C183.377 3.27853 180.388 3.99128 177.589 3.93673H177.589Z" fill="white"/>
-              <path d="M28.6208 2.30694C33.2993 5.10652 33.8523 11.6229 30.3776 15.642C28.5278 17.7818 22.088 24.5251 19.9316 25.4368C16.7325 26.7897 13.3454 26.3281 10.6039 24.2303L10.7216 24.0725C15.276 25.0243 18.3409 22.1246 21.2787 19.2544C23.0107 17.5624 28.4226 12.2941 28.8532 10.3544C29.5067 7.4104 26.6058 4.42596 23.6701 4.78312C20.7343 5.14028 15.5778 12.4134 12.9584 14.3907C12.162 14.992 11.434 15.1934 10.5065 14.6615C10.2306 14.5034 7.1245 11.4652 6.88234 11.1284C5.33831 8.98191 7.73599 6.79107 9.85462 8.39358C10.3962 8.80333 11.1573 10.1287 11.8818 9.78572C16.2246 5.85421 19.4536 -0.445947 26.439 1.38892C27.1098 1.56514 28.0258 1.95056 28.6205 2.30654L28.6208 2.30694Z" fill="white"/>
-              <path d="M14.4934 3.40567C14.7313 3.62114 15.2623 3.96496 15.119 4.31388C14.9746 4.66593 12.9411 6.22998 12.6672 6.73511L12.4431 6.67231C9.02808 2.29258 1.95827 6.89328 4.74844 11.7726C5.25906 12.6655 9.03005 16.4385 9.92295 16.9538C11.8524 18.0681 13.5126 17.4444 15.1234 16.1983C16.8122 14.8917 22.4181 8.23558 23.552 7.9573C25.1902 7.5554 26.7303 9.0174 25.9771 10.6764C25.5654 11.5835 19.2566 17.7105 18.1003 18.7455C15.07 21.4584 11.1973 22.2626 7.53311 20.1447C6.53346 19.567 2.59802 15.7756 1.82012 14.7591C-4.44628 6.57419 6.87413 -3.49263 14.4934 3.40567Z" fill="white"/>
-              <path d="M87.5954 19.7628C86.0832 21.2072 84.3108 22.7378 82.0838 22.095C77.2319 20.6942 78.9223 12.9972 81.3989 10.0806C84.2201 6.75825 89.03 5.8728 92.9976 7.42469L91.1682 21.9599C90.9696 22.1664 88.6175 22.0345 88.2305 21.7562C87.7795 21.2036 87.5935 20.465 87.5954 19.7628ZM88.8526 9.41026C84.9678 9.16378 82.8197 12.6777 82.8849 16.1975C82.9547 19.9626 85.5922 19.7852 87.1661 17.0193C88.4562 14.7528 88.6057 11.9543 88.8522 9.41026H88.8526Z" fill="white"/>
-              <path d="M146.848 6.58823L141.518 13.9979L145.671 22.0364L144.804 21.9783L140.842 14.8163C140.525 14.7782 139.694 15.9478 139.721 16.2539L142.692 22.0788L141.635 21.8751L138.883 17.0205L135.024 21.7891C134.235 22.2892 132.065 21.9705 131.074 22.1153L137.26 13.9014L133.618 6.58391C133.708 6.47009 134.099 6.4854 134.235 6.5274C134.866 6.72128 137.18 12.3495 138.029 13.0933L139.126 11.6042L136.41 6.43163C138.578 6.48226 138.749 9.49143 139.912 10.8184C140.43 10.8926 142.374 6.98111 143.197 6.58588C144.063 6.16945 145.863 6.58352 146.849 6.58902L146.848 6.58823Z" fill="white"/>
-              <path d="M120.559 22.0368L123.168 0.294363L123.352 0.0156991L126.993 0L124.382 21.7405L124.208 22.0368H120.559Z" fill="white"/>
-              <path d="M126.129 22.0369L127.864 6.91101L131.666 6.89648L129.876 21.9373L129.7 22.0369H126.129Z" fill="white"/>
-              <path d="M130.23 4.87223C131.55 4.87223 132.62 3.80297 132.62 2.48397C132.62 1.16497 131.55 0.0957031 130.23 0.0957031C128.91 0.0957031 127.84 1.16497 127.84 2.48397C127.84 3.80297 128.91 4.87223 130.23 4.87223Z" fill="white"/>
-              </svg>
-                         
-          <p class="footer-tagline">Clinically guided weight loss—fast, affordable,<br>and entirely online.</p>
-          
-          <div class="social-icons">
-              <a href="#" class="social-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M22 12.3038C22 6.74719 17.5229 2.24268 12 2.24268C6.47715 2.24268 2 6.74719 2 12.3038C2 17.3255 5.65684 21.4879 10.4375 22.2427V15.2121H7.89844V12.3038H10.4375V10.0872C10.4375 7.56564 11.9305 6.1728 14.2146 6.1728C15.3088 6.1728 16.4531 6.36931 16.4531 6.36931V8.84529H15.1922C13.95 8.84529 13.5625 9.6209 13.5625 10.4166V12.3038H16.3359L15.8926 15.2121H13.5625V22.2427C18.3432 21.4879 22 17.3257 22 12.3038Z" fill="white"/>
-                  </svg>
-                  </a>
-              <a href="https://www.instagram.com/metabolixmd" class="social-icon"><svg width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path fill-rule="evenodd" clip-rule="evenodd" d="M13 0.242676H5C2.23858 0.242676 0 2.48126 0 5.24268V13.2427C0 16.0041 2.23858 18.2427 5 18.2427H13C15.7614 18.2427 18 16.0041 18 13.2427V5.24268C18 2.48126 15.7614 0.242676 13 0.242676ZM16.25 13.2427C16.2445 15.0353 14.7926 16.4872 13 16.4927H5C3.20735 16.4872 1.75549 15.0353 1.75 13.2427V5.24268C1.75549 3.45003 3.20735 1.99817 5 1.99268H13C14.7926 1.99817 16.2445 3.45003 16.25 5.24268V13.2427ZM13.75 5.49268C14.3023 5.49268 14.75 5.04496 14.75 4.49268C14.75 3.9404 14.3023 3.49268 13.75 3.49268C13.1977 3.49268 12.75 3.9404 12.75 4.49268C12.75 5.04496 13.1977 5.49268 13.75 5.49268ZM9 4.74268C6.51472 4.74268 4.5 6.7574 4.5 9.24268C4.5 11.728 6.51472 13.7427 9 13.7427C11.4853 13.7427 13.5 11.728 13.5 9.24268C13.5027 8.04838 13.0294 6.90225 12.1849 6.05776C11.3404 5.21327 10.1943 4.74002 9 4.74268ZM6.25 9.24268C6.25 10.7615 7.4812 11.9927 9 11.9927C10.5188 11.9927 11.75 10.7615 11.75 9.24268C11.75 7.72388 10.5188 6.49268 9 6.49268C7.4812 6.49268 6.25 7.72388 6.25 9.24268Z" fill="white"/>
-                  </svg>
-                  </a>
-              <a href="#" class="social-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M17.1761 4.24268H19.9362L13.9061 11.0201L21 20.2427H15.4456L11.0951 14.6493L6.11723 20.2427H3.35544L9.80517 12.9935L3 4.24268H8.69545L12.6279 9.3553L17.1761 4.24268ZM16.2073 18.6181H17.7368L7.86441 5.78196H6.2232L16.2073 18.6181Z" fill="white"/>
-                  </svg>
-                  </a>
-              <a href="#" class="social-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path fill-rule="evenodd" clip-rule="evenodd" d="M4.5 3.24268C3.67157 3.24268 3 3.91425 3 4.74268V19.7427C3 20.5711 3.67157 21.2427 4.5 21.2427H19.5C20.3284 21.2427 21 20.5711 21 19.7427V4.74268C21 3.91425 20.3284 3.24268 19.5 3.24268H4.5ZM8.52076 7.2454C8.52639 8.20165 7.81061 8.79087 6.96123 8.78665C6.16107 8.78243 5.46357 8.1454 5.46779 7.24681C5.47201 6.40165 6.13998 5.72243 7.00764 5.74212C7.88795 5.76181 8.52639 6.40728 8.52076 7.2454ZM12.2797 10.0044H9.75971H9.7583V18.5643H12.4217V18.3646C12.4217 17.9847 12.4214 17.6047 12.4211 17.2246C12.4203 16.2108 12.4194 15.1959 12.4246 14.1824C12.426 13.9363 12.4372 13.6804 12.5005 13.4455C12.7381 12.568 13.5271 12.0013 14.4074 12.1406C14.9727 12.2291 15.3467 12.5568 15.5042 13.0898C15.6013 13.423 15.6449 13.7816 15.6491 14.129C15.6605 15.1766 15.6589 16.2242 15.6573 17.2719C15.6567 17.6417 15.6561 18.0117 15.6561 18.3815V18.5629H18.328V18.3576C18.328 17.9056 18.3278 17.4537 18.3275 17.0018C18.327 15.8723 18.3264 14.7428 18.3294 13.6129C18.3308 13.1024 18.276 12.599 18.1508 12.1054C17.9638 11.3713 17.5771 10.7638 16.9485 10.3251C16.5027 10.0129 16.0133 9.81178 15.4663 9.78928C15.404 9.78669 15.3412 9.7833 15.2781 9.77989C14.9984 9.76477 14.7141 9.74941 14.4467 9.80334C13.6817 9.95662 13.0096 10.3068 12.5019 10.9241C12.4429 10.9949 12.3852 11.0668 12.2991 11.1741L12.2797 11.1984V10.0044ZM5.68164 18.5671H8.33242V10.01H5.68164V18.5671Z" fill="white"/>
-                  </svg>
-                  </a>
-              <a href="#" class="social-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M21.593 7.20301C21.4791 6.78041 21.2565 6.39501 20.9474 6.08518C20.6382 5.77534 20.2533 5.55187 19.831 5.43701C18.265 5.00701 12 5.00001 12 5.00001C12 5.00001 5.736 4.99301 4.169 5.40401C3.74693 5.52415 3.36282 5.75078 3.05357 6.06214C2.74431 6.3735 2.52029 6.75913 2.403 7.18201C1.99 8.74801 1.986 11.996 1.986 11.996C1.986 11.996 1.982 15.26 2.392 16.81C2.622 17.667 3.297 18.344 4.155 18.575C5.737 19.005 11.985 19.012 11.985 19.012C11.985 19.012 18.25 19.019 19.816 18.609C20.2385 18.4943 20.6237 18.2714 20.9337 17.9622C21.2436 17.653 21.4674 17.2682 21.583 16.846C21.997 15.281 22 12.034 22 12.034C22 12.034 22.02 8.76901 21.593 7.20301ZM9.996 15.005L10.001 9.00501L15.208 12.01L9.996 15.005Z" fill="white"/>
-                  </svg>
-                  </a>
-          </div>
-
-          <div class="footer-buttons" style="display: flex; justify-content: space-between; margin-bottom: 30px;">
-              <a href="https://www.metabolixmd.com" class="footer-button" style="background-color: #365D56; color: white; padding: 10px 15px; border-radius: 25px; font-size: 12px; text-decoration: none; flex:  0 0 30%; text-align: center;">Account Log In</a>
-              <a href="https://www.metabolixmd.com/get-started" class="footer-button" style="background-color: #365D56; color: white; padding: 10px 15px; border-radius: 25px; font-size: 12px; text-decoration: none; flex:  0 0 30%; text-align: center;">Refill Prescription</a>
-              <a href="https://www.metabolixmd.com/contact-us" class="footer-button" style="background-color: #365D56; color: white; padding: 10px 15px; border-radius: 25px; font-size: 12px; text-decoration: none; flex:  0 0 30%; text-align: center;">Contact Support</a>
-          </div>
-
-          <p class="footer-address" style="font-size: 12px; line-height: 150px; margin-bottom: 30px;">MetabolixMD 2025.<br>4414 82nd St, Suite 212, Lubbock, TX 79424<br>info@metabolixmd.com</p>
-
-          <div class="footer-links" style="color: rgba(255, 255, 255, 0.6); margin: 0 5px;">
-              <a href="https://www.metabolixmd.com/Privacy-policy" class="footer-link">Privacy Policy</a>
-          </div>
-          
-          <p class="footer-disclaimer" style="font-size: 10px; margin-top: 20px; color: #FFFFFFB2; width: 70%; display: flex; justify-content: center; align-items: center;">This email has been sent on behalf of MetabolixMD. Click here to manage your email preferences.</p>
-      </div>
-    </div>
 </body>
 </html>
