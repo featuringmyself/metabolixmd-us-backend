@@ -58,6 +58,7 @@ const createOrder = catchAsync(async (req, res) => {
     // Schedule welcome email after 5 minutes if no meeting link exists
     setTimeout(async () => {
       const updatedOrder = await orderService.getOrderById(order._id);
+      
       if (!updatedOrder.meetLink) {
         const html = await ejs.renderFile(path.join(__dirname, '../views/ordermail.ejs'), {order: updatedOrder});
         await sendEmail({
