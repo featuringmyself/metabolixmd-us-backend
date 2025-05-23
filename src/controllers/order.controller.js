@@ -55,20 +55,13 @@ const createOrder = catchAsync(async (req, res) => {
       `You have received an order from ${user.name ?? " "}. Please check admin panel.`
     );
 
-    // Schedule welcome email after 5 minutes if no meeting link exists
-    setTimeout(async () => {
       const updatedOrder = await orderService.getOrderById(order._id);
-      
-      if (!updatedOrder.meetLink) {
-        const html = await ejs.renderFile(path.join(__dirname, '../views/ordermail.ejs'), {order: updatedOrder});
-        await sendEmail({
-          to: user.email,
-          subject: "Welcome to MetabolixMD – Let's Get Started!",
-          html: html,
-        });
-      }
-    }, 5 * 60 * 1000); // 5 minutes in milliseconds
-
+      const html = await ejs.renderFile(path.join(__dirname, '../views/ordermail.ejs'), {order: updatedOrder});
+      await sendEmail({
+        to: user.email,
+        subject: "Welcome to MetabolixMD – Let's Get Started!",
+        html: html,
+      });
     const checkout = await createCheckoutSession(totalValue, user, order._id, order.orderItems);
     return res.status(200).send({status: true, data: checkout, message: "Order is created"});
   }
