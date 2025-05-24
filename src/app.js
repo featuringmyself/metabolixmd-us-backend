@@ -39,8 +39,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use(compression());
 
 // enable cors
-app.use(cors());
-app.options("*", cors());
+const corsOptions = {
+  origin: ["https://www.metabolixmd.com", "https://metabolixmd.com", "http://localhost:3000"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
+
 
 const path = require('path');
 
