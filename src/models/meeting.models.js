@@ -24,6 +24,10 @@ const meetingSchema = new mongoose.Schema(
     notes: {
       type: String,
     },
+    startTime: {
+      type: String,
+      required: true,
+    },
     type: {
       type: String,
       enum: ["consultation", "follow-up", "emergency"],

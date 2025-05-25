@@ -18,14 +18,14 @@ const getMeetingById = async (id) => {
 
 const getMeetingsByUser = async (userId) => {
   const meetings = await Meeting.find({ user: userId })
-    .sort({ meetTime: -1 })
+    .sort({ startTime: -1 })
     .populate('order', 'orderNo status');
   return meetings;
 };
 
 const getMeetingsByOrder = async (orderId) => {
   const meetings = await Meeting.find({ order: orderId })
-    .sort({ meetTime: -1 });
+    .sort({ startTime: -1 });
   return meetings;
 };
 

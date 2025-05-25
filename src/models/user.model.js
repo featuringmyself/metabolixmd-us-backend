@@ -24,6 +24,7 @@ const userSchema = new mongoose.Schema(
       },
       default: null,
     },
+    // Non-PHI demographic data
     detail:{
       accomplish_with_body_program:[String],
       height:{
@@ -41,15 +42,115 @@ const userSchema = new mongoose.Schema(
       },
       zipCode:String,
       seen_primary_care_provider:Boolean,
-      heart_condition:[String],
-      hormone_kidney_liver_condition:[String],
-      type_2_diabetes:String,
-      diabetic:String,
-      additional_condition:[String],
-      allergies:[String],
-      allergy_GLP_1:Boolean,
-      medications:[String],
-      describe_yourself:[String]
+    },
+    // PHI data with encryption
+    phi: {
+      // Encrypted medical conditions
+      heart_condition: {
+        type: String,
+        get: function(data) {
+          try {
+            return data ? JSON.parse(require('../utils/encryption').decrypt(data)) : [];
+          } catch (e) {
+            return [];
+          }
+        },
+        set: function(data) {
+          return data && data.length ? require('../utils/encryption').encrypt(JSON.stringify(data)) : null;
+        }
+      },
+      hormone_kidney_liver_condition: {
+        type: String,
+        get: function(data) {
+          try {
+            return data ? JSON.parse(require('../utils/encryption').decrypt(data)) : [];
+          } catch (e) {
+            return [];
+          }
+        },
+        set: function(data) {
+          return data && data.length ? require('../utils/encryption').encrypt(JSON.stringify(data)) : null;
+        }
+      },
+      type_2_diabetes: {
+        type: String,
+        get: function(data) {
+          return data ? require('../utils/encryption').decrypt(data) : null;
+        },
+        set: function(data) {
+          return data ? require('../utils/encryption').encrypt(data) : null;
+        }
+      },
+      diabetic: {
+        type: String,
+        get: function(data) {
+          return data ? require('../utils/encryption').decrypt(data) : null;
+        },
+        set: function(data) {
+          return data ? require('../utils/encryption').encrypt(data) : null;
+        }
+      },
+      additional_condition: {
+        type: String,
+        get: function(data) {
+          try {
+            return data ? JSON.parse(require('../utils/encryption').decrypt(data)) : [];
+          } catch (e) {
+            return [];
+          }
+        },
+        set: function(data) {
+          return data && data.length ? require('../utils/encryption').encrypt(JSON.stringify(data)) : null;
+        }
+      },
+      allergies: {
+        type: String,
+        get: function(data) {
+          try {
+            return data ? JSON.parse(require('../utils/encryption').decrypt(data)) : [];
+          } catch (e) {
+            return [];
+          }
+        },
+        set: function(data) {
+          return data && data.length ? require('../utils/encryption').encrypt(JSON.stringify(data)) : null;
+        }
+      },
+      allergy_GLP_1: {
+        type: String,
+        get: function(data) {
+          return data ? require('../utils/encryption').decrypt(data) === 'true' : false;
+        },
+        set: function(data) {
+          return data !== undefined ? require('../utils/encryption').encrypt(String(data)) : null;
+        }
+      },
+      medications: {
+        type: String,
+        get: function(data) {
+          try {
+            return data ? JSON.parse(require('../utils/encryption').decrypt(data)) : [];
+          } catch (e) {
+            return [];
+          }
+        },
+        set: function(data) {
+          return data && data.length ? require('../utils/encryption').encrypt(JSON.stringify(data)) : null;
+        }
+      },
+      describe_yourself: {
+        type: String,
+        get: function(data) {
+          try {
+            return data ? JSON.parse(require('../utils/encryption').decrypt(data)) : [];
+          } catch (e) {
+            return [];
+          }
+        },
+        set: function(data) {
+          return data && data.length ? require('../utils/encryption').encrypt(JSON.stringify(data)) : null;
+        }
+      }
     },
     firebaseUid: {
       type: String,
@@ -70,7 +171,11 @@ const userSchema = new mongoose.Schema(
       default: false,
     }
   },
-  {timestamps: true}
+  {
+    timestamps: true,
+    toJSON: { getters: true },
+    toObject: { getters: true }
+  }
 );
 
 const vendorSchema = new mongoose.Schema(
@@ -84,9 +189,21 @@ const vendorSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    
+    // HIPAA compliance fields for providers
+    npiNumber: {
+      type: String
+    },
+    medicalLicense: {
+      number: String,
+      state: String,
+      expirationDate: Date
+    }
   },
-  { timestamps: true }
+  { 
+    timestamps: true,
+    toJSON: { getters: true },
+    toObject: { getters: true }
+  }
 );
 
 
@@ -102,7 +219,11 @@ const adminSchema = new mongoose.Schema(
       default: false,
     }
   },
-  { timestamps: true }
+  { 
+    timestamps: true,
+    toJSON: { getters: true },
+    toObject: { getters: true }
+  }
 );
 
 

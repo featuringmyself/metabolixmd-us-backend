@@ -9,17 +9,20 @@ const ApiError = require('../utils/ApiError');
 const httpStatus = require('http-status');
 
 const createMeeting = catchAsync(async (req, res) => {
-  const { orderId, meetLink, meetTime, duration, type, notes } = req.body;
+  const { orderId, meetLink, meetTime, duration, startTime, type, notes } = req.body;
+  
+  console.log('Meeting creation request received:', req.body);
   
   // Create meeting object
   const meetingData = {
     user: req.user._id,
     meetLink,
-    meetTime,
-    duration,
-    type,
-    notes
+    startTime,
+    type: type || 'consultation',
+    notes: notes || 'Scheduled via Calendly'
   };
+  
+  console.log('Processed meeting data:', meetingData);
 
   // If orderId is provided, validate and add it to meeting data
   if (orderId) {
@@ -34,14 +37,16 @@ const createMeeting = catchAsync(async (req, res) => {
   }
 
   // Create meeting
+  console.log('Creating meeting with data:', meetingData);
   const meeting = await meetingService.createMeeting(meetingData);
+  console.log('Meeting created:', meeting);
 
   // Send confirmation email
   const user = await userService.getUserById(req.user._id);
   const html = await ejs.renderFile(path.join(__dirname, '../views/scheduleMeetMail.ejs'), {
     name: user.name,
     meetLink,
-    meetTime
+    meetTime: startTime // Using startTime as meetTime
   });
 
   await sendEmail({

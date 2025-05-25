@@ -12,6 +12,8 @@ const config = require("./config/config");
 const ApiError = require("./utils/ApiError");
 const { errorConverter, errorHandler } = require("./middlewares/error");
 const ejs = require('ejs');
+const hipaaLogger = require('./middlewares/hipaaLogger');
+const sessionTimeout = require('./middlewares/sessionTimeout');
 
 const app = express();
 
@@ -22,8 +24,32 @@ if (config.env !== "test") {
   app.use(morgan.errorHandler);
 }
 
-// set security HTTP headers
-app.use(helmet());
+// set security HTTP headers with HIPAA-compliant settings
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "https://www.google-analytics.com", "https://js.stripe.com"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      imgSrc: ["'self'", "data:", "https://www.google-analytics.com", "https://*.stripe.com"],
+      connectSrc: ["'self'", "https://www.google-analytics.com", "https://api.stripe.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      objectSrc: ["'none'"],
+      mediaSrc: ["'self'"],
+      frameSrc: ["'self'", "https://js.stripe.com", "https://hooks.stripe.com"],
+    },
+  },
+  xssFilter: true,
+  hsts: {
+    maxAge: 31536000, // 1 year in seconds
+    includeSubDomains: true,
+    preload: true
+  },
+  frameguard: {
+    action: 'deny'
+  },
+  referrerPolicy: { policy: 'strict-origin-when-cross-origin' }
+}));
 
 // parse json request body
 app.use(express.json({
@@ -38,16 +64,18 @@ app.use(express.urlencoded({ extended: true }));
 // gzip compression
 app.use(compression());
 
-// enable cors
+// enable cors with HIPAA-compliant settings
 const corsOptions = {
   origin: ["https://www.metabolixmd.com", "https://metabolixmd.com", "http://localhost:3000"],
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
   credentials: true,
+  maxAge: 86400, // 24 hours in seconds
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token', 'timezone'],
+  exposedHeaders: ['Content-Range', 'X-Content-Range']
 };
 
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
-
 
 const path = require('path');
 
@@ -56,6 +84,12 @@ app.use('/v1', (req, res, next) => {
   res.setHeader('Content-Type', 'application/json');
   next();
 });
+
+// Apply HIPAA session timeout middleware (15 minutes default)
+app.use(sessionTimeout(process.env.SESSION_TIMEOUT || 900000));
+
+// Apply HIPAA audit logging middleware
+app.use(hipaaLogger());
 
 // Reroute all API request starting with "/v1" route
 app.use('/v1', routes);
