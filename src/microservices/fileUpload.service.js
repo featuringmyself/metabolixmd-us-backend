@@ -27,7 +27,7 @@ async function fileFilter(req, file, cb) {
 const multerUpload = multer({
   storage,
   fileFilter,
-  // limits: { fileSize: 10000000, files: 10 },
+  limits: { fileSize: 5 * 1024 * 1024, files: 1 }, // 5MB limit for profile pictures
 });
 
 async function getObjectURL(Key, signedUrl = false) {

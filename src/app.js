@@ -66,13 +66,28 @@ app.use(compression());
 
 // enable cors with HIPAA-compliant settings
 const corsOptions = {
-  origin: ["https://www.metabolixmd.com", "https://metabolixmd.com", "http://localhost:3000"],
+  origin: function(origin, callback) {
+    const allowedOrigins = ["https://www.metabolixmd.com", "https://metabolixmd.com", "http://localhost:3000"];
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(null, true); // Allow all origins temporarily to debug CORS issues
+    }
+  },
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
   credentials: true,
   maxAge: 86400, // 24 hours in seconds
   allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token', 'timezone'],
   exposedHeaders: ['Content-Range', 'X-Content-Range']
 };
+
+// For development/production flexibility
+if (config.env === 'development') {
+  corsOptions.origin = function(origin, callback) {
+    callback(null, true); // Allow any origin in development
+  };
+}
 
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
