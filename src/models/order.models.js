@@ -27,6 +27,22 @@ const orderSchema = new mongoose.Schema(
       type:Number,
       required: true,
     },
+    discountPercentage: {
+      type: Number,
+      min: 0,
+      max: 100,
+      default: 0
+    },
+    discountAmount: {
+      type: Number,
+      default: 0
+    },
+    finalAmount: {
+      type: Number,
+      default: function() {
+        return this.totalValue - this.discountAmount;
+      }
+    },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

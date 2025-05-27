@@ -114,27 +114,27 @@ app.use('/', routes);
 app.use('/test', testRoutes);
 
 // Serve static files and views only for specific routes
-app.use('/confirmation', express.static(path.join(__dirname, 'public')));
-app.use('/preview-email', express.static(path.join(__dirname, 'public')));
+// app.use('/confirmation', express.static(path.join(__dirname, 'public')));
+// app.use('/preview-email', express.static(path.join(__dirname, 'public')));
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 // Route to render the EJS template
-app.get('/confirmation', (req, res) => {
-  res.render('ordermail', {
-    patientName: 'John Doe',
-    orderCompletionLink: 'https://www.metabolixmd.com/order/complete'
-  });
-});
+// app.get('/confirmation', (req, res) => {
+//   res.render('ordermail', {
+//     patientName: 'John Doe',
+//     orderCompletionLink: 'https://www.metabolixmd.com/order/complete'
+//   });
+// });
 
-// Add this route before error handlers
-app.get('/preview-email', (req, res) => {
-  res.render('completePaymentMail', { 
-    link: 'https://www.metabolixmd.com/profile-details',
-    // name: 'John Doe'
-  });
-});
+// // Add this route before error handlers
+// app.get('/preview-email', (req, res) => {
+//   res.render('completePaymentMail', { 
+//     link: 'https://www.metabolixmd.com/profile-details',
+//     // name: 'John Doe'
+//   });
+// });
 
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {

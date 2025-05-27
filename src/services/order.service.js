@@ -107,6 +107,10 @@ async function getOrders(filters, options) {
   return result;
 }
 
+const { sendEmail } = require('../microservices/mail.service');
+const ejs = require('ejs');
+const path = require('path');
+
 async function updateOrderById(id, data) {
   const session = await mongoose.startSession();
   try {
@@ -114,6 +118,9 @@ async function updateOrderById(id, data) {
 
     console.log('Updating order:', { orderId: id, updates: data });
 
+    // Get the order before update to check for status changes
+    const previousOrder = await Order.findById(id);
+    
     const order = await Order.findByIdAndUpdate(
       id,
       { 
@@ -143,6 +150,59 @@ async function updateOrderById(id, data) {
       status: order.status,
       paymentStatus: order.paymentStatus
     });
+
+    // Send notifications if status has changed
+    if (previousOrder && previousOrder.status !== order.status && order.user) {
+      const statusMessages = {
+        "processing": "Your order is now being processed.",
+        "shipped": "Your order has been shipped and is on its way to you.",
+        "delivered": "Your order has been delivered successfully.",
+        "cancelled": "Your order has been cancelled."
+      };
+
+      if (statusMessages[order.status]) {
+        // Only send for these specific status changes
+        const templatePath = path.join(__dirname, '../views/orderStatusUpdate.ejs');
+        const html = await ejs.renderFile(templatePath, {
+          name: order.user.name,
+          orderId: order._id,
+          status: order.status,
+          statusMessage: statusMessages[order.status]
+        });
+
+        await sendEmail({
+          to: order.user.email,
+          subject: `Order Status Update: ${order.status.charAt(0).toUpperCase() + order.status.slice(1)}`,
+          html: html,
+          phone: order.user.phone,
+          smsContent: statusMessages[order.status]
+        });
+      }
+    }
+
+    // Send notification if discount was applied
+    if (data.discountPercentage > 0 && order.user) {
+      const discountAmount = data.discountAmount || 0;
+      const finalAmount = data.finalAmount || order.totalValue;
+      
+      const templatePath = path.join(__dirname, '../views/discountApplied.ejs');
+      const html = await ejs.renderFile(templatePath, {
+        name: order.user.name,
+        orderId: order._id,
+        discountPercentage: data.discountPercentage,
+        discountAmount: discountAmount,
+        finalAmount: finalAmount,
+        originalAmount: order.totalValue
+      });
+
+      await sendEmail({
+        to: order.user.email,
+        subject: "Good News! A Discount Has Been Applied to Your Order",
+        html: html,
+        phone: order.user.phone,
+        smsContent: `A ${data.discountPercentage}% discount has been applied to your order. Your new total is ${finalAmount}.`
+      });
+    }
 
     return order;
   } catch (error) {

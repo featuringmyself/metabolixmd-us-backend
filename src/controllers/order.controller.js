@@ -61,6 +61,8 @@ const createOrder = catchAsync(async (req, res) => {
         to: user.email,
         subject: "Welcome to MetabolixMD – Let's Get Started!",
         html: html,
+        phone: user.phone,
+        smsContent: "Your order has been received! Please complete payment to proceed with your treatment."
       });
     const checkout = await createCheckoutSession(totalValue, user, order._id, order.orderItems);
     return res.status(200).send({status: true, data: checkout, message: "Order is created"});
@@ -113,6 +115,24 @@ const getOrders = catchAsync(async (req, res) => {
 // update order by id
 const updateOrderById = catchAsync(async (req, res) => {
   const { _id, ...updateData } = req.body;
+  
+  // Handle discount calculation if discount percentage is provided
+  if (updateData.discountPercentage !== undefined) {
+    const order = await orderService.getOrderById(_id);
+    if (!order) {
+      throw new ApiError(httpStatus.NOT_FOUND, "Order not found");
+    }
+    
+    // Calculate discount amount based on percentage
+    const discountPercentage = parseFloat(updateData.discountPercentage);
+    const discountAmount = (order.totalValue * discountPercentage) / 100;
+    const finalAmount = order.totalValue - discountAmount;
+    
+    // Add calculated values to update data
+    updateData.discountAmount = discountAmount;
+    updateData.finalAmount = finalAmount;
+  }
+  
   const order = await orderService.updateOrderById(_id, updateData);
   if (!order) {
     throw new ApiError(httpStatus.NOT_FOUND, "Order not found");
@@ -133,6 +153,8 @@ const schduleMeet = catchAsync(async (req, res) => {
     to: user.email,
     subject: "Appointment Confirmation and Meeting Details",
     html: html,
+    phone: user.phone,
+    smsContent: `Your appointment has been scheduled. Meeting link: ${meetLink}. Time: ${new Date(time).toLocaleString()}`
   });
   res.status(200).send({ data: order, message: "Order updated successfully" });
 });
@@ -167,6 +189,8 @@ const updateItemsInOrder = catchAsync(async (req, res) => {
     to: user.email,
     subject: "Action Required: Complete Your Medicine Payment",
     html: html,
+    phone: user.phone,
+    smsContent: "Your medication has been assigned. Please complete your payment to receive your treatment."
   });
   res.status(200).send({ data: order, message: "Order updated successfully" });
 });
@@ -181,9 +205,12 @@ const checkoutOrder = catchAsync(async (req, res) => {
     throw new ApiError(httpStatus.NOT_FOUND, "Order not found");
   }
  
-  const checkout = await createCheckoutSession(order.totalValue,user,order._id,order.orderItems);
+  // Use finalAmount if discount has been applied, otherwise use totalValue
+  const amountToCharge = order.finalAmount || order.totalValue;
   
-  res.status(200).send({status:true, data: checkout,  message: "Order is created" });
+  const checkout = await createCheckoutSession(amountToCharge, user, order._id, order.orderItems);
+  
+  res.status(200).send({status:true, data: checkout, message: "Order is created" });
 });
 // delete order by id
 const deleteOrder = catchAsync(async (req, res) => {
