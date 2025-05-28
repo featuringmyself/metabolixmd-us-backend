@@ -55,8 +55,9 @@ router.post('/test-email', async (req, res) => {
 router.get('/send-email', async(req, res) => {
     try {
         // Render the mail.ejs template
-        const html = await ejs.renderFile(path.join(__dirname, '../views/ordermail.ejs'), {
-            customerName: "Test Customer" // You can make this dynamic by passing it in request
+        const html = await ejs.renderFile(path.join(__dirname, '../views/completePaymentMail.ejs'), {
+            customerName: "Test Customer", // You can make this dynamic by passing it in request
+            link: 'profile-details'
         });
 
         const sgMail = require('@sendgrid/mail');
