@@ -48,7 +48,12 @@ app.use(helmet({
   frameguard: {
     action: 'deny'
   },
-  referrerPolicy: { policy: 'strict-origin-when-cross-origin' }
+  referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+  permissionsPolicy: {
+    features: {
+      payment: ["self", "https://js.stripe.com", "https://hooks.stripe.com"],
+    }
+  }
 }));
 
 // parse json request body
@@ -99,9 +104,6 @@ app.use('/v1', (req, res, next) => {
   res.setHeader('Content-Type', 'application/json');
   next();
 });
-
-// Apply HIPAA session timeout middleware (15 minutes default)
-app.use(sessionTimeout(process.env.SESSION_TIMEOUT || 900000));
 
 // Apply HIPAA audit logging middleware
 app.use(hipaaLogger());
