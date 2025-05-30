@@ -13,7 +13,6 @@ const ApiError = require("./utils/ApiError");
 const { errorConverter, errorHandler } = require("./middlewares/error");
 const ejs = require('ejs');
 const hipaaLogger = require('./middlewares/hipaaLogger');
-const sessionTimeout = require('./middlewares/sessionTimeout');
 
 const app = express();
 
