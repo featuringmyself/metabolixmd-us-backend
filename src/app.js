@@ -55,16 +55,19 @@ app.use(helmet({
   }
 }));
 
-// parse json request body with increased limit
+// Increase body size limits before other middleware
 app.use(express.json({
-  limit: '50mb',
+  limit: '100mb',
   verify: (req, res, buf) => {
     if (req.originalUrl.includes('webhook')) req.rawBody = buf.toString();
   },
 }));
 
-// parse urlencoded request body with increased limit
-app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+app.use(express.urlencoded({ 
+  extended: true, 
+  limit: '100mb',
+  parameterLimit: 100000 
+}));
 
 // enable cors with HIPAA-compliant settings
 const corsOptions = {
@@ -79,26 +82,44 @@ const corsOptions = {
     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
+      console.log('Blocked origin:', origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
   credentials: true,
   maxAge: 86400, // 24 hours in seconds
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token', 'timezone', 'Content-Length'],
-  exposedHeaders: ['Content-Range', 'X-Content-Range'],
-  preflightContinue: false,
-  optionsSuccessStatus: 204
+  allowedHeaders: [
+    'Content-Type',
+    'Authorization',
+    'X-CSRF-Token',
+    'timezone',
+    'Content-Length',
+    'Accept',
+    'Origin'
+  ],
+  exposedHeaders: [
+    'Content-Range',
+    'X-Content-Range',
+    'Access-Control-Allow-Origin',
+    'Access-Control-Allow-Credentials'
+  ]
 };
 
 // For development/production flexibility
 if (config.env === 'development') {
   corsOptions.origin = function(origin, callback) {
-    callback(null, true); // Allow any origin in development
+    callback(null, true);
   };
 }
 
-// Apply CORS middleware
+// Apply CORS middleware first
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
+  next();
+});
+
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
 
