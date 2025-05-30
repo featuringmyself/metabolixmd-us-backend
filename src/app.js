@@ -55,35 +55,40 @@ app.use(helmet({
   }
 }));
 
-// parse json request body
+// parse json request body with increased limit
 app.use(express.json({
+  limit: '50mb',
   verify: (req, res, buf) => {
     if (req.originalUrl.includes('webhook')) req.rawBody = buf.toString();
   },
 }));
 
-// parse urlencoded request body
-app.use(express.urlencoded({ extended: true }));
-
-// gzip compression
-app.use(compression());
+// parse urlencoded request body with increased limit
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 // enable cors with HIPAA-compliant settings
 const corsOptions = {
   origin: function(origin, callback) {
-    const allowedOrigins = ["https://www.metabolixmd.com", "https://metabolixmd.com", "http://localhost:3000"];
+    const allowedOrigins = [
+      "https://www.metabolixmd.com",
+      "https://metabolixmd.com",
+      "https://api.metabolixmd.com",
+      "http://localhost:3000"
+    ];
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      callback(null, true); // Allow all origins temporarily to debug CORS issues
+      callback(new Error('Not allowed by CORS'));
     }
   },
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
   credentials: true,
   maxAge: 86400, // 24 hours in seconds
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token', 'timezone'],
-  exposedHeaders: ['Content-Range', 'X-Content-Range']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token', 'timezone', 'Content-Length'],
+  exposedHeaders: ['Content-Range', 'X-Content-Range'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204
 };
 
 // For development/production flexibility
@@ -93,10 +98,12 @@ if (config.env === 'development') {
   };
 }
 
+// Apply CORS middleware
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
 
-const path = require('path');
+// gzip compression
+app.use(compression());
 
 // Set content type for API routes
 app.use('/v1', (req, res, next) => {
@@ -114,28 +121,9 @@ app.use('/', routes);
 // Add test routes
 app.use('/test', testRoutes);
 
-// Serve static files and views only for specific routes
-// app.use('/confirmation', express.static(path.join(__dirname, 'public')));
-// app.use('/preview-email', express.static(path.join(__dirname, 'public')));
-
+const path = require('path');
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
-
-// Route to render the EJS template
-// app.get('/confirmation', (req, res) => {
-//   res.render('ordermail', {
-//     patientName: 'John Doe',
-//     orderCompletionLink: 'https://www.metabolixmd.com/order/complete'
-//   });
-// });
-
-// // Add this route before error handlers
-// app.get('/preview-email', (req, res) => {
-//   res.render('completePaymentMail', { 
-//     link: 'https://www.metabolixmd.com/profile-details',
-//     // name: 'John Doe'
-//   });
-// });
 
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {
