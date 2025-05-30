@@ -27,10 +27,10 @@ const firebaseAuth = (allowUserType = 'All') => async (req, res, next) => {
       if (!user) {
         console.log('Request path:', req.path);
         if (['/onBoarding'].includes(req.path) || req.path.includes('secretSignup') || req.path.includes('/vendor/onBoarding')) {
-          console.log('New user payload:', payload);
+          // console.log('New user payload:', payload);
           req.newUser = payload;
           req.routeType = allowUserType;
-        } else reject(new ApiError(httpStatus.NOT_FOUND, "User doesn't exist. Please create account"));
+        } else reject(new ApiError(httpStatus.NOT_FOUND));
       } else {
         if (!allowUserType.split(',').includes(user.__t) && allowUserType !== 'All') {
           reject(new ApiError(httpStatus.FORBIDDEN, "Sorry, but you can't access this"));
