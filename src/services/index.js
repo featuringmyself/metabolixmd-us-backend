@@ -1,0 +1,12 @@
+module.exports.userService = require("./user.service");
+module.exports.authService = require("./auth.service");
+module.exports.productService = require("./product.service");
+module.exports.vendorProductService = require("./vendorProduct.service");
+module.exports.cartService = require("./cart.service");
+module.exports.orderService = require("./order.service.js");
+module.exports.bannerService = require("./banner.service");
+module.exports.brandLogoService = require("./brandLogo.service");
+module.exports.diseaseService = require("./disease.service");
+module.exports.prescriptionService = require("./prescription.service");
+module.exports.questionService = require("./question.service");
+module.exports.paymentService = require("./payment.service");

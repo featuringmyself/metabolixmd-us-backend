@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prescription Approved - MetabolixMD</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      color: #2d2d2d;
+      margin: 0;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      color: #2d6a4f;
+    }
+    a {
+      color: #2d6a4f;
+      text-decoration: none;
+    }
+    .logo {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .logo img {
+      width: 100px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Thank You for Choosing MetabolixMD</h1>
+    <h2>Prescription Approved</h2>
+
+    <p>Dear <%= patientName %>,</p>
+
+    <p>Thank you for choosing <strong>MetabolixMD</strong> as your partner in your weight loss journey. We’re pleased to inform you that your uploaded prescription has been <strong>approved</strong> by our team of medical professionals.</p>
+
+    <p>To complete your order and begin your personalized treatment plan, please follow this link: <a href="<%= orderCompletionLink %>">Order Completion Link</a></p>
+
+    <p>If you have any questions or need assistance at any stage, feel free to reach out to our support team at <a href="mailto:consultant@metabolixmd.com">consultant@metabolixmd.com</a></p>
+
+    <p>We're here to ensure your experience with MetabolixMD is smooth and supportive.</p>
+
+    <p>Thank you once again for trusting MetabolixMD. We look forward to supporting you every step of the way!</p>
+
+    <div class="logo">
+      <img src="/image/3.png" alt="MetabolixMD Logo">
+    </div>
+  </div>
+</body>
+</html>

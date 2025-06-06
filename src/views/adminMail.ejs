@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Confirmation</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      padding: 20px;
+      color: #333;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+      color: #2c3e50;
+    }
+    p {
+      margin-bottom: 15px;
+    }
+    .footer {
+      text-align: center;
+      color: #888;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Congratulations,! 🎉</h2>
+    <p>We are thrilled to confirm that we’ve received your order and can’t wait to deliver it.</p>
+    <p><strong>Order Number:</strong> <%= orderNumber %></p>
+    
+    <p><strong>Shipping Address:</strong></p>
+    <p>
+      <%= customerAddress %><br>
+      <%= city %>, <%= state %>, <%= zipCode %>
+    </p>
+    
+    <p>For your convenience, you can track your order status anytime by following this link:</p>
+    <p><a href="<%= trackingLink %>" style="color: #1a73e8; text-decoration: none;">Track Your Order</a></p>
+    
+    <p>Thank you for shopping with us!</p>
+    
+    <div class="footer">
+      &copy; 2024 Metabolix. All rights reserved.
+    </div>
+  </div>
+</body>
+</html>
