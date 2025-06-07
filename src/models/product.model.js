@@ -17,7 +17,7 @@ const productSchema = new mongoose.Schema(
       type: String,
       trim: true,
       required: true,
-      default:null
+      default:'MetabolixMD'
     },
     image: {
       type: {
@@ -35,10 +35,6 @@ const productSchema = new mongoose.Schema(
       default:0
     },
     sellingPrice: {
-      type: Number,
-      default:0
-    },
-    purchasePrice: {
       type: Number,
       default:0
     },

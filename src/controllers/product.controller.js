@@ -14,7 +14,6 @@ const createProduct = catchAsync(async (req, res) => {
 });
 
 const uploadCsv = catchAsync(async (req, res) => {
-
     console.log(req.file);
     const fileBuffer = req.file.buffer;
     const results = [];
@@ -51,8 +50,8 @@ const uploadCsv = catchAsync(async (req, res) => {
   
 
 const updateProduct = catchAsync(async (req, res) => {
-    const product = await productService.updateProductById(req.body._id,req.body);
-    res.status(200).send({data: product, message: 'Product is update'});
+    const product = await productService.updateProductById(req.params.id, req.body);
+    res.status(200).send({data: product, message: 'Product is updated'});
 });
 
 const getProducts = catchAsync(async (req, res) => {
@@ -76,11 +75,16 @@ const getProduct = catchAsync(async (req, res) => {
     res.status(200).send({data: products, message: 'Products'});
 });
 
+const deleteProduct = catchAsync(async (req, res) => {
+    await productService.deleteProductById(req.params.id);
+    res.status(200).send({ message: 'Product deleted successfully' });
+});
 
 module.exports = {
  createProduct,
  updateProduct,
  getProducts,
  getProduct,
- uploadCsv
+ uploadCsv,
+ deleteProduct
 };

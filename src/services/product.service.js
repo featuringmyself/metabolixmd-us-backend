@@ -2,14 +2,43 @@ const {Product} = require('../models');
 const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 
-
-
 async function create(data) {
+  try {
+    console.log('Received data in create:', data);
+    
+    // Ensure required fields are present
+    if (!data.name || !data.sellingPrice) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Name and selling price are required');
+    }
 
-  
+    // Set default values for optional fields
+    const productData = {
+      name: data.name,
+      description: data.description || '',
+      brand: data.brand || 'MetabolixMD', // Set default brand if not provided
+      unit: data.unit || '',
+      sellingPrice: Number(data.sellingPrice),
+      purchasePrice: data.purchasePrice ? Number(data.purchasePrice) : 0,
+      saltComposition: data.saltComposition || '',
+      image: data.image || { url: '' },
+      quantity: 0,
+      mrp: 0,
+      isDeleted: false,
+      isPrescribed: false
+    };
 
-  const product = await Product.create(data);
-  return product;
+    console.log('Formatted product data:', productData);
+
+    const product = await Product.create(productData);
+    console.log('Created product:', product);
+    return product;
+  } catch (error) {
+    console.error('Error in create product:', error);
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to create product: ' + error.message);
+  }
 }
 
 async function getProductById(id) {
@@ -23,22 +52,10 @@ async function getProducts(filters, options) {
 
 async function updateProductById(id, newDetails) {
   const product = await Product.findById(id);
-  productValidator(product);
-  let updates = {...newDetails};
-  if (profileImage) {
-    const [profilePic] = await fileUploadService.s3Upload([profileImage], 'profilePics').catch(err => {
-      throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to upload profile picture');
-    });
-    if (product.profilePic) {
-      const oldPicKey = product.profilePic.key;
-      await fileUploadService
-        .s3Delete(oldPicKey)
-        .catch(err => console.log('Failed to delete profile picture', oldPicKey));
-    }
-    updates = {...updates, profilePic};
+  if (!product) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
   }
-
-    return await Product.findByIdAndUpdate(id, updates, {new: true});
+  return await Product.findByIdAndUpdate(id, newDetails, {new: true});
 }
 
 async function deleteProductById(id) {
@@ -49,7 +66,6 @@ async function deleteProductById(id) {
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to delete the product');
   }
 }
-
 
 module.exports = {
   getProducts,
