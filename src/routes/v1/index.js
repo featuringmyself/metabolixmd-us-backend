@@ -12,7 +12,7 @@ const brandLogoRoute = require("./brandLogo.route");
 const diseaseRoute = require("./disease.route"); 
 const prescriptionRoute = require("./prescription.route");
 const questionRoute = require("./question.route");
-const stripeRoute = require("./stripe.route");
+const squareRoute = require("./square.route");
 const meetingRoute = require("./meeting.route");
 
 router.use("/auth", authRoute);
@@ -26,7 +26,7 @@ router.use("/brandLogo", brandLogoRoute);
 router.use("/disease", diseaseRoute);
 router.use("/prescription", prescriptionRoute);
 router.use("/question", questionRoute);
-router.use("/stripe", stripeRoute);
+router.use("/square", squareRoute);
 router.use("/meeting", meetingRoute);
 
 module.exports = router;

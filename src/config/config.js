@@ -60,9 +60,10 @@ module.exports = {
     // exception added for TDD purpose
     url: envVars.MONGODB_URL + (envVars.NODE_ENV === 'test' ? '-test' : '')
   },
-  stripe: {
-    secretKey: envVars.STRIPE_SECRET,
-    webhookSecret: envVars.STRIPE_WEBHOOK_SECRET,
+  square: {
+    accessToken: envVars.SQUARE_ACCESS_TOKEN,
+    webhookSignatureKey: envVars.SQUARE_WEBHOOK_SIGNATURE_KEY,
+    locationId: envVars.SQUARE_LOCATION_ID,
   },
   sendGrid:{
     password: envVars.SENDGRID_PASSWORD

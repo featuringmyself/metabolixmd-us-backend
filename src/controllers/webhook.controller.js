@@ -1,6 +1,6 @@
 const { default: mongoose } = require("mongoose");
 const { paymentService, userService, orderService } = require("../services");
-const { stripeService } = require("../microservices");
+const { squareService } = require("../microservices");
 const catchAsync = require("../utils/catchAsync");
 const { sendEmail } = require("../microservices/mail.service");
 const ejs = require('ejs');
@@ -9,25 +9,36 @@ const config = require("../config/config");
 const { sendOrderStatusUpdate } = require("../microservices/sms.service");
 const httpStatus = require("http-status");
 
-const handleStripeCheckoutSessionCompleted = async payload => {
+const handleSquarePaymentCompleted = async payload => {
     const session = {
         startTime: new Date(),
-        metadata: payload.metadata
+        metadata: {
+            orderId: null,
+            userId: null
+        }
     };
     
     try {
-        console.log('Processing checkout.session.completed webhook', {
-            payloadId: payload.id,
-            metadata: payload.metadata
+        console.log('Processing payment.updated webhook', {
+            paymentId: payload.id,
+            status: payload.status
         });
 
-        const { userId, orderId } = payload.metadata;
-        if (!userId || !orderId) {
-            console.error('Missing metadata in webhook:', payload);
-            throw new Error('Missing required metadata: userId or orderId');
+        // Extract order ID and user ID from payment note
+        const noteMatch = payload.note ? payload.note.match(/Order ID: ([^,]+)/) : null;
+        const userIdMatch = payload.note ? payload.note.match(/User ID: ([^,]+)/) : null;
+        
+        if (!noteMatch || !userIdMatch) {
+            console.error('Missing metadata in payment note:', payload.note);
+            throw new Error('Missing required metadata: orderId or userId');
         }
+        
+        const orderId = noteMatch[1];
+        const userId = userIdMatch[1];
+        
+        session.metadata = { orderId, userId };
 
-        const amount = payload.amount_total / 100;
+        const amount = payload.amount_money.amount / 100;
         console.log(`Processing payment of $${amount} for order ${orderId}`);
 
         // Find user and order in parallel
@@ -54,18 +65,17 @@ const handleStripeCheckoutSessionCompleted = async payload => {
             paymentDate: new Date()
         };
         
-        // Create payment record with session ID and intent
+        // Create payment record with payment ID
         const payment = await paymentService.create({
             user: userId,
             order: orderId,
             checkoutSessionId: payload.id,
             amount,
-            currency: payload.currency,
+            currency: payload.amount_money.currency,
             customer: {
-                id: payload.customer,
-                email: payload.customer_email,
+                id: payload.customer_id,
+                email: payload.buyer_email,
             },
-            paymentIntent: payload.payment_intent,
             paymentStatus: 'succeeded',
         });
 
@@ -153,10 +163,10 @@ const processWebhook = catchAsync(async (req, res) => {
     console.log('Received webhook request:', {
         path: req.path,
         method: req.method,
-        headers: req.headers['stripe-signature']
+        headers: req.headers['square-signature']
     });
 
-    if (!req.body || !req.headers['stripe-signature']) {
+    if (!req.body || !req.headers['square-signature']) {
         console.error('Missing webhook body or signature');
         return res.status(400).json({ 
             received: false,
@@ -165,21 +175,26 @@ const processWebhook = catchAsync(async (req, res) => {
     }
 
     try {
-        const stripeEvent = stripeService.constructEvent(
-            req.rawBody || req.body,
-            req.headers['stripe-signature']
+        const squareEvent = squareService.verifyWebhookSignature(
+            req.rawBody || JSON.stringify(req.body),
+            req.headers['square-signature']
         );
         
-        console.log(`Processing Stripe event: ${stripeEvent.type}`);
+        console.log(`Processing Square event: ${squareEvent.type}`);
         
-        switch (stripeEvent.type) {
-            case 'checkout.session.completed':
-                const result = await handleStripeCheckoutSessionCompleted(stripeEvent.data.object);
-                console.log('Payment processed successfully:', result);
+        switch (squareEvent.type) {
+            case 'payment.updated':
+                const payment = squareEvent.data.object.payment;
+                if (payment.status === 'COMPLETED') {
+                    const result = await handleSquarePaymentCompleted(payment);
+                    console.log('Payment processed successfully:', result);
+                } else {
+                    console.log(`Payment status is ${payment.status}, not processing further`);
+                }
                 break;
 
             default:
-                console.log(`Unhandled webhook event type: ${stripeEvent.type}`);
+                console.log(`Unhandled webhook event type: ${squareEvent.type}`);
         }
 
         res.status(200).json({ received: true });

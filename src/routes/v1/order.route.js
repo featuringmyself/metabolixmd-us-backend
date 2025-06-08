@@ -21,6 +21,7 @@ router.post("/upateItems", firebaseAuth('Admin'), orderController.updateItemsInO
 
 router.post("/checkout/:id", firebaseAuth(), orderController.checkoutOrder);
 
-
+// Add route to handle payment confirmation from Square
+router.post("/payment-confirmation/:id", orderController.confirmPayment);
 
 module.exports = router;

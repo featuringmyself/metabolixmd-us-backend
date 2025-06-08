@@ -4,7 +4,7 @@ const { getPaginateConfig } = require("../utils/queryPHandler");
 const ApiError = require("../utils/ApiError");
 const { createUser } = require("../services/auth.service.js");
 const { productService, orderService, userService } = require("../services");
-const { createCheckoutSession } = require("../microservices/stripe.service");
+const { createCheckoutSession } = require("../microservices/square.service");
 const ejs = require('ejs');
 const path = require('path');
 const { sendEmail } = require("../microservices/mail.service");
@@ -231,6 +231,76 @@ const checkoutOrder = catchAsync(async (req, res) => {
   
   res.status(200).send({status:true, data: checkout, message: "Order is created" });
 });
+
+// Handle payment confirmation from Square
+const confirmPayment = catchAsync(async (req, res) => {
+  const { id } = req.params; // Order ID
+  
+  console.log(`[PAYMENT CONFIRMATION] Processing payment confirmation for order: ${id}`);
+  console.log(`[PAYMENT CONFIRMATION] Request body:`, req.body);
+  console.log(`[PAYMENT CONFIRMATION] Request headers:`, req.headers);
+  
+  const order = await orderService.getOrderById(id);
+  if (!order) {
+    console.error(`[PAYMENT CONFIRMATION] Order not found: ${id}`);
+    throw new ApiError(httpStatus.NOT_FOUND, "Order not found");
+  }
+  
+  console.log(`[PAYMENT CONFIRMATION] Found order:`, {
+    id: order._id,
+    user: order.user,
+    status: order.status,
+    paymentStatus: order.paymentStatus,
+    amount: order.finalAmount || order.totalValue
+  });
+  
+  // Update order payment status
+  const updatedOrder = await orderService.updateOrderById(id, {
+    paymentStatus: 'paid',
+    paymentDate: new Date()
+  });
+  
+  console.log(`[PAYMENT CONFIRMATION] Payment confirmed for order ${id}. Updated status:`, updatedOrder.paymentStatus);
+  
+  // Send email notification
+  try {
+    const user = await userService.getUserById(order.user);
+    console.log(`[PAYMENT CONFIRMATION] Found user:`, {
+      id: user._id,
+      name: user.name,
+      email: user.email
+    });
+    
+    const html = await ejs.renderFile(path.join(__dirname, '../views/paymentConfirmationMail.ejs'), {
+      name: user.name,
+      orderId: id,
+      amount: order.finalAmount || order.totalValue,
+      date: new Date().toLocaleDateString()
+    });
+    
+    console.log(`[PAYMENT CONFIRMATION] Sending confirmation email to: ${user.email}`);
+    
+    await sendEmail({
+      to: user.email,
+      subject: "Payment Confirmation - MetabolixMD",
+      html: html,
+      phone: user.phone,
+      smsContent: `Your payment for order #${id.substring(0, 8)} has been confirmed. Thank you for your purchase!`
+    });
+    
+    console.log(`[PAYMENT CONFIRMATION] Email sent successfully`);
+  } catch (emailError) {
+    console.error(`[PAYMENT CONFIRMATION] Failed to send payment confirmation email:`, emailError);
+  }
+  
+  console.log(`[PAYMENT CONFIRMATION] Sending success response for order: ${id}`);
+  
+  res.status(200).send({ 
+    status: true, 
+    data: updatedOrder, 
+    message: "Payment confirmed successfully" 
+  });
+});
 // delete order by id
 const deleteOrder = catchAsync(async (req, res) => {
   const order = await orderService.deleteOrder(req.params.id);
@@ -249,5 +319,6 @@ module.exports = {
   deleteOrder,
   schduleMeet,
   updateItemsInOrder,
-  checkoutOrder
+  checkoutOrder,
+  confirmPayment
 };
