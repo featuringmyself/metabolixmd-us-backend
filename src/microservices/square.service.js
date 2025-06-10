@@ -50,13 +50,16 @@ const createCheckoutSession = async (amount, user, orderId, product_data) => {
       throw new Error('No products provided for checkout');
     }
 
-    // Keep the production redirect URL but use sandbox for payment processing
     const baseUrl = config.env === 'production' 
       ? 'https://metabolixmd.com'
       : 'http://localhost:3000';
     
-    // Always use sandbox API URL for testing
-    const apiUrl = 'https://connect.squareupsandbox.com/v2/online-checkout/payment-links';
+    // Use correct API URL based on environment
+    const apiUrl = config.env === 'production' 
+      ? 'https://connect.squareup.com/v2/online-checkout/payment-links'  // Production API
+      : 'https://connect.squareupsandbox.com/v2/online-checkout/payment-links'; // Sandbox API
+    
+    console.log(`Using Square API URL: ${apiUrl}`);
     
     // Create a unique idempotency key for this transaction
     const idempotencyKey = crypto.randomUUID();
@@ -78,7 +81,7 @@ const createCheckoutSession = async (amount, user, orderId, product_data) => {
       checkout_options: {
         redirect_url: `${baseUrl}/profile-details?payment=success&order_id=${orderId}`,
         ask_for_shipping_address: false,
-        merchant_support_email: 'support@metabolixmd.com', // Use a fixed support email
+        merchant_support_email: 'support@metabolixmd.com',
       },
       pre_populated_data: {
         buyer_email: user.email,
@@ -87,6 +90,8 @@ const createCheckoutSession = async (amount, user, orderId, product_data) => {
     };
     
     console.log('Square API request payload:', JSON.stringify(requestBody));
+    console.log('Environment:', config.env);
+    console.log('Access Token exists:', !!config.square.accessToken);
     
     console.log('Sending payment link request to Square API');
     try {
