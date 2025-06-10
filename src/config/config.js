@@ -63,7 +63,7 @@ module.exports = {
   square: {
     accessToken: envVars.SQUARE_ACCESS_TOKEN,
     webhookSignatureKey: envVars.SQUARE_WEBHOOK_SIGNATURE_KEY,
-    locationId: envVars.SQUARE_LOCATION_ID,
+    locationId: envVars.SQUARE_LOCATION_ID || 'L3Z7XB8C4YFCV', // Provide fallback location ID
   },
   sendGrid:{
     password: envVars.SENDGRID_PASSWORD

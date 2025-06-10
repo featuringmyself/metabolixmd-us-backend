@@ -42,9 +42,11 @@ const verifyWebhookSignature = (requestBody, signatureHeader) => {
 
 const createCheckoutSession = async (amount, user, orderId, product_data) => {
   try {
-    console.log('Creating checkout session for order:', { orderId, userId: user._id });
+    console.log('Creating checkout session for order:', { orderId, userId: user._id, amount });
     
-    if (!product_data || !product_data.length) {
+    // Ensure product_data is an array
+    if (!product_data || !Array.isArray(product_data) || product_data.length === 0) {
+      console.error('Invalid product data:', product_data);
       throw new Error('No products provided for checkout');
     }
 
@@ -60,6 +62,9 @@ const createCheckoutSession = async (amount, user, orderId, product_data) => {
     const idempotencyKey = crypto.randomUUID();
     console.log(`Using idempotency key: ${idempotencyKey} for order: ${orderId}`);
     
+    // Log product data for debugging
+    console.log('Product data for checkout:', JSON.stringify(product_data));
+    
     const requestBody = {
       idempotency_key: idempotencyKey,
       quick_pay: {
@@ -73,7 +78,7 @@ const createCheckoutSession = async (amount, user, orderId, product_data) => {
       checkout_options: {
         redirect_url: `${baseUrl}/profile-details?payment=success&order_id=${orderId}`,
         ask_for_shipping_address: false,
-        merchant_support_email: user.email,
+        merchant_support_email: 'support@metabolixmd.com', // Use a fixed support email
       },
       pre_populated_data: {
         buyer_email: user.email,
@@ -81,35 +86,53 @@ const createCheckoutSession = async (amount, user, orderId, product_data) => {
       note: `Order ID: ${orderId}, User ID: ${user._id}`
     };
     
+    console.log('Square API request payload:', JSON.stringify(requestBody));
+    
     console.log('Sending payment link request to Square API');
-    const response = await axios.post(apiUrl, requestBody, {
-      headers: {
-        'Square-Version': '2025-05-21',
-        'Authorization': `Bearer ${config.square.accessToken}`,
-        'Content-Type': 'application/json'
+    try {
+      const response = await axios.post(apiUrl, requestBody, {
+        headers: {
+          'Square-Version': '2025-05-21',
+          'Authorization': `Bearer ${config.square.accessToken}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      console.log('Square API response status:', response.status);
+      
+      // Log response data for debugging
+      if (response.data) {
+        console.log('Square API response data:', JSON.stringify(response.data));
       }
-    });
 
-    if (!response.data || !response.data.payment_link) {
-      throw new Error('Failed to create payment link');
+      if (!response.data || !response.data.payment_link) {
+        console.error('Invalid response from Square API:', response.data);
+        throw new Error('Failed to create payment link: Invalid response structure');
+      }
+
+      console.log('Checkout session created successfully:', { 
+        paymentLinkId: response.data.payment_link.id,
+        orderId,
+        userId: user._id 
+      });
+
+      return {
+        id: response.data.payment_link.id,
+        url: response.data.payment_link.url
+      };
+    } catch (axiosError) {
+      if (axiosError.response) {
+        console.error('Square API error response:', {
+          status: axiosError.response.status,
+          data: JSON.stringify(axiosError.response.data)
+        });
+        throw new Error(`Failed to create payment link: ${axiosError.response.status} - ${JSON.stringify(axiosError.response.data)}`);
+      }
+      throw axiosError;
     }
-
-    console.log('Checkout session created successfully:', { 
-      paymentLinkId: response.data.payment_link.id,
-      orderId,
-      userId: user._id 
-    });
-
-    return {
-      id: response.data.payment_link.id,
-      url: response.data.payment_link.url
-    };
   } catch (err) {
-    console.error('Error creating checkout session:', err);
-    throw new ApiError(
-      httpStatus.INTERNAL_SERVER_ERROR,
-      'Failed to create checkout session: ' + err.message
-    );
+    console.error(err);
+    throw err;
   }
 };
 
