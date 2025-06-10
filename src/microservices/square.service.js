@@ -48,14 +48,13 @@ const createCheckoutSession = async (amount, user, orderId, product_data) => {
       throw new Error('No products provided for checkout');
     }
 
+    // Keep the production redirect URL but use sandbox for payment processing
     const baseUrl = config.env === 'production' 
       ? 'https://metabolixmd.com'
       : 'http://localhost:3000';
     
-    // Use direct API call instead of SDK
-    const apiUrl = config.env === 'production'
-      ? 'https://connect.squareup.com/v2/online-checkout/payment-links'
-      : 'https://connect.squareupsandbox.com/v2/online-checkout/payment-links';
+    // Always use sandbox API URL for testing
+    const apiUrl = 'https://connect.squareupsandbox.com/v2/online-checkout/payment-links';
     
     // Create a unique idempotency key for this transaction
     const idempotencyKey = crypto.randomUUID();
