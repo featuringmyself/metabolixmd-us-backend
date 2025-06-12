@@ -250,45 +250,64 @@ async function handleWebhook(req, res) {
   try {
     const signature = req.headers['x-square-hmacsha256-signature'];
     const url = req.originalUrl;
-    const rawBody = req.body; // This is already a Buffer due to express.raw()
+    const rawBody = req.rawBody;
+
+    logger.info('Received webhook', {
+      type: req.body.type,
+      eventId: req.body.event_id,
+      merchantId: req.body.merchant_id
+    });
 
     // Validate webhook signature
     if (!validateWebhookSignature(signature, url, rawBody)) {
-      throw new ApiError(401, 'Invalid webhook signature');
+      logger.error('Invalid webhook signature', {
+        signature,
+        url,
+        eventId: req.body.event_id
+      });
+      return res.status(401).json({ error: 'Invalid signature' });
     }
 
-    // Parse the raw body
-    const body = JSON.parse(rawBody.toString());
-    const { type, data, event_id } = body;
-
-    logger.info('Received webhook', {
-      type,
-      eventId: event_id
-    });
+    const { type, event_id, data } = req.body;
 
     // Handle different event types
     switch (type) {
       case 'payment.updated':
-        await processPaymentUpdate(data.object.payment, event_id);
+        if (data?.object?.payment) {
+          await processPaymentUpdate(data.object.payment, event_id);
+        } else {
+          logger.warn('Invalid payment.updated payload structure', {
+            eventId: event_id,
+            data: JSON.stringify(data)
+          });
+        }
         break;
-      
+
       case 'order.updated':
-        await processOrderUpdate(data.object.order, event_id);
+        if (data?.object?.order) {
+          await processOrderUpdate(data.object.order, event_id);
+        } else {
+          logger.warn('Invalid order.updated payload structure', {
+            eventId: event_id,
+            data: JSON.stringify(data)
+          });
+        }
         break;
-      
+
       default:
-        logger.info('Unhandled webhook event type', { type });
+        logger.info('Unhandled webhook event type', { type, eventId: event_id });
     }
 
     // Always return 200 to acknowledge receipt
     res.status(200).json({ received: true });
   } catch (error) {
-    logger.error('Webhook error', {
+    logger.error('Error processing webhook', {
       error: error.message,
-      stack: error.stack
+      stack: error.stack,
+      body: req.body
     });
     // Still return 200 to prevent Square from retrying
-    res.status(200).json({ error: error.message });
+    res.status(200).json({ error: 'Internal server error' });
   }
 }
 

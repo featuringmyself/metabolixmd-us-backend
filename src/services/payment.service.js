@@ -170,16 +170,33 @@ async function getPaymentStatus(paymentId) {
  */
 async function verifyPayment(paymentId, eventId) {
   try {
+    logger.info('Verifying payment', {
+      paymentId,
+      eventId
+    });
+
     // Check for duplicate webhook event
     const existingPayment = await Payment.findOne({ webhookEventId: eventId });
     if (existingPayment) {
-      logger.info('Duplicate webhook event received', { eventId, paymentId });
+      logger.info('Duplicate webhook event received', { 
+        eventId, 
+        paymentId,
+        existingPaymentId: existingPayment._id
+      });
       return existingPayment;
     }
 
     // Get latest payment status from Square
     const squarePayment = await getPaymentStatus(paymentId);
     
+    logger.info('Retrieved payment status from Square', {
+      paymentId,
+      status: squarePayment.status,
+      orderId: squarePayment.orderId,
+      amount: squarePayment.amountMoney?.amount,
+      currency: squarePayment.amountMoney?.currency
+    });
+
     // Update payment in database
     const payment = await Payment.findOneAndUpdate(
       { squarePaymentId: paymentId },
@@ -188,25 +205,36 @@ async function verifyPayment(paymentId, eventId) {
         verifiedAt: new Date(),
         verificationMethod: 'WEBHOOK',
         webhookEventId: eventId,
+        metadata: {
+          receiptNumber: squarePayment.receiptNumber,
+          sourceType: squarePayment.sourceType,
+          cardDetails: squarePayment.cardDetails,
+          riskEvaluation: squarePayment.riskEvaluation,
+          receiptUrl: squarePayment.receiptUrl
+        },
         $setOnInsert: {
           orderId: squarePayment.orderId,
-          amount: squarePayment.amountMoney.amount,
-          currency: squarePayment.amountMoney.currency
+          amount: squarePayment.amountMoney?.amount,
+          currency: squarePayment.amountMoney?.currency
         }
       },
       { upsert: true, new: true }
     );
 
-    logger.info('Payment verified', {
+    logger.info('Payment verified and updated', {
       paymentId,
       eventId,
-      status: payment.status
+      status: payment.status,
+      orderId: payment.orderId,
+      amount: payment.amount,
+      currency: payment.currency
     });
 
     return payment;
   } catch (error) {
     logger.error('Error verifying payment', {
       error: error.message,
+      stack: error.stack,
       paymentId,
       eventId
     });
