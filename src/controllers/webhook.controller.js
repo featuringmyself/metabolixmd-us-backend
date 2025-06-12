@@ -8,9 +8,6 @@ const path = require('path');
 const config = require("../config/config");
 const { sendOrderStatusUpdate } = require("../microservices/sms.service");
 const httpStatus = require("http-status");
-const crypto = require('crypto');
-const { ApiError } = require('../utils/ApiError');
-const logger = require('../config/logger');
 
 const handleSquarePaymentCompleted = async payload => {
     const session = {
@@ -162,158 +159,54 @@ const handleSquarePaymentCompleted = async payload => {
     }
 };
 
-/**
- * Validates the Square webhook signature
- * @param {string} signature - The x-square-hmacsha256-signature header
- * @param {string} url - The webhook URL
- * @param {Buffer} rawBody - The raw request body
- * @returns {boolean} Whether the signature is valid
- */
-function validateWebhookSignature(signature, url, rawBody) {
-  try {
-    const signatureKey = process.env.SQUARE_WEBHOOK_SIGNATURE_KEY;
-    if (!signatureKey) {
-      logger.error('Missing webhook signature key');
-      return false;
-    }
-
-    const hmac = crypto.createHmac('sha256', signatureKey);
-    const data = url + rawBody;
-    const calculatedSignature = hmac.update(data).digest('base64');
-    return crypto.timingSafeEqual(
-      Buffer.from(signature),
-      Buffer.from(calculatedSignature)
-    );
-  } catch (error) {
-    logger.error('Error validating webhook signature', { error: error.message });
-    return false;
-  }
-}
-
-/**
- * Processes a payment update event
- * @param {Object} payment - The payment object from Square
- * @param {string} eventId - The webhook event ID
- * @returns {Promise<void>}
- */
-async function processPaymentUpdate(payment, eventId) {
-  try {
-    if (payment.status === 'COMPLETED') {
-      await paymentService.verifyPayment(payment.id, eventId);
-    } else {
-      logger.info('Payment not completed', {
-        paymentId: payment.id,
-        status: payment.status
-      });
-    }
-  } catch (error) {
-    logger.error('Error processing payment update', {
-      error: error.message,
-      paymentId: payment.id,
-      eventId
-    });
-    throw error;
-  }
-}
-
-/**
- * Processes an order update event
- * @param {Object} order - The order object from Square
- * @param {string} eventId - The webhook event ID
- * @returns {Promise<void>}
- */
-async function processOrderUpdate(order, eventId) {
-  try {
-    if (order.payments && order.payments.length > 0) {
-      for (const payment of order.payments) {
-        await processPaymentUpdate(payment, eventId);
-      }
-    } else {
-      logger.info('Order has no payments', { orderId: order.id });
-    }
-  } catch (error) {
-    logger.error('Error processing order update', {
-      error: error.message,
-      orderId: order.id,
-      eventId
-    });
-    throw error;
-  }
-}
-
-/**
- * Handles incoming Square webhooks
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- */
-async function handleWebhook(req, res) {
-  try {
-    const signature = req.headers['x-square-hmacsha256-signature'];
-    const url = req.originalUrl;
-    const rawBody = req.rawBody;
-
-    logger.info('Received webhook', {
-      type: req.body.type,
-      eventId: req.body.event_id,
-      merchantId: req.body.merchant_id
+const processWebhook = catchAsync(async (req, res) => {
+    console.log('Received webhook request:', {
+        path: req.path,
+        method: req.method,
+        headers: req.headers['square-signature']
     });
 
-    // Validate webhook signature
-    if (!validateWebhookSignature(signature, url, rawBody)) {
-      logger.error('Invalid webhook signature', {
-        signature,
-        url,
-        eventId: req.body.event_id
-      });
-      return res.status(401).json({ error: 'Invalid signature' });
+    if (!req.body || !req.headers['square-signature']) {
+        console.error('Missing webhook body or signature');
+        return res.status(400).json({ 
+            received: false,
+            error: 'Missing webhook body or signature'
+        });
     }
 
-    const { type, event_id, data } = req.body;
+    try {
+        const squareEvent = squareService.verifyWebhookSignature(
+            req.rawBody || JSON.stringify(req.body),
+            req.headers['square-signature']
+        );
+        
+        console.log(`Processing Square event: ${squareEvent.type}`);
+        
+        switch (squareEvent.type) {
+            case 'payment.updated':
+                const payment = squareEvent.data.object.payment;
+                if (payment.status === 'COMPLETED') {
+                    const result = await handleSquarePaymentCompleted(payment);
+                    console.log('Payment processed successfully:', result);
+                } else {
+                    console.log(`Payment status is ${payment.status}, not processing further`);
+                }
+                break;
 
-    // Handle different event types
-    switch (type) {
-      case 'payment.updated':
-        if (data?.object?.payment) {
-          await processPaymentUpdate(data.object.payment, event_id);
-        } else {
-          logger.warn('Invalid payment.updated payload structure', {
-            eventId: event_id,
-            data: JSON.stringify(data)
-          });
+            default:
+                console.log(`Unhandled webhook event type: ${squareEvent.type}`);
         }
-        break;
 
-      case 'order.updated':
-        if (data?.object?.order) {
-          await processOrderUpdate(data.object.order, event_id);
-        } else {
-          logger.warn('Invalid order.updated payload structure', {
-            eventId: event_id,
-            data: JSON.stringify(data)
-          });
-        }
-        break;
-
-      default:
-        logger.info('Unhandled webhook event type', { type, eventId: event_id });
+        res.status(200).json({ received: true });
+    } catch (err) {
+        console.error('Webhook processing error:', err);
+        res.status(200).json({ 
+            received: true,
+            error: err.message
+        });
     }
-
-    // Always return 200 to acknowledge receipt
-    res.status(200).json({ received: true });
-  } catch (error) {
-    logger.error('Error processing webhook', {
-      error: error.message,
-      stack: error.stack,
-      body: req.body
-    });
-    // Still return 200 to prevent Square from retrying
-    res.status(200).json({ error: 'Internal server error' });
-  }
-}
+});
 
 module.exports = {
-  handleWebhook,
-  validateWebhookSignature, // Exported for testing
-  processPaymentUpdate,    // Exported for testing
-  processOrderUpdate       // Exported for testing
-};
+    processWebhook
+}

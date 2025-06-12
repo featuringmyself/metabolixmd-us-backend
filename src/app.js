@@ -5,7 +5,7 @@ const helmet = require("helmet");
 const httpStatus = require("http-status");
 const routes = require("./routes/v1");
 const testRoutes = require("./routes/test.routes");
-const webhookRoutes = require("./routes/webhook.route");
+const webhookRoute = require("./routes/webhook.route");
 const morgan = require("./config/morgan");
 const config = require("./config/config");
 const ApiError = require("./utils/ApiError");
@@ -33,8 +33,7 @@ const corsOptions = {
     'Content-Type',
     'Accept',
     'Authorization',
-    'timezone',
-    'x-square-hmacsha256-signature'
+    'timezone'
   ],
   exposedHeaders: [
     'Access-Control-Allow-Origin',
@@ -42,10 +41,6 @@ const corsOptions = {
   ]
 };
 
-// Special handling for webhook requests
-app.use('/webhook', express.raw({ type: 'application/json' }));
-
-// Regular middleware for other routes
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
 
@@ -54,7 +49,7 @@ app.use((req, res, next) => {
   if (req.method === 'OPTIONS') {
     res.header('Access-Control-Allow-Origin', req.headers.origin);
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization,timezone,x-square-hmacsha256-signature');
+    res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization,timezone');
     res.header('Access-Control-Allow-Credentials', 'true');
     return res.status(200).json({});
   }
@@ -81,12 +76,25 @@ app.use(helmet({
   crossOriginOpenerPolicy: false
 }));
 
-// Regular body parsing for non-webhook routes
-app.use(express.json({ limit: '50mb' }));
+// Increase body size limits before other middleware
+app.use(express.json({
+  limit: '50mb',
+  verify: (req, res, buf) => {
+    if (req.originalUrl.includes('webhook')) req.rawBody = buf.toString();
+  },
+}));
+
+// Configure file upload limits
 app.use(express.urlencoded({ 
   extended: true, 
   limit: '50mb',
   parameterLimit: 100000 
+}));
+
+// Configure body parser with increased limits
+app.use(express.raw({
+  limit: '50mb',
+  type: ['image/*']
 }));
 
 // gzip compression
@@ -95,13 +103,11 @@ app.use(compression());
 // Apply HIPAA audit logging middleware
 app.use(hipaaLogger());
 
-// Mount webhook routes first to prevent interference
-app.use('/webhook', webhookRoutes);
-
-// Mount other routes
+// Reroute all API requests
+app.use('/webhooks', webhookRoute);
 app.use('/v1', routes);
-app.use('/test', testRoutes);
 app.use('/', routes);
+app.use('/test', testRoutes);
 
 const path = require('path');
 app.set('view engine', 'ejs');
