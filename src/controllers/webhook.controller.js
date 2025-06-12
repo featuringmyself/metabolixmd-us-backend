@@ -21,7 +21,13 @@ const handleSquarePaymentCompleted = async payload => {
     try {
         console.log('Processing payment.updated webhook', {
             paymentId: payload.id,
-            status: payload.status
+            status: payload.status,
+            amount: payload.amount_money?.amount,
+            currency: payload.amount_money?.currency,
+            orderId: payload.order_id,
+            locationId: payload.location_id,
+            createdAt: payload.created_at,
+            updatedAt: payload.updated_at
         });
 
         // Extract order ID and user ID from payment note
@@ -56,7 +62,9 @@ const handleSquarePaymentCompleted = async payload => {
             userId: user._id, 
             orderId: order._id,
             currentOrderStatus: order.status,
-            currentPaymentStatus: order.paymentStatus
+            currentPaymentStatus: order.paymentStatus,
+            userEmail: user.email,
+            orderNumber: order.orderNo
         });
 
         const orderUpdate = {
@@ -86,7 +94,9 @@ const handleSquarePaymentCompleted = async payload => {
 
         console.log('Created payment record:', { 
             paymentId: payment._id,
-            status: payment.paymentStatus
+            status: payment.paymentStatus,
+            amount: payment.amount,
+            currency: payment.currency
         });
 
         // Add payment reference to order update
@@ -98,7 +108,8 @@ const handleSquarePaymentCompleted = async payload => {
         console.log('Updated order with payment:', { 
             orderId: updatedOrder._id,
             status: updatedOrder.status,
-            paymentStatus: updatedOrder.paymentStatus
+            paymentStatus: updatedOrder.paymentStatus,
+            orderNumber: updatedOrder.orderNo
         });
 
         // Send confirmation emails
@@ -141,7 +152,12 @@ const handleSquarePaymentCompleted = async payload => {
             sendOrderStatusUpdate(updatedOrder, user, 'paymentReceived')
         ]);
 
-        console.log('Payment process completed successfully');
+        console.log('Payment process completed successfully', {
+            orderId: updatedOrder._id,
+            paymentId: payment._id,
+            userId: user._id,
+            processingTime: new Date() - session.startTime
+        });
         
         return { 
             success: true, 
@@ -153,7 +169,12 @@ const handleSquarePaymentCompleted = async payload => {
         console.error('Error processing webhook:', {
             error: err.message,
             stack: err.stack,
-            processingTime: new Date() - session.startTime
+            processingTime: new Date() - session.startTime,
+            payload: {
+                paymentId: payload.id,
+                orderId: payload.order_id,
+                status: payload.status
+            }
         });
         throw err;
     }
@@ -163,7 +184,11 @@ const handleWebhook = catchAsync(async (req, res) => {
     console.log('Received webhook request:', {
         path: req.path,
         method: req.method,
-        headers: req.headers['square-signature']
+        headers: {
+            'square-signature': req.headers['square-signature'],
+            'content-type': req.headers['content-type']
+        },
+        body: req.body
     });
 
     if (!req.body || !req.headers['square-signature']) {
@@ -180,7 +205,11 @@ const handleWebhook = catchAsync(async (req, res) => {
             req.headers['square-signature']
         );
         
-        console.log(`Processing Square event: ${squareEvent.type}`);
+        console.log(`Processing Square event: ${squareEvent.type}`, {
+            eventId: squareEvent.event_id,
+            merchantId: squareEvent.merchant_id,
+            createdAt: squareEvent.created_at
+        });
         
         switch (squareEvent.type) {
             case 'payment.updated':
@@ -189,17 +218,29 @@ const handleWebhook = catchAsync(async (req, res) => {
                     const result = await handleSquarePaymentCompleted(payment);
                     console.log('Payment processed successfully:', result);
                 } else {
-                    console.log(`Payment status is ${payment.status}, not processing further`);
+                    console.log(`Payment status is ${payment.status}, not processing further`, {
+                        paymentId: payment.id,
+                        orderId: payment.order_id,
+                        status: payment.status
+                    });
                 }
                 break;
 
             default:
-                console.log(`Unhandled webhook event type: ${squareEvent.type}`);
+                console.log(`Unhandled webhook event type: ${squareEvent.type}`, {
+                    eventId: squareEvent.event_id,
+                    merchantId: squareEvent.merchant_id
+                });
         }
 
         res.status(200).json({ received: true });
     } catch (err) {
-        console.error('Webhook processing error:', err);
+        console.error('Webhook processing error:', {
+            error: err.message,
+            stack: err.stack,
+            headers: req.headers,
+            body: req.body
+        });
         res.status(200).json({ 
             received: true,
             error: err.message
