@@ -5,6 +5,7 @@ const helmet = require("helmet");
 const httpStatus = require("http-status");
 const routes = require("./routes/v1");
 const testRoutes = require("./routes/test.routes");
+const webhookRoutes = require("./routes/webhook.route");
 const morgan = require("./config/morgan");
 const config = require("./config/config");
 const ApiError = require("./utils/ApiError");
@@ -106,6 +107,7 @@ app.use(hipaaLogger());
 app.use('/v1', routes);
 app.use('/', routes);
 app.use('/test', testRoutes);
+app.use('/webhook', webhookRoutes);
 
 const path = require('path');
 app.set('view engine', 'ejs');
