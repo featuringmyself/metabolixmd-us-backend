@@ -159,7 +159,7 @@ const handleSquarePaymentCompleted = async payload => {
     }
 };
 
-const processWebhook = catchAsync(async (req, res) => {
+const handleWebhook = catchAsync(async (req, res) => {
     console.log('Received webhook request:', {
         path: req.path,
         method: req.method,
@@ -208,5 +208,5 @@ const processWebhook = catchAsync(async (req, res) => {
 });
 
 module.exports = {
-    processWebhook
+    handleWebhook
 }

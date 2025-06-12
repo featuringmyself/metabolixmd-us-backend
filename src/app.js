@@ -15,6 +15,12 @@ const hipaaLogger = require('./middlewares/hipaaLogger');
 
 const app = express();
 
+// Special handling for webhook requests
+app.use('/webhooks', express.raw({ type: 'application/json' }), (req, res, next) => {
+  req.rawBody = req.body.toString();
+  next();
+});
+
 //Morgan will handle logging HTTP requests,
 // while winston logger will take care of your application-specific logs
 if (config.env !== "test") {
@@ -33,7 +39,8 @@ const corsOptions = {
     'Content-Type',
     'Accept',
     'Authorization',
-    'timezone'
+    'timezone',
+    'square-signature'
   ],
   exposedHeaders: [
     'Access-Control-Allow-Origin',
@@ -49,7 +56,7 @@ app.use((req, res, next) => {
   if (req.method === 'OPTIONS') {
     res.header('Access-Control-Allow-Origin', req.headers.origin);
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization,timezone');
+    res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization,timezone,square-signature');
     res.header('Access-Control-Allow-Credentials', 'true');
     return res.status(200).json({});
   }
@@ -76,13 +83,14 @@ app.use(helmet({
   crossOriginOpenerPolicy: false
 }));
 
-// Increase body size limits before other middleware
-app.use(express.json({
-  limit: '50mb',
-  verify: (req, res, buf) => {
-    if (req.originalUrl.includes('webhook')) req.rawBody = buf.toString();
-  },
-}));
+// Parse JSON bodies for non-webhook routes
+app.use((req, res, next) => {
+  if (!req.originalUrl.includes('/webhooks')) {
+    express.json({ limit: '50mb' })(req, res, next);
+  } else {
+    next();
+  }
+});
 
 // Configure file upload limits
 app.use(express.urlencoded({ 
@@ -103,7 +111,7 @@ app.use(compression());
 // Apply HIPAA audit logging middleware
 app.use(hipaaLogger());
 
-// Reroute all API requests
+// Mount routes
 app.use('/webhooks', webhookRoute);
 app.use('/v1', routes);
 app.use('/', routes);
