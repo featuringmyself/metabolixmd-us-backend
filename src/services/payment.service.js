@@ -2,6 +2,9 @@ const { Payment } = require('../models/payment.models');
 const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const mongoose = require('mongoose');
+const squareClient = require('../config/square.config');
+const { v4: uuidv4 } = require('uuid');
+const logger = require('../config/logger');
 
 async function create(paymentData) {
   const session = await mongoose.startSession();
@@ -85,10 +88,139 @@ async function getPayments(filters = {}, options = {}) {
   return result;
 }
 
+/**
+ * Creates a payment using Square's API
+ * @param {string} sourceId - The source ID (e.g., 'cnon:card-nonce-ok' for sandbox)
+ * @param {number} amount - Amount in cents
+ * @param {string} orderId - Associated order ID
+ * @param {string} currency - Currency code (default: 'USD')
+ * @returns {Promise<Object>} The payment object
+ */
+async function createPayment(sourceId, amount, orderId, currency = 'USD') {
+  try {
+    const payment = await squareClient.paymentsApi.createPayment({
+      idempotencyKey: uuidv4(),
+      sourceId,
+      amountMoney: {
+        amount,
+        currency
+      },
+      locationId: process.env.SQUARE_LOCATION_ID,
+      note: `Order ID: ${orderId}`
+    });
+
+    const paymentData = payment.result.payment;
+    
+    // Store payment in database
+    await Payment.create({
+      squarePaymentId: paymentData.id,
+      orderId,
+      amount: paymentData.amountMoney.amount,
+      currency: paymentData.amountMoney.currency,
+      status: paymentData.status,
+      metadata: {
+        receiptNumber: paymentData.receiptNumber,
+        sourceType: paymentData.sourceType,
+        cardDetails: paymentData.cardDetails
+      }
+    });
+
+    logger.info('Payment created', {
+      paymentId: paymentData.id,
+      orderId,
+      amount,
+      status: paymentData.status
+    });
+
+    return paymentData;
+  } catch (error) {
+    logger.error('Error creating payment', {
+      error: error.message,
+      sourceId,
+      amount,
+      orderId
+    });
+    throw new ApiError(500, 'Failed to create payment');
+  }
+}
+
+/**
+ * Gets the status of a payment using Square's API
+ * @param {string} paymentId - The Square payment ID
+ * @returns {Promise<Object>} The payment object with status
+ */
+async function getPaymentStatus(paymentId) {
+  try {
+    const response = await squareClient.paymentsApi.getPayment(paymentId);
+    return response.result.payment;
+  } catch (error) {
+    logger.error('Error getting payment status', {
+      error: error.message,
+      paymentId
+    });
+    throw new ApiError(500, 'Failed to get payment status');
+  }
+}
+
+/**
+ * Verifies and updates payment status
+ * @param {string} paymentId - The Square payment ID
+ * @param {string} eventId - The webhook event ID
+ * @returns {Promise<Object>} The updated payment object
+ */
+async function verifyPayment(paymentId, eventId) {
+  try {
+    // Check for duplicate webhook event
+    const existingPayment = await Payment.findOne({ webhookEventId: eventId });
+    if (existingPayment) {
+      logger.info('Duplicate webhook event received', { eventId, paymentId });
+      return existingPayment;
+    }
+
+    // Get latest payment status from Square
+    const squarePayment = await getPaymentStatus(paymentId);
+    
+    // Update payment in database
+    const payment = await Payment.findOneAndUpdate(
+      { squarePaymentId: paymentId },
+      {
+        status: squarePayment.status,
+        verifiedAt: new Date(),
+        verificationMethod: 'WEBHOOK',
+        webhookEventId: eventId,
+        $setOnInsert: {
+          orderId: squarePayment.orderId,
+          amount: squarePayment.amountMoney.amount,
+          currency: squarePayment.amountMoney.currency
+        }
+      },
+      { upsert: true, new: true }
+    );
+
+    logger.info('Payment verified', {
+      paymentId,
+      eventId,
+      status: payment.status
+    });
+
+    return payment;
+  } catch (error) {
+    logger.error('Error verifying payment', {
+      error: error.message,
+      paymentId,
+      eventId
+    });
+    throw new ApiError(500, 'Failed to verify payment');
+  }
+}
+
 module.exports = {
   create,
   getPaymentById,
   getPaymentsByOrderId,
   getPaymentsByUserId,
   getPayments,
+  createPayment,
+  getPaymentStatus,
+  verifyPayment
 };
