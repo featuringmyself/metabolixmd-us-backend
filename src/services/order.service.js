@@ -113,6 +113,8 @@ const path = require('path');
 
 async function updateOrderById(id, data) {
   const session = await mongoose.startSession();
+  let order;
+  
   try {
     session.startTransaction();
 
@@ -121,7 +123,7 @@ async function updateOrderById(id, data) {
     // Get the order before update to check for status changes
     const previousOrder = await Order.findById(id);
     
-    const order = await Order.findByIdAndUpdate(
+    order = await Order.findByIdAndUpdate(
       id,
       { 
         ...data,
@@ -140,7 +142,6 @@ async function updateOrderById(id, data) {
     });
 
     if (!order) {
-      console.log('Order not found for update:', id);
       throw new ApiError(httpStatus.NOT_FOUND, "Order not found");
     }
 
@@ -206,7 +207,9 @@ async function updateOrderById(id, data) {
 
     return order;
   } catch (error) {
-    await session.abortTransaction();
+    if (session.inTransaction()) {
+      await session.abortTransaction();
+    }
     console.error('Order update error:', error);
     throw error;
   } finally {
