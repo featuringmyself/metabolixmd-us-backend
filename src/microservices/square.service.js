@@ -79,7 +79,7 @@ const createCheckoutSession = async (amount, user, orderId, product_data) => {
         location_id: config.square.locationId
       },
       checkout_options: {
-        redirect_url: `${baseUrl}/profile-details?payment=success&order_id=${orderId}`,
+        redirect_url: `${baseUrl}/payment-verification?payment=success&order_id=${orderId}`,
         ask_for_shipping_address: false,
         merchant_support_email: 'support@metabolixmd.com',
       },
