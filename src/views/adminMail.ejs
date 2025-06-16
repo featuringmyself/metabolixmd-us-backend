@@ -4,54 +4,131 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Order Confirmation</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      padding: 20px;
-      color: #333;
-    }
-    .container {
-      max-width: 600px;
-      margin: 0 auto;
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-    h2 {
-      color: #2c3e50;
-    }
-    p {
-      margin-bottom: 15px;
-    }
-    .footer {
-      text-align: center;
-      color: #888;
-      margin-top: 20px;
-    }
-  </style>
 </head>
-<body>
-  <div class="container">
-    <h2>Congratulations,! 🎉</h2>
-    <p>We are thrilled to confirm that we’ve received your order and can’t wait to deliver it.</p>
-    <p><strong>Order Number:</strong> <%= orderNumber %></p>
-    
-    <p><strong>Shipping Address:</strong></p>
-    <p>
-      <%= customerAddress %><br>
-      <%= city %>, <%= state %>, <%= zipCode %>
-    </p>
-    
-    <p>For your convenience, you can track your order status anytime by following this link:</p>
-    <p><a href="<%= trackingLink %>" style="color: #1a73e8; text-decoration: none;">Track Your Order</a></p>
-    
-    <p>Thank you for shopping with us!</p>
-    
-    <div class="footer">
-      &copy; 2024 Metabolix. All rights reserved.
-    </div>
-  </div>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f8faf9; color: #1f2937;">
+  
+  <!-- Main container -->
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f8faf9; padding: 40px 20px;">
+    <tr>
+      <td align="center">
+        
+        <!-- Email content wrapper -->
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 20px rgba(16, 185, 129, 0.08); overflow: hidden;">
+          
+          <!-- Minimal header with accent -->
+          <tr>
+            <td style="padding: 0;">
+              <div style="height: 4px; background: linear-gradient(90deg, #10b981 0%, #059669 100%);"></div>
+            </td>
+          </tr>
+          
+          <!-- Main content -->
+          <tr>
+            <td style="padding: 48px 40px;">
+              
+              <!-- Success icon and title -->
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                  <td style="text-align: center; padding-bottom: 32px;">
+                    <div style="display: inline-block; width: 64px; height: 64px; background-color: #d1fae5; border-radius: 50%; margin-bottom: 24px;">
+                      <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 28px; color: #10b981;">✓</div>
+                    </div>
+                    <h1 style="margin: 0; font-size: 28px; font-weight: 600; color: #111827; letter-spacing: -0.025em; line-height: 1.2;">
+                      Order Confirmed
+                    </h1>
+                  </td>
+                </tr>
+              </table>
+              
+              <!-- Confirmation message -->
+              <p style="margin: 0 0 32px; font-size: 16px; line-height: 1.6; color: #6b7280; text-align: center;">
+                Thank you for your order. We've received your payment and your order is being processed.
+              </p>
+              
+              <!-- Order details card -->
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin: 32px 0; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
+                <tr>
+                  <td style="background-color: #f9fafb; padding: 20px 24px; border-bottom: 1px solid #e5e7eb;">
+                    <h3 style="margin: 0; font-size: 16px; font-weight: 600; color: #374151;">Order Details</h3>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 24px;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                      <tr>
+                        <td style="padding: 12px 0; font-size: 14px; color: #6b7280; font-weight: 500;">
+                          Order Number
+                        </td>
+                        <td style="padding: 12px 0; text-align: right; font-size: 14px; color: #111827; font-weight: 600; font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;">
+                          <%= orderNumber %>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+              
+              <!-- Shipping address -->
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin: 32px 0; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
+                <tr>
+                  <td style="background-color: #f9fafb; padding: 20px 24px; border-bottom: 1px solid #e5e7eb;">
+                    <h3 style="margin: 0; font-size: 16px; font-weight: 600; color: #374151;">Shipping Address</h3>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 24px;">
+                    <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #374151;">
+                      <%= customerAddress %><br>
+                      <%= city %>, <%= state %> <%= zipCode %>
+                    </p>
+                  </td>
+                </tr>
+              </table>
+              
+              <!-- Track order button -->
+              <!-- <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin: 40px 0 32px;">
+                <tr>
+                  <td style="text-align: center;">
+                    <a href="<%= trackingLink %>" style="display: inline-block; padding: 16px 32px; background-color: #10b981; color: #ffffff; text-decoration: none; border-radius: 8px; font-size: 16px; font-weight: 600; transition: background-color 0.2s ease;">
+                      Track Your Order
+                    </a>
+                  </td>
+                </tr>
+              </table> -->
+              
+              <!-- Support note -->
+              <div style="margin: 40px 0 0; padding: 20px; background-color: #f9fafb; border-radius: 8px; border-left: 3px solid #10b981;">
+                <p style="margin: 0; font-size: 14px; line-height: 1.5; color: #6b7280;">
+                  <strong style="color: #374151;">Need help?</strong> Our customer support team is here to assist you with any questions about your order. Mail us at <a href="mailto:consultant@metabolixmd.com" style="color: #10b981; text-decoration: none;">consultant@metabolixmd.com</a>
+                </p>
+              </div>
+              
+            </td>
+          </tr>
+          
+          <!-- Clean footer -->
+          <tr>
+            <td style="padding: 32px 40px; background-color: #f9fafb; border-top: 1px solid #e5e7eb;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                  <td style="text-align: center;">
+                    <p style="margin: 0 0 8px; font-size: 16px; font-weight: 600; color: #10b981;">
+                      MetabolixMD
+                    </p>
+                    <p style="margin: 0; font-size: 12px; color: #9ca3af;">
+                      © 2025 MetabolixMD. All rights reserved.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          
+        </table>
+        
+      </td>
+    </tr>
+  </table>
+  
 </body>
 </html>
