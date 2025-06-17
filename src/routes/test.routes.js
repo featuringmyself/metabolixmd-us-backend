@@ -56,8 +56,10 @@ router.get('/send-email', async(req, res) => {
     try {
         // Render the mail.ejs template
         const html = await ejs.renderFile(path.join(__dirname, '../views/scheduleMeetMail.ejs'), {
-            customerName: "Test Customer", // You can make this dynamic by passing it in request
-            link: 'profile-details'
+            name: "Test Customer", // You can make this dynamic by passing it in request
+            link: 'profile-details',
+            meetTime: '12',
+            meetLink: 'join'
         });
 
         const sgMail = require('@sendgrid/mail');
@@ -65,10 +67,10 @@ router.get('/send-email', async(req, res) => {
 
         const msg = {
             to: 'rudralocked@gmail.com',
-            from: 'alert@metabolixmd.com',
+            from: 'info@metabolixmd.com',
             subject: 'Sending with Twilio SendGrid is Fun',
             text: 'and easy to do anywhere, even with Node.js',
-            html: html
+            
         };
 
         await sgMail.send(msg);
