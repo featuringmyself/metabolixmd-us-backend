@@ -14,18 +14,18 @@ admin.initializeApp({
 const firebaseAuth = (allowUserType = 'All') => async (req, res, next) => {
   return new Promise(async (resolve, reject) => {
     const token = req.headers?.authorization?.split(' ')[1];
-    console.log('Token:', token);
+    // console.log('Token:', token); 
     // token not found
     if (!token) {
       reject(new ApiError(httpStatus.BAD_REQUEST, 'Please Authenticate!'));
     }
     try {
       const payload = await admin.auth().verifyIdToken(token, true);
-      console.log('FirebaseAuthPayload:', payload);
+      // console.log('FirebaseAuthPayload:', payload);
       const user = await authService.getUserByFirebaseUId(payload.uid);
-      console.log('FirebaseAuthUser:', user);
+      // console.log('FirebaseAuthUser:', user);
       if (!user) {
-        console.log('Request path:', req.path);
+        // console.log('Request path:', req.path);
         if (['/onBoarding'].includes(req.path) || req.path.includes('secretSignup') || req.path.includes('/vendor/onBoarding')) {
           // console.log('New user payload:', payload);
           req.newUser = payload;
@@ -62,8 +62,8 @@ const generateToken = async(req,res,next) => {
   try{
      console.log(req.params.uid)
       const token =  await admin.auth().createCustomToken(req.params.uid);
-      console.log(token)
-      console.log(getAuth(restApp));
+      // console.log(token)
+      // console.log(getAuth(restApp));
       const FIREBASE_API_KEY = firebase.api_key;
       const resp = await axios({
         url: `https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyCustomToken?key=${FIREBASE_API_KEY}`,
@@ -74,7 +74,7 @@ const generateToken = async(req,res,next) => {
         },
         json: true,
       });
-      console.log(resp.data)
+      // console.log(resp.data)
       if (resp.data.error) {
         return res.status(500).json({
           status: false,
@@ -82,7 +82,7 @@ const generateToken = async(req,res,next) => {
         })
       }
       const idToken = resp.data.idToken;
-      console.log(idToken);
+      // console.log(idToken);
       
   
       // const user = await signInWithCustomToken(getAuth(restApp),token);
@@ -94,7 +94,7 @@ const generateToken = async(req,res,next) => {
       });
 
   }catch(err){
-      console.log(err)
+      // console.log(err)
       return res.status(500).json({
           status:false,
           msg:err.message

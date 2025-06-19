@@ -14,6 +14,7 @@ const prescriptionRoute = require("./prescription.route");
 const questionRoute = require("./question.route");
 const squareRoute = require("./square.route");
 const meetingRoute = require("./meeting.route");
+const followUpRoute = require("./followUp.route");
 
 router.use("/auth", authRoute);
 router.use("/users", userRoute);
@@ -28,5 +29,6 @@ router.use("/prescription", prescriptionRoute);
 router.use("/question", questionRoute);
 router.use("/square", squareRoute);
 router.use("/meeting", meetingRoute);
+router.use("/follow-up", followUpRoute);
 
 module.exports = router;

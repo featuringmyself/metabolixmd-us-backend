@@ -10,3 +10,5 @@ module.exports.diseaseService = require("./disease.service");
 module.exports.prescriptionService = require("./prescription.service");
 module.exports.questionService = require("./question.service");
 module.exports.paymentService = require("./payment.service");
+module.exports.meetingService = require('./meeting.service');
+module.exports.followUpService = require('./followUp.service');
