@@ -7,6 +7,7 @@ const path = require('path');
 const ejs = require('ejs');
 const ApiError = require('../utils/ApiError');
 const httpStatus = require('http-status');
+const { DateTime } = require('luxon');
 
 const createMeeting = catchAsync(async (req, res) => {
   const { orderId, meetLink, startTime, endTime, timeZone, type, notes } = req.body;
@@ -45,10 +46,17 @@ const createMeeting = catchAsync(async (req, res) => {
 
   // Send confirmation email
   const user = await userService.getUserById(req.user._id);
+  // Format the meeting time in the user's timezone using the DB value
+  let formattedMeetTime = meeting.startTime;
+  if (meeting.startTime && meeting.timeZone) {
+    formattedMeetTime = DateTime.fromISO(meeting.startTime, { zone: 'utc' })
+      .setZone(meeting.timeZone)
+      .toLocaleString(DateTime.DATETIME_FULL);
+  }
   const html = await ejs.renderFile(path.join(__dirname, '../views/scheduleMeetMail.ejs'), {
     name: user.name,
     meetLink,
-    meetTime: startTime // Using startTime as meetTime
+    meetTime: formattedMeetTime
   });
 
   await sendEmail({
