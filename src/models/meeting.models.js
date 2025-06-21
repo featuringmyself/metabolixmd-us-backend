@@ -28,6 +28,14 @@ const meetingSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    endTime: {
+      type: String,
+      required: true,
+    },
+    timeZone: {
+      type: String,
+      required: true,
+    },
     type: {
       type: String,
       enum: ["consultation", "follow-up", "emergency"],

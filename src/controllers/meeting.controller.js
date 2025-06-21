@@ -9,7 +9,7 @@ const ApiError = require('../utils/ApiError');
 const httpStatus = require('http-status');
 
 const createMeeting = catchAsync(async (req, res) => {
-  const { orderId, meetLink, meetTime, duration, startTime, type, notes } = req.body;
+  const { orderId, meetLink, startTime, endTime, timeZone, type, notes } = req.body;
   
   console.log('Meeting creation request received:', req.body);
   
@@ -18,6 +18,8 @@ const createMeeting = catchAsync(async (req, res) => {
     user: req.user._id,
     meetLink,
     startTime,
+    endTime,
+    timeZone,
     type: type || 'consultation',
     notes: notes || 'Scheduled via Calendly'
   };
