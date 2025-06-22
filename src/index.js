@@ -1,5 +1,3 @@
-require('../instrument');
-const Sentry = require('@sentry/node');
 const app = require('./app');
 const config = require('./config/config');
 const logger = require('./config/logger');
@@ -25,8 +23,6 @@ server.maxHeadersCount = 100;
 
 // Mount routes
 
-// Attach Sentry error handler before custom error handlers
-Sentry.setupExpressErrorHandler(app);
 
 // ------------- Don't Modify  -------------
 const exitHandler = () => {
