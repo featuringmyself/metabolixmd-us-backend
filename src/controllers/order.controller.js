@@ -13,6 +13,7 @@ const config = require("../config/config");
 
 // create order
 const createOrder = catchAsync(async (req, res) => {
+  console.log("createOrder controller hit", { user: req.user, body: req.body });
   const user = req.user;
   const body = req.body;
   let items = [];

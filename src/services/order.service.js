@@ -4,6 +4,7 @@ const ApiError = require("../utils/ApiError");
 const mongoose = require('mongoose');
 
 async function createOrder(data) {
+  console.log('orderService.createOrder called', data);
   const session = await mongoose.startSession();
   try {
     session.startTransaction();

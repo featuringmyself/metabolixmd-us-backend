@@ -12,6 +12,7 @@ admin.initializeApp({
 });
 
 const firebaseAuth = (allowUserType = 'All') => async (req, res, next) => {
+  console.log('firebaseAuth middleware called', { authorization: req.headers?.authorization });
   return new Promise(async (resolve, reject) => {
     const token = req.headers?.authorization?.split(' ')[1];
     // console.log('Token:', token); 
@@ -30,7 +31,7 @@ const firebaseAuth = (allowUserType = 'All') => async (req, res, next) => {
           // console.log('New user payload:', payload);
           req.newUser = payload;
           req.routeType = allowUserType;
-        } else reject(new ApiError(httpStatus.NOT_FOUND));
+        } else reject(new ApiError(httpStatus.NOT_FOUND, `User with firebase UID ${payload.uid} not found in the database.`));
       } else {
         if (!allowUserType.split(',').includes(user.__t) && allowUserType !== 'All') {
           reject(new ApiError(httpStatus.FORBIDDEN, "Sorry, but you can't access this"));

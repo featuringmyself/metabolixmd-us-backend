@@ -3,8 +3,12 @@ const router = express.Router();
 const orderController = require("../../controllers/order.controller");
 const {firebaseAuth} = require("../../middlewares/firebaseAuth.js");
 
-router.post("/", firebaseAuth(), orderController.createOrder);
+console.log("Order route loaded");
 
+router.post("/", firebaseAuth(), (req, res, next) => {
+  console.log("POST /v1/order hit");
+  orderController.createOrder(req, res, next);
+});
 
 router.get("/user", firebaseAuth(), orderController.getOrderByUserId);
 
