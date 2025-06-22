@@ -165,7 +165,7 @@ app.use(errorConverter);
 // handle error
 app.use(errorHandler);
 
-app.get('/debug-sentry', function mainHandler(req, res) {
+app.get('/v1/debug-sentry', function mainHandler(req, res) {
   throw new Error('My first Sentry error!');
 });
 
