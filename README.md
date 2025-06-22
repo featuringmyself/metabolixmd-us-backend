@@ -34,3 +34,25 @@
 _Codebase should be like a graden where everyone can move around easily and peacefully._
 
 **_HAPPY CODING..._**
+
+## HIPAA Compliance Checklist
+
+- [x] Authentication and access control (Firebase Auth, role-based)
+- [x] Audit logging (HIPAA logger, 7-year retention)
+- [x] Input validation (Joi)
+- [x] Error handling (centralized, no sensitive data leaks)
+- [x] CORS and security headers (Helmet, custom CSP)
+- [x] Encryption at rest (AES-256-CBC for PHI)
+- [x] Logging (Winston, Morgan)
+- [x] Rate limiting (express-rate-limit)
+- [x] CSRF protection (csurf)
+- [x] HTTPS enforcement (middleware + deploy config)
+
+**Operational/Organizational Requirements:**
+- [ ] **Business Associate Agreements (BAA):** Ensure BAAs are signed with all third-party vendors (Firebase, AWS, SendGrid, etc.)
+- [ ] **Data Backup & Disaster Recovery:** Ensure automated, secure backups and a documented recovery plan for all PHI data.
+- [ ] **Employee Training & Policies:** All staff must be trained on HIPAA and your organization must have written policies and procedures.
+
+**Note:**
+- Some requirements (BAA, backups, training) are not enforceable in code and must be handled by your organization.
+- Always deploy with HTTPS enabled and monitor for new vulnerabilities in dependencies.

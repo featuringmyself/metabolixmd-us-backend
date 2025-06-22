@@ -12,6 +12,8 @@ const ApiError = require("./utils/ApiError");
 const { errorConverter, errorHandler } = require("./middlewares/error");
 const ejs = require('ejs');
 const hipaaLogger = require('./middlewares/hipaaLogger');
+const rateLimit = require('express-rate-limit');
+const csurf = require('csurf');
 
 const app = express();
 
@@ -111,6 +113,25 @@ app.use(compression());
 // Apply HIPAA audit logging middleware
 app.use(hipaaLogger());
 
+// Apply rate limiting globally
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use(limiter);
+
+// Redirect HTTP to HTTPS in production
+if (process.env.NODE_ENV === 'production') {
+  app.use((req, res, next) => {
+    if (req.headers['x-forwarded-proto'] && req.headers['x-forwarded-proto'] !== 'https') {
+      return res.redirect(301, 'https://' + req.headers.host + req.originalUrl);
+    }
+    next();
+  });
+}
+
 // Mount routes
 app.use('/webhooks', webhookRoute);
 app.use('/v1', routes);
@@ -120,6 +141,18 @@ app.use('/test', testRoutes);
 const path = require('path');
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+
+// CSRF protection (skip for API and webhook routes)
+app.use((req, res, next) => {
+  if (
+    req.originalUrl.startsWith('/v1') ||
+    req.originalUrl.startsWith('/webhooks') ||
+    req.method === 'OPTIONS'
+  ) {
+    return next();
+  }
+  return csurf({ cookie: true })(req, res, next);
+});
 
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {
@@ -131,5 +164,9 @@ app.use(errorConverter);
 
 // handle error
 app.use(errorHandler);
+
+app.get('/debug-sentry', function mainHandler(req, res) {
+  throw new Error('My first Sentry error!');
+});
 
 module.exports = app;

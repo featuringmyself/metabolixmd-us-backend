@@ -1,3 +1,4 @@
+const Sentry = require('../instrument');
 const app = require('./app');
 const config = require('./config/config');
 const logger = require('./config/logger');
@@ -12,6 +13,9 @@ mongoose
     console.log(err);
   });
 
+// Attach Sentry request handler before all other middleware/routes
+app.use(Sentry.Handlers.requestHandler());
+
 // Create server with proper raw body handling
 const server = app.listen(config.port, () => {
   console.log(`Pharma app listening on port ${config.port}!`);
@@ -20,6 +24,11 @@ const server = app.listen(config.port, () => {
 // Increase payload size limit for webhook
 server.setTimeout(30000); // 30 second timeout
 server.maxHeadersCount = 100;
+
+// Mount routes
+
+// Attach Sentry error handler before custom error handlers
+app.use(Sentry.Handlers.errorHandler());
 
 // ------------- Don't Modify  -------------
 const exitHandler = () => {
