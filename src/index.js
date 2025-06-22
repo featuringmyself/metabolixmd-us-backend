@@ -14,9 +14,6 @@ mongoose
     console.log(err);
   });
 
-// Attach Sentry request handler before all other middleware/routes
-app.use(Sentry.Handlers.requestHandler());
-
 // Create server with proper raw body handling
 const server = app.listen(config.port, () => {
   console.log(`Pharma app listening on port ${config.port}!`);
@@ -29,7 +26,7 @@ server.maxHeadersCount = 100;
 // Mount routes
 
 // Attach Sentry error handler before custom error handlers
-app.use(Sentry.Handlers.errorHandler());
+Sentry.setupExpressErrorHandler(app);
 
 // ------------- Don't Modify  -------------
 const exitHandler = () => {
