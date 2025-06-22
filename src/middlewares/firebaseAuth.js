@@ -12,7 +12,9 @@ admin.initializeApp({
 });
 
 const firebaseAuth = (allowUserType = 'All') => async (req, res, next) => {
-  console.log('firebaseAuth middleware called', { authorization: req.headers?.authorization });
+  if (process.env.NODE_ENV === 'development') {
+    console.log('firebaseAuth middleware called', { authorization: req.headers?.authorization });
+  }
   return new Promise(async (resolve, reject) => {
     const token = req.headers?.authorization?.split(' ')[1];
     // console.log('Token:', token); 

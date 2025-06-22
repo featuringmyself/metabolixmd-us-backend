@@ -16,33 +16,61 @@ const squareRoute = require("./square.route");
 const meetingRoute = require("./meeting.route");
 const followUpRoute = require("./followUp.route");
 
-console.log("Mounting /auth route");
+if (process.env.NODE_ENV === 'development') {
+  console.log("Mounting /auth route");
+}
 router.use("/auth", authRoute);
-console.log("Mounting /users route");
+if (process.env.NODE_ENV === 'development') {
+  console.log("Mounting /users route");
+}
 router.use("/users", userRoute);
-console.log("Mounting /product route");
+if (process.env.NODE_ENV === 'development') {
+  console.log("Mounting /product route");
+}
 router.use("/product", productRoute);
-console.log("Mounting /vendorProduct route");
+if (process.env.NODE_ENV === 'development') {
+  console.log("Mounting /vendorProduct route");
+}
 router.use("/vendorProduct", vendorProductRoute);
-console.log("Mounting /cart route");
+if (process.env.NODE_ENV === 'development') {
+  console.log("Mounting /cart route");
+}
 router.use("/cart", cartRoute); 
-console.log("Mounting /order route");
+if (process.env.NODE_ENV === 'development') {
+  console.log("Mounting /order route");
+}
 router.use("/order", orderRoute);
-console.log("Mounting /banner route");
+if (process.env.NODE_ENV === 'development') {
+  console.log("Mounting /banner route");
+}
 router.use("/banner", bannerRoute);
-console.log("Mounting /brandLogo route");
+if (process.env.NODE_ENV === 'development') {
+  console.log("Mounting /brandLogo route");
+}
 router.use("/brandLogo", brandLogoRoute);
-console.log("Mounting /disease route");
+if (process.env.NODE_ENV === 'development') {
+  console.log("Mounting /disease route");
+}
 router.use("/disease", diseaseRoute);
-console.log("Mounting /prescription route");
+if (process.env.NODE_ENV === 'development') {
+  console.log("Mounting /prescription route");
+}
 router.use("/prescription", prescriptionRoute);
-console.log("Mounting /question route");
+if (process.env.NODE_ENV === 'development') {
+  console.log("Mounting /question route");
+}
 router.use("/question", questionRoute);
-console.log("Mounting /square route");
+if (process.env.NODE_ENV === 'development') {
+  console.log("Mounting /square route");
+}
 router.use("/square", squareRoute);
-console.log("Mounting /meeting route");
+if (process.env.NODE_ENV === 'development') {
+  console.log("Mounting /meeting route");
+}
 router.use("/meeting", meetingRoute);
-console.log("Mounting /follow-up route");
+if (process.env.NODE_ENV === 'development') {
+  console.log("Mounting /follow-up route");
+}
 router.use("/follow-up", followUpRoute);
 
 module.exports = router;

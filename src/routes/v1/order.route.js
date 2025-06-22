@@ -3,10 +3,14 @@ const router = express.Router();
 const orderController = require("../../controllers/order.controller");
 const {firebaseAuth} = require("../../middlewares/firebaseAuth.js");
 
-console.log("Order route loaded");
+if (process.env.NODE_ENV === 'development') {
+  console.log("Order route loaded");
+}
 
 router.post("/", firebaseAuth(), (req, res, next) => {
-  console.log("POST /v1/order hit");
+  if (process.env.NODE_ENV === 'development') {
+    console.log("POST /v1/order hit");
+  }
   orderController.createOrder(req, res, next);
 });
 
