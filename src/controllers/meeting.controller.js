@@ -10,6 +10,7 @@ const httpStatus = require('http-status');
 const { DateTime } = require('luxon');
 
 const createMeeting = catchAsync(async (req, res) => {
+  console.log('createMeeting controller hit', { user: req.user, body: req.body });
   const { orderId, meetLink, startTime, endTime, timeZone, type, notes } = req.body;
   
   console.log('Meeting creation request received:', req.body);
@@ -69,26 +70,31 @@ const createMeeting = catchAsync(async (req, res) => {
 });
 
 const getMeeting = catchAsync(async (req, res) => {
+  console.log('getMeeting controller hit', { meetingId: req.params.meetingId });
   const meeting = await meetingService.getMeetingById(req.params.meetingId);
   res.send({ data: meeting });
 });
 
 const getUserMeetings = catchAsync(async (req, res) => {
+  console.log('getUserMeetings controller hit', { user: req.user });
   const meetings = await meetingService.getMeetingsByUser(req.user._id);
   res.send({ data: meetings });
 });
 
 const getOrderMeetings = catchAsync(async (req, res) => {
+  console.log('getOrderMeetings controller hit', { orderId: req.params.orderId });
   const meetings = await meetingService.getMeetingsByOrder(req.params.orderId);
   res.send({ data: meetings });
 });
 
 const updateMeeting = catchAsync(async (req, res) => {
+  console.log('updateMeeting controller hit', { meetingId: req.params.meetingId, body: req.body });
   const meeting = await meetingService.updateMeetingById(req.params.meetingId, req.body);
   res.send({ data: meeting, message: 'Meeting updated successfully' });
 });
 
 const deleteMeeting = catchAsync(async (req, res) => {
+  console.log('deleteMeeting controller hit', { meetingId: req.params.meetingId });
   await meetingService.deleteMeetingById(req.params.meetingId);
   res.status(204).send();
 });
