@@ -1,5 +1,4 @@
 const squareClient = require('../config/square.config');
-const { GUIDE_MERCHANT_CATEGORY_CODE, revenueTypes } = require('../constants');
 const ApiError = require('../utils/ApiError');
 const config = require('../config/config');
 const { Payment } = require('../models/payment.models');
@@ -7,8 +6,6 @@ const httpStatus = require('http-status');
 const crypto = require('crypto');
 const axios = require('axios');
 
-// Initialize Square API clients
-const checkoutApi = squareClient.checkout;
 
 const verifyWebhookSignature = (requestBody, signatureHeader) => {
   try {
