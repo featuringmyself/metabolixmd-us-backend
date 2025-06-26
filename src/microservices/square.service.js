@@ -22,11 +22,17 @@ const verifyWebhookSignature = (requestBody, signatureHeader, notificationUrl) =
     if (!notificationUrl) {
       throw new Error('Notification URL is required for signature verification');
     }
-    // Square webhook verification (per docs)
+    // Debug logging for troubleshooting signature mismatches
     const signatureKey = config.square.webhookSignatureKey;
+    console.log('Notification URL:', notificationUrl);
+    console.log('Raw body (base64):', Buffer.from(requestBody).toString('base64'));
+    console.log('Signature key (first 4, last 4):', signatureKey.slice(0,4), signatureKey.slice(-4));
+    console.log('Signature from header:', signatureHeader);
+    // Square webhook verification (per docs)
     const hmac = crypto.createHmac('sha256', signatureKey);
     hmac.update(notificationUrl + requestBody);
     const generatedSignature = hmac.digest('base64');
+    console.log('Generated signature:', generatedSignature);
     if (generatedSignature !== signatureHeader) {
       throw new Error('Webhook signature verification failed');
     }
