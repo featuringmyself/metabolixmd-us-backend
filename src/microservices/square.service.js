@@ -10,27 +10,29 @@ const axios = require('axios');
 // Initialize Square API clients
 const checkoutApi = squareClient.checkout;
 
-const verifyWebhookSignature = (requestBody, signatureHeader) => {
+const verifyWebhookSignature = (requestBody, signatureHeader, notificationUrl) => {
   try {
     console.log('Verifying Square webhook signature...');
     if (!signatureHeader) {
       throw new Error('No signature header found');
     }
-    
     if (!config.square.webhookSignatureKey) {
       throw new Error('Square webhook signature key is not configured');
     }
-
-    // Square webhook verification
+    if (!notificationUrl) {
+      throw new Error('Notification URL is required for signature verification');
+    }
+    // Log for debugging
+    console.log('Notification URL used for signature verification:', notificationUrl);
+    console.log('Signature Key used for signature verification:', config.square.webhookSignatureKey);
+    // Square webhook verification: HMAC_SHA256(signatureKey, notificationUrl + rawBody)
     const signatureKey = config.square.webhookSignatureKey;
     const hmac = crypto.createHmac('sha256', signatureKey);
-    hmac.update(requestBody);
+    hmac.update(notificationUrl + requestBody);
     const generatedSignature = hmac.digest('base64');
-    
     if (generatedSignature !== signatureHeader) {
       throw new Error('Webhook signature verification failed');
     }
-    
     console.log('Webhook signature verified successfully');
     const event = JSON.parse(requestBody);
     return event;
