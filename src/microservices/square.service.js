@@ -5,31 +5,34 @@ const config = require('../config/config');
 const { Payment } = require('../models/payment.models');
 const httpStatus = require('http-status');
 const crypto = require('crypto');
-const axios = require('axios');
 
 // Initialize Square API clients
 const checkoutApi = squareClient.checkout;
+const paymentsApi = squareClient.payments;
+const customersApi = squareClient.customers;
 
 const verifyWebhookSignature = (requestBody, signatureHeader, notificationUrl) => {
   try {
     console.log('Verifying Square webhook signature...');
+    
     if (!signatureHeader) {
       throw new Error('No signature header found');
     }
+    
     if (!config.square.webhookSignatureKey) {
       throw new Error('Square webhook signature key is not configured');
     }
     
-    // Debug logging for troubleshooting signature mismatches
     const signatureKey = config.square.webhookSignatureKey;
+    
+    // Debug logging (remove in production)
     console.log('Notification URL:', notificationUrl);
-    console.log('Raw body (base64):', Buffer.from(requestBody).toString('base64'));
-    console.log('Signature key (first 4, last 4):', signatureKey.slice(0,4), signatureKey.slice(-4));
+    console.log('Signature key exists:', !!signatureKey);
     console.log('Signature from header:', signatureHeader);
     
-    // Square webhook verification - ONLY use request body, not URL + body
+    // Square webhook verification - use only request body
     const hmac = crypto.createHmac('sha256', signatureKey);
-    hmac.update(requestBody); // ✅ FIXED: Only use request body
+    hmac.update(requestBody);
     const generatedSignature = hmac.digest('base64');
     
     console.log('Generated signature:', generatedSignature);
@@ -39,19 +42,36 @@ const verifyWebhookSignature = (requestBody, signatureHeader, notificationUrl) =
     }
     
     console.log('Webhook signature verified successfully');
-    const event = JSON.parse(requestBody);
-    return event;
+    return JSON.parse(requestBody);
+    
   } catch (err) {
-    console.error('Webhook signature verification failed:', err);
+    console.error('Webhook signature verification failed:', err.message);
     throw new ApiError(httpStatus.BAD_REQUEST, `Webhook Error: ${err.message}`);
   }
 };
 
 const createCheckoutSession = async (amount, user, orderId, product_data) => {
   try {
-    console.log('Creating checkout session for order:', { orderId, userId: user._id, amount });
+    console.log('Creating checkout session for order:', { 
+      orderId, 
+      userId: user._id, 
+      amount 
+    });
     
-    // Ensure product_data is an array
+    // Validate inputs
+    if (!amount || amount <= 0) {
+      throw new Error('Invalid amount provided');
+    }
+    
+    if (!user || !user._id || !user.email) {
+      throw new Error('Invalid user data provided');
+    }
+    
+    if (!orderId) {
+      throw new Error('Order ID is required');
+    }
+    
+    // Ensure product_data is valid
     if (!product_data || !Array.isArray(product_data) || product_data.length === 0) {
       console.error('Invalid product data:', product_data);
       throw new Error('No products provided for checkout');
@@ -61,90 +81,82 @@ const createCheckoutSession = async (amount, user, orderId, product_data) => {
       ? 'https://metabolixmd.com'
       : 'http://localhost:3000';
     
-    // Use correct API URL based on environment
-    const apiUrl = config.env === 'production' 
-      ? 'https://connect.squareup.com/v2/online-checkout/payment-links'  // Production API
-      : 'https://connect.squareupsandbox.com/v2/online-checkout/payment-links'; // Sandbox API
-    
-    console.log(`Using Square API URL: ${apiUrl}`);
-    
-    // Create a unique idempotency key for this transaction
+    // Create a unique idempotency key
     const idempotencyKey = crypto.randomUUID();
     console.log(`Using idempotency key: ${idempotencyKey} for order: ${orderId}`);
     
-    // Log product data for debugging
-    console.log('Product data for checkout:', JSON.stringify(product_data));
+    // Build line items from product data
+    const lineItems = product_data.map((product, index) => ({
+      name: product.name || `Product ${index + 1}`,
+      quantity: String(product.quantity || 1),
+      basePriceMoney: {
+        amount: Math.round((product.price || 0) * 100), // Convert to cents
+        currency: 'USD'
+      }
+    }));
     
     const requestBody = {
-      idempotency_key: idempotencyKey,
-      quick_pay: {
-        name: 'MetabolixMD Order',
-        price_money: {
-          amount: Math.round(amount * 100), // Convert to cents and round
-          currency: 'USD'
-        },
-        location_id: config.square.locationId
+      idempotencyKey,
+      order: {
+        locationId: config.square.locationId,
+        lineItems,
+        metadata: {
+          orderId,
+          userId: String(user._id)
+        }
       },
-      checkout_options: {
-        redirect_url: `${baseUrl}/payment-verification?payment=success&order_id=${orderId}`,
-        ask_for_shipping_address: false,
-        merchant_support_email: 'support@metabolixmd.com',
+      checkoutOptions: {
+        redirectUrl: `${baseUrl}/payment-verification?payment=success&order_id=${orderId}`,
+        askForShippingAddress: false,
+        merchantSupportEmail: 'support@metabolixmd.com',
+        enableCoupon: false,
+        enableLoyalty: false
       },
-      pre_populated_data: {
-        buyer_email: user.email,
-      },
-      note: `Order ID: ${orderId}, User ID: ${user._id}`
+      prePopulatedData: {
+        buyerEmail: user.email,
+        buyerPhoneNumber: user.phone || undefined
+      }
     };
     
-    console.log('Square API request payload:', JSON.stringify(requestBody));
-    console.log('Environment:', config.env);
-    console.log('Access Token exists:', !!config.square.accessToken);
+    console.log('Creating checkout session with Square SDK...');
+    console.log('Request payload:', JSON.stringify(requestBody, null, 2));
     
-    console.log('Sending payment link request to Square API');
-    try {
-      const response = await axios.post(apiUrl, requestBody, {
-        headers: {
-          'Square-Version': '2025-05-21',
-          'Authorization': `Bearer ${config.square.accessToken}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      
-      console.log('Square API response status:', response.status);
-      
-      // Log response data for debugging
-      if (response.data) {
-        console.log('Square API response data:', JSON.stringify(response.data));
-      }
-
-      if (!response.data || !response.data.payment_link) {
-        console.error('Invalid response from Square API:', response.data);
-        throw new Error('Failed to create payment link: Invalid response structure');
-      }
-
-      console.log('Checkout session created successfully:', { 
-        paymentLinkId: response.data.payment_link.id,
-        orderId,
-        userId: user._id 
-      });
-
-      return {
-        id: response.data.payment_link.id,
-        url: response.data.payment_link.url
-      };
-    } catch (axiosError) {
-      if (axiosError.response) {
-        console.error('Square API error response:', {
-          status: axiosError.response.status,
-          data: JSON.stringify(axiosError.response.data)
-        });
-        throw new Error(`Failed to create payment link: ${axiosError.response.status} - ${JSON.stringify(axiosError.response.data)}`);
-      }
-      throw axiosError;
+    const response = await checkoutApi.createPaymentLink(requestBody);
+    
+    if (!response.result || !response.result.paymentLink) {
+      console.error('Invalid response from Square API:', response);
+      throw new Error('Failed to create payment link: Invalid response structure');
     }
+    
+    const paymentLink = response.result.paymentLink;
+    
+    console.log('Checkout session created successfully:', { 
+      paymentLinkId: paymentLink.id,
+      orderId,
+      userId: user._id 
+    });
+
+    return {
+      id: paymentLink.id,
+      url: paymentLink.url,
+      orderId: paymentLink.orderId
+    };
+    
   } catch (err) {
-    console.error(err);
-    throw err;
+    console.error('Error creating checkout session:', err);
+    
+    // Handle Square-specific errors
+    if (err.errors) {
+      const errorMessages = err.errors.map(error => 
+        `${error.category}: ${error.detail}`
+      ).join(', ');
+      throw new ApiError(httpStatus.BAD_REQUEST, `Square API Error: ${errorMessages}`);
+    }
+    
+    throw new ApiError(
+      httpStatus.INTERNAL_SERVER_ERROR, 
+      `Failed to create checkout session: ${err.message}`
+    );
   }
 };
 
@@ -152,25 +164,51 @@ const createCustomer = async (user) => {
   try {
     console.log('Creating Square customer for user:', user._id);
     
-    const customersApi = squareClient.customers;
-    const response = await customersApi.createCustomer({
-      emailAddress: user.email,
-      givenName: user.name,
-      phoneNumber: user.phone,
-      referenceId: String(user._id)
+    // Check if customer already exists by reference ID
+    const searchResponse = await customersApi.searchCustomers({
+      filter: {
+        referenceIdFilter: {
+          referenceIds: [String(user._id)]
+        }
+      }
     });
     
+    if (searchResponse.result?.customers?.length > 0) {
+      console.log('Customer already exists:', searchResponse.result.customers[0].id);
+      return searchResponse.result.customers[0];
+    }
+    
+    const createRequest = {
+      emailAddress: user.email,
+      givenName: user.name?.split(' ')[0] || user.name,
+      familyName: user.name?.split(' ').slice(1).join(' ') || undefined,
+      phoneNumber: user.phone || undefined,
+      referenceId: String(user._id)
+    };
+    
+    const response = await customersApi.createCustomer(createRequest);
+    
     if (!response.result || !response.result.customer) {
-      throw new Error('Failed to create customer');
+      throw new Error('Failed to create customer - no customer in response');
     }
     
     console.log('Square customer created successfully:', response.result.customer.id);
     return response.result.customer;
+    
   } catch (err) {
     console.error('Error creating Square customer:', err);
+    
+    // Handle Square-specific errors
+    if (err.errors) {
+      const errorMessages = err.errors.map(error => 
+        `${error.category}: ${error.detail}`
+      ).join(', ');
+      throw new ApiError(httpStatus.BAD_REQUEST, `Square Customer Error: ${errorMessages}`);
+    }
+    
     throw new ApiError(
       httpStatus.INTERNAL_SERVER_ERROR,
-      'Failed to create customer: ' + err.message
+      `Failed to create customer: ${err.message}`
     );
   }
 };
@@ -180,8 +218,7 @@ const handleWebhookEvent = async (event) => {
     console.log('Processing webhook event:', {
       type: event.type,
       id: event.id,
-      createdAt: event.created_at,
-      data: event.data
+      createdAt: event.created_at
     });
     
     switch (event.type) {
@@ -190,56 +227,28 @@ const handleWebhookEvent = async (event) => {
         
         if (payment.status !== 'COMPLETED') {
           console.log(`Payment status is ${payment.status}, not processing further`);
-          return null;
+          return { processed: false, reason: 'Payment not completed' };
         }
         
-        console.log('Processing completed payment:', {
-          paymentId: payment.id,
-          orderId: payment.note ? payment.note.split('Order ID: ')[1]?.split(',')[0] : null,
-          amount: payment.amount_money.amount,
-          currency: payment.amount_money.currency,
-          status: payment.status
-        });
+        return await processCompletedPayment(payment);
+      }
+      
+      case 'order.updated': {
+        const order = event.data.object.order;
         
-        // Extract order ID from payment note
-        const noteMatch = payment.note ? payment.note.match(/Order ID: ([^,]+)/) : null;
-        const userIdMatch = payment.note ? payment.note.match(/User ID: ([^,]+)/) : null;
-        
-        if (!noteMatch || !userIdMatch) {
-          console.error('Missing required metadata in payment note:', payment.note);
-          throw new Error('Missing required metadata: orderId or userId');
+        if (order.state !== 'COMPLETED') {
+          console.log(`Order state is ${order.state}, not processing further`);
+          return { processed: false, reason: 'Order not completed' };
         }
         
-        const orderId = noteMatch[1];
-        const userId = userIdMatch[1];
-
-        // Create payment record
-        const paymentData = {
-          user: userId,
-          order: orderId,
-          checkoutSessionId: payment.id,
-          amount: payment.amount_money.amount / 100, // Convert from cents to dollars
-          currency: payment.amount_money.currency,
-          customer: {
-            id: payment.customer_id,
-            email: payment.buyer_email
-          },
-          paymentStatus: payment.status === 'COMPLETED' ? 'paid' : payment.status.toLowerCase()
-        };
-
-        console.log('Creating payment record with data:', paymentData);
-        const paymentRecord = await Payment.create(paymentData);
-        console.log('Payment record created successfully:', {
-          paymentId: paymentRecord._id,
-          status: paymentRecord.paymentStatus
-        });
-        return paymentRecord;
+        return await processCompletedOrder(order);
       }
       
       default:
         console.log(`Unhandled event type: ${event.type}`);
-        return null;
+        return { processed: false, reason: 'Unhandled event type' };
     }
+    
   } catch (error) {
     console.error('Error processing webhook event:', {
       error: error.message,
@@ -248,6 +257,100 @@ const handleWebhookEvent = async (event) => {
     });
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to process webhook event');
   }
+};
+
+const processCompletedPayment = async (payment) => {
+  console.log('Processing completed payment:', {
+    paymentId: payment.id,
+    orderId: payment.order_id,
+    amount: payment.amount_money.amount,
+    currency: payment.amount_money.currency,
+    status: payment.status
+  });
+  
+  // Get order details to extract metadata
+  let orderId, userId;
+  
+  if (payment.order_id) {
+    try {
+      const orderResponse = await squareClient.orders.retrieveOrder(payment.order_id);
+      const order = orderResponse.result.order;
+      
+      orderId = order.metadata?.orderId;
+      userId = order.metadata?.userId;
+    } catch (err) {
+      console.error('Failed to retrieve order details:', err);
+    }
+  }
+  
+  // Fallback to payment note if metadata not available
+  if (!orderId || !userId) {
+    const noteMatch = payment.note ? payment.note.match(/Order ID: ([^,]+)/) : null;
+    const userIdMatch = payment.note ? payment.note.match(/User ID: ([^,]+)/) : null;
+    
+    orderId = orderId || (noteMatch ? noteMatch[1] : null);
+    userId = userId || (userIdMatch ? userIdMatch[1] : null);
+  }
+  
+  if (!orderId || !userId) {
+    throw new Error('Missing required metadata: orderId or userId');
+  }
+  
+  // Check if payment record already exists
+  const existingPayment = await Payment.findOne({ 
+    checkoutSessionId: payment.id 
+  });
+  
+  if (existingPayment) {
+    console.log('Payment record already exists:', existingPayment._id);
+    return { processed: true, existing: true, paymentId: existingPayment._id };
+  }
+  
+  const paymentData = {
+    user: userId,
+    order: orderId,
+    checkoutSessionId: payment.id,
+    amount: payment.amount_money.amount / 100, // Convert from cents
+    currency: payment.amount_money.currency,
+    customer: {
+      id: payment.customer_id,
+      email: payment.buyer_email_address
+    },
+    paymentStatus: 'paid',
+    squarePaymentId: payment.id,
+    createdAt: new Date(payment.created_at)
+  };
+
+  console.log('Creating payment record with data:', paymentData);
+  const paymentRecord = await Payment.create(paymentData);
+  
+  console.log('Payment record created successfully:', {
+    paymentId: paymentRecord._id,
+    status: paymentRecord.paymentStatus
+  });
+  
+  return { processed: true, existing: false, paymentId: paymentRecord._id };
+};
+
+const processCompletedOrder = async (order) => {
+  console.log('Processing completed order:', {
+    orderId: order.id,
+    state: order.state,
+    totalMoney: order.total_money
+  });
+  
+  const orderId = order.metadata?.orderId;
+  const userId = order.metadata?.userId;
+  
+  if (!orderId || !userId) {
+    throw new Error('Missing required metadata in order: orderId or userId');
+  }
+  
+  // This would typically trigger order fulfillment logic
+  // For now, just log the successful order completion
+  console.log('Order completed successfully:', { orderId, userId });
+  
+  return { processed: true, orderId, userId };
 };
 
 module.exports = {
