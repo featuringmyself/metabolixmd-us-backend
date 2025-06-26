@@ -170,7 +170,8 @@ const handleWebhook = catchAsync(async (req, res) => {
 
     // Accept both header names for Square signature
     const signature = req.headers['square-signature'] || req.headers['x-square-hmacsha256-signature'];
-    const notificationUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
+    // Hardcode the notification URL to match the Square dashboard exactly
+    const notificationUrl = 'https://api.metabolixmd.com/webhooks'; // <-- update if your dashboard uses a different URL
     if (!req.body || !signature) {
         console.error('--- [WEBHOOK] Missing webhook body or signature');
         return res.status(400).json({ 
