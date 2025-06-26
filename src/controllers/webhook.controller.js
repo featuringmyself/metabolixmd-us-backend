@@ -265,7 +265,7 @@ const handleWebhook = catchAsync(async (req, res) => {
     // Accept both header names for Square signature
     const signature = req.headers['square-signature'] || req.headers['x-square-hmacsha256-signature'];
     
-    if (!req.body || !signature) {
+    if (!req.rawBody || !signature) {
         console.error('--- [WEBHOOK] Missing webhook body or signature');
         return res.status(400).json({ 
             received: false,
@@ -273,16 +273,16 @@ const handleWebhook = catchAsync(async (req, res) => {
         });
     }
 
-    const notificationUrl = config.square.webhookUrl || 'https://api.metabolixmd.com/webhooks';
+    // Use the exact notification URL configured in Square dashboard
+    const notificationUrl = config.square.webhookUrl || 'https://api.metabolixmd.com/webhooks/square';
     
     try {
         console.log('--- [WEBHOOK] Verifying Square webhook signature...');
-        
-        // Use raw body for signature verification
-        const rawBody = req.rawBody || (typeof req.body === 'string' ? req.body : JSON.stringify(req.body));
+        console.log('Using notification URL:', notificationUrl);
+        console.log('Raw body length:', req.rawBody.length);
         
         const squareEvent = squareService.verifyWebhookSignature(
-            rawBody,
+            req.rawBody, // Use the raw body string we captured
             signature,
             notificationUrl
         );

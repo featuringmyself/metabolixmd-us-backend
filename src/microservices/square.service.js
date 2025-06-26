@@ -29,20 +29,51 @@ const verifyWebhookSignature = (requestBody, signatureHeader, notificationUrl) =
     console.log('Notification URL:', notificationUrl);
     console.log('Signature key exists:', !!signatureKey);
     console.log('Signature from header:', signatureHeader);
+    console.log('Request body type:', typeof requestBody);
+    console.log('Request body length:', requestBody?.length);
     
-    // Square webhook verification - use only request body
+    // Ensure we have the raw body as a string
+    let bodyString;
+    if (typeof requestBody === 'string') {
+      bodyString = requestBody;
+    } else if (Buffer.isBuffer(requestBody)) {
+      bodyString = requestBody.toString('utf8');
+    } else {
+      bodyString = JSON.stringify(requestBody);
+    }
+    
+    console.log('Body string length:', bodyString.length);
+    console.log('Body string preview:', bodyString.substring(0, 200));
+    
+    // Square webhook signature verification includes notification URL + body
+    const stringToSign = notificationUrl + bodyString;
+    
+    console.log('String to sign length:', stringToSign.length);
+    console.log('String to sign preview:', stringToSign.substring(0, 300));
+    
     const hmac = crypto.createHmac('sha256', signatureKey);
-    hmac.update(requestBody);
+    hmac.update(stringToSign, 'utf8');
     const generatedSignature = hmac.digest('base64');
     
     console.log('Generated signature:', generatedSignature);
+    console.log('Expected signature:', signatureHeader);
     
     if (generatedSignature !== signatureHeader) {
-      throw new Error('Webhook signature verification failed');
+      // Try without notification URL (fallback)
+      console.log('Trying signature verification without notification URL...');
+      const hmac2 = crypto.createHmac('sha256', signatureKey);
+      hmac2.update(bodyString, 'utf8');
+      const generatedSignature2 = hmac2.digest('base64');
+      
+      console.log('Generated signature (body only):', generatedSignature2);
+      
+      if (generatedSignature2 !== signatureHeader) {
+        throw new Error('Webhook signature verification failed');
+      }
     }
     
     console.log('Webhook signature verified successfully');
-    return JSON.parse(requestBody);
+    return JSON.parse(bodyString);
     
   } catch (err) {
     console.error('Webhook signature verification failed:', err.message);

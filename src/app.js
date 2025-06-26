@@ -16,9 +16,27 @@ const hipaaLogger = require('./middlewares/hipaaLogger');
 const app = express();
 
 // Special handling for webhook requests
-app.use('/webhooks', express.raw({ type: 'application/json' }), (req, res, next) => {
-  req.rawBody = req.body.toString();
-  next();
+app.use('/webhooks', (req, res, next) => {
+  // Store raw body as buffer first
+  const chunks = [];
+  
+  req.on('data', (chunk) => {
+    chunks.push(chunk);
+  });
+  
+  req.on('end', () => {
+    const rawBuffer = Buffer.concat(chunks);
+    req.rawBody = rawBuffer.toString('utf8'); // Store as string
+    req.body = rawBuffer; // Keep original buffer
+    
+    console.log('Webhook raw body captured:', {
+      bufferLength: rawBuffer.length,
+      stringLength: req.rawBody.length,
+      contentType: req.headers['content-type']
+    });
+    
+    next();
+  });
 });
 
 //Morgan will handle logging HTTP requests,
