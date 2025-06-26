@@ -389,6 +389,7 @@ const handleWebhookEvent = async (event) => {
   }
 };
 
+<<<<<<< HEAD
 const processCompletedPayment = async (payment) => {
   console.log('Processing completed payment:', {
     paymentId: payment.id,
@@ -482,6 +483,16 @@ const processCompletedOrder = async (order) => {
   console.log('Order completed successfully:', { orderId, userId });
   
   return { processed: true, orderId, userId };
+=======
+const getOrder = async (orderId) => {
+  try {
+    const response = await squareClient.orders.get({ orderId });
+    return response.order;
+  } catch (err) {
+    console.error('Error retrieving order from Square:', err);
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to retrieve order: ' + err.message);
+  }
+>>>>>>> 42b0c4f (Add getOrder function: Implement a new function to retrieve orders from Square, including error handling for improved reliability. Update module exports to include the new function.)
 };
 
 module.exports = {
