@@ -167,11 +167,11 @@ const handleWebhook = catchAsync(async (req, res) => {
         'content-type': req.headers['content-type']
     });
     console.log('Body:', JSON.stringify(req.body));
-
     // Accept both header names for Square signature
     const signature = req.headers['square-signature'] || req.headers['x-square-hmacsha256-signature'];
-    // Hardcode the notification URL to match the Square dashboard exactly
-    const notificationUrl = 'https://api.metabolixmd.com/webhooks'; // <-- update if your dashboard uses a different URL
+    // Try both with and without trailing slash for notification URL
+    const notificationUrlNoSlash = 'https://api.metabolixmd.com/webhooks';
+    const notificationUrlWithSlash = 'https://api.metabolixmd.com/webhooks/';
     if (!req.body || !signature) {
         console.error('--- [WEBHOOK] Missing webhook body or signature');
         return res.status(400).json({ 
@@ -180,22 +180,46 @@ const handleWebhook = catchAsync(async (req, res) => {
         });
     }
 
+    let squareEvent = null;
+    let signatureError = null;
     try {
-        console.log('--- [WEBHOOK] Verifying Square webhook signature...');
-        const squareEvent = squareService.verifyWebhookSignature(
+        console.log('--- [WEBHOOK] Verifying Square webhook signature (no trailing slash)...');
+        squareEvent = squareService.verifyWebhookSignature(
             req.rawBody || JSON.stringify(req.body),
             signature,
-            notificationUrl
+            notificationUrlNoSlash
         );
-        console.log('--- [WEBHOOK] Signature verified.');
-        console.log(`--- [WEBHOOK] Processing Square event: ${squareEvent.type}`);
+    } catch (err) {
+        signatureError = err;
+        try {
+            console.log('--- [WEBHOOK] Verifying Square webhook signature (with trailing slash)...');
+            squareEvent = squareService.verifyWebhookSignature(
+                req.rawBody || JSON.stringify(req.body),
+                signature,
+                notificationUrlWithSlash
+            );
+            signatureError = null;
+        } catch (err2) {
+            signatureError = err2;
+        }
+    }
+    if (signatureError) {
+        console.error('--- [WEBHOOK] Webhook signature verification failed for both URL variants:', signatureError);
+        return res.status(400).json({
+            received: false,
+            error: signatureError.message
+        });
+    }
+
+    try {
+        console.log('--- [WEBHOOK] Processing Square event: ${squareEvent.type}');
         console.log('Event metadata:', {
             eventId: squareEvent.event_id,
             merchantId: squareEvent.merchant_id,
             createdAt: squareEvent.created_at
         });
         switch (squareEvent.type) {
-            case 'payment.updated':
+            case 'payment.updated': {
                 const payment = squareEvent.data.object.payment;
                 console.log('--- [WEBHOOK] payment.updated event:', JSON.stringify(payment, null, 2));
                 if (payment.status === 'COMPLETED') {
@@ -209,6 +233,7 @@ const handleWebhook = catchAsync(async (req, res) => {
                     });
                 }
                 break;
+            }
             default:
                 console.log(`--- [WEBHOOK] Unhandled webhook event type: ${squareEvent.type}`, {
                     eventId: squareEvent.event_id,
@@ -231,5 +256,6 @@ const handleWebhook = catchAsync(async (req, res) => {
 });
 
 module.exports = {
-    handleWebhook
+    handleWebhook,
+    handleSquarePaymentCompleted
 }
