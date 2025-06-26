@@ -11,12 +11,21 @@ const checkoutApi = squareClient.checkout;
 const paymentsApi = squareClient.payments;
 const customersApi = squareClient.customers;
 
-const verifyWebhookSignature = (requestBody, signatureHeader, notificationUrl) => {
+const verifyWebhookSignature = (requestBody, signatureHeaders, notificationUrl) => {
   try {
     console.log('Verifying Square webhook signature...');
     
-    if (!signatureHeader) {
-      throw new Error('No signature header found');
+    // Extract both possible signature headers
+    const sha1Signature = signatureHeaders['x-square-signature'];
+    const sha256Signature = signatureHeaders['x-square-hmacsha256-signature'];
+    
+    console.log('Available signatures:', {
+      'x-square-signature': sha1Signature,
+      'x-square-hmacsha256-signature': sha256Signature
+    });
+    
+    if (!sha1Signature && !sha256Signature) {
+      throw new Error('No Square signature header found');
     }
     
     if (!config.square.webhookSignatureKey) {
@@ -28,7 +37,6 @@ const verifyWebhookSignature = (requestBody, signatureHeader, notificationUrl) =
     // Debug logging (remove in production)
     console.log('Notification URL:', notificationUrl);
     console.log('Signature key exists:', !!signatureKey);
-    console.log('Signature from header:', signatureHeader);
     console.log('Request body type:', typeof requestBody);
     console.log('Request body length:', requestBody?.length);
     
@@ -45,31 +53,74 @@ const verifyWebhookSignature = (requestBody, signatureHeader, notificationUrl) =
     console.log('Body string length:', bodyString.length);
     console.log('Body string preview:', bodyString.substring(0, 200));
     
-    // Square webhook signature verification includes notification URL + body
+    // Square webhook signature verification: notification_url + request_body
     const stringToSign = notificationUrl + bodyString;
     
     console.log('String to sign length:', stringToSign.length);
     console.log('String to sign preview:', stringToSign.substring(0, 300));
     
-    const hmac = crypto.createHmac('sha256', signatureKey);
-    hmac.update(stringToSign, 'utf8');
-    const generatedSignature = hmac.digest('base64');
+    let verified = false;
     
-    console.log('Generated signature:', generatedSignature);
-    console.log('Expected signature:', signatureHeader);
-    
-    if (generatedSignature !== signatureHeader) {
-      // Try without notification URL (fallback)
-      console.log('Trying signature verification without notification URL...');
-      const hmac2 = crypto.createHmac('sha256', signatureKey);
-      hmac2.update(bodyString, 'utf8');
-      const generatedSignature2 = hmac2.digest('base64');
+    // Try SHA-256 signature first (newer method)
+    if (sha256Signature) {
+      console.log('Trying SHA-256 signature verification...');
+      const hmac256 = crypto.createHmac('sha256', signatureKey);
+      hmac256.update(stringToSign, 'utf8');
+      const generated256 = hmac256.digest('base64');
       
-      console.log('Generated signature (body only):', generatedSignature2);
+      console.log('Generated SHA-256 signature:', generated256);
+      console.log('Expected SHA-256 signature:', sha256Signature);
       
-      if (generatedSignature2 !== signatureHeader) {
-        throw new Error('Webhook signature verification failed');
+      if (generated256 === sha256Signature) {
+        console.log('SHA-256 signature verified successfully');
+        verified = true;
+      } else {
+        // Try with body only (fallback)
+        console.log('Trying SHA-256 with body only...');
+        const hmac256Body = crypto.createHmac('sha256', signatureKey);
+        hmac256Body.update(bodyString, 'utf8');
+        const generated256Body = hmac256Body.digest('base64');
+        
+        console.log('Generated SHA-256 signature (body only):', generated256Body);
+        
+        if (generated256Body === sha256Signature) {
+          console.log('SHA-256 signature (body only) verified successfully');
+          verified = true;
+        }
       }
+    }
+    
+    // Try SHA-1 signature if SHA-256 didn't work (legacy method)
+    if (!verified && sha1Signature) {
+      console.log('Trying SHA-1 signature verification...');
+      const hmac1 = crypto.createHmac('sha1', signatureKey);
+      hmac1.update(stringToSign, 'utf8');
+      const generated1 = hmac1.digest('base64');
+      
+      console.log('Generated SHA-1 signature:', generated1);
+      console.log('Expected SHA-1 signature:', sha1Signature);
+      
+      if (generated1 === sha1Signature) {
+        console.log('SHA-1 signature verified successfully');
+        verified = true;
+      } else {
+        // Try with body only (fallback)
+        console.log('Trying SHA-1 with body only...');
+        const hmac1Body = crypto.createHmac('sha1', signatureKey);
+        hmac1Body.update(bodyString, 'utf8');
+        const generated1Body = hmac1Body.digest('base64');
+        
+        console.log('Generated SHA-1 signature (body only):', generated1Body);
+        
+        if (generated1Body === sha1Signature) {
+          console.log('SHA-1 signature (body only) verified successfully');
+          verified = true;
+        }
+      }
+    }
+    
+    if (!verified) {
+      throw new Error('All signature verification attempts failed');
     }
     
     console.log('Webhook signature verified successfully');
