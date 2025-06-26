@@ -170,6 +170,7 @@ const handleWebhook = catchAsync(async (req, res) => {
 
     // Accept both header names for Square signature
     const signature = req.headers['square-signature'] || req.headers['x-square-hmacsha256-signature'];
+    const notificationUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
     if (!req.body || !signature) {
         console.error('--- [WEBHOOK] Missing webhook body or signature');
         return res.status(400).json({ 
@@ -182,7 +183,8 @@ const handleWebhook = catchAsync(async (req, res) => {
         console.log('--- [WEBHOOK] Verifying Square webhook signature...');
         const squareEvent = squareService.verifyWebhookSignature(
             req.rawBody || JSON.stringify(req.body),
-            signature
+            signature,
+            notificationUrl
         );
         console.log('--- [WEBHOOK] Signature verified.');
         console.log(`--- [WEBHOOK] Processing Square event: ${squareEvent.type}`);
