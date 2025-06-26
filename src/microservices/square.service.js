@@ -7,27 +7,35 @@ const crypto = require('crypto');
 const axios = require('axios');
 
 
-const verifyWebhookSignature = (requestBody, signatureHeader) => {
+const verifyWebhookSignature = (requestBody, signatureHeaders, notificationUrl) => {
   try {
-    console.log('Verifying Square webhook signature...');
+    // Prefer x-square-hmacsha256-signature, fallback to x-square-signature
+    const signatureHeader = signatureHeaders['x-square-hmacsha256-signature'] || signatureHeaders['x-square-signature'];
     if (!signatureHeader) {
       throw new Error('No signature header found');
     }
-    
     if (!config.square.webhookSignatureKey) {
       throw new Error('Square webhook signature key is not configured');
     }
+    if (!notificationUrl) {
+      throw new Error('Notification URL is required for signature verification');
+    }
 
-    // Square webhook verification
-    const signatureKey = config.square.webhookSignatureKey;
-    const hmac = crypto.createHmac('sha256', signatureKey);
-    hmac.update(requestBody);
+    // Concatenate notification URL and raw body as per Square docs
+    const payload = notificationUrl + requestBody;
+    const hmac = crypto.createHmac('sha256', config.square.webhookSignatureKey);
+    hmac.update(payload);
     const generatedSignature = hmac.digest('base64');
-    
-    if (generatedSignature !== signatureHeader) {
+
+    // Use constant-time comparison
+    const isValid =
+      generatedSignature.length === signatureHeader.length &&
+      crypto.timingSafeEqual(Buffer.from(generatedSignature), Buffer.from(signatureHeader));
+
+    if (!isValid) {
       throw new Error('Webhook signature verification failed');
     }
-    
+
     console.log('Webhook signature verified successfully');
     const event = JSON.parse(requestBody);
     return event;
