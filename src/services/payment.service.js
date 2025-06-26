@@ -7,40 +7,35 @@ async function create(paymentData) {
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
-    
-    console.log('Creating payment record:', {
-      orderId: paymentData.order,
-      userId: paymentData.user,
-      sessionId: paymentData.checkoutSessionId
-    });
-
+    console.log('--- [PAYMENT SERVICE] create() called with:', paymentData);
     // Validate required fields
     if (!paymentData.user || !paymentData.order || !paymentData.checkoutSessionId) {
+      console.error('--- [PAYMENT SERVICE] Missing required payment fields:', paymentData);
       throw new ApiError(httpStatus.BAD_REQUEST, 'Missing required payment fields');
     }
-
     const payment = await Payment.create([paymentData], { session });
+    console.log('--- [PAYMENT SERVICE] Payment.create result:', payment);
     if (!payment || !payment[0]) {
+      console.error('--- [PAYMENT SERVICE] Failed to create payment record:', payment);
       throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to create payment record');
     }
-
     // Populate user and order details
     const populatedPayment = await payment[0].populate(['user', 'order']);
-    
+    console.log('--- [PAYMENT SERVICE] Populated payment:', populatedPayment);
     await session.commitTransaction();
-    console.log('Payment record created successfully:', {
+    console.log('--- [PAYMENT SERVICE] Payment record created successfully:', {
       paymentId: populatedPayment._id,
       orderId: populatedPayment.order._id,
       status: populatedPayment.paymentStatus
     });
-    
     return populatedPayment;
   } catch (error) {
     await session.abortTransaction();
-    console.error('Payment creation error:', {
+    console.error('--- [PAYMENT SERVICE] Payment creation error:', {
       error: error.message,
       orderId: paymentData.order,
-      userId: paymentData.user
+      userId: paymentData.user,
+      stack: error.stack
     });
     throw error;
   } finally {
