@@ -10,6 +10,7 @@ const crypto = require('crypto');
 const checkoutApi = squareClient.checkout;
 const paymentsApi = squareClient.payments;
 const customersApi = squareClient.customers;
+const ordersApi = squareClient.orders; // Add this line
 
 const verifyWebhookSignature = (requestBody, signatureHeaders, notificationUrl) => {
   try {
@@ -129,6 +130,53 @@ const verifyWebhookSignature = (requestBody, signatureHeaders, notificationUrl) 
   } catch (err) {
     console.error('Webhook signature verification failed:', err.message);
     throw new ApiError(httpStatus.BAD_REQUEST, `Webhook Error: ${err.message}`);
+  }
+};
+
+// ADD THIS MISSING FUNCTION
+const getOrder = async (orderId) => {
+  try {
+    console.log('--- [SQUARE SERVICE] Retrieving order from Square:', orderId);
+    
+    if (!orderId) {
+      throw new Error('Order ID is required');
+    }
+    
+    const response = await ordersApi.retrieveOrder(orderId);
+    
+    if (!response.result || !response.result.order) {
+      throw new Error('Order not found in Square API response');
+    }
+    
+    const order = response.result.order;
+    console.log('--- [SQUARE SERVICE] Retrieved order successfully:', {
+      orderId: order.id,
+      state: order.state,
+      locationId: order.locationId,
+      hasMetadata: !!order.metadata
+    });
+    
+    return order;
+    
+  } catch (err) {
+    console.error('--- [SQUARE SERVICE] Error retrieving order:', {
+      orderId,
+      error: err.message,
+      stack: err.stack
+    });
+    
+    // Handle Square-specific errors
+    if (err.errors) {
+      const errorMessages = err.errors.map(error => 
+        `${error.category}: ${error.detail}`
+      ).join(', ');
+      throw new ApiError(httpStatus.BAD_REQUEST, `Square API Error: ${errorMessages}`);
+    }
+    
+    throw new ApiError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      `Failed to retrieve order: ${err.message}`
+    );
   }
 };
 
@@ -355,7 +403,8 @@ const processCompletedPayment = async (payment) => {
   
   if (payment.order_id) {
     try {
-      const orderResponse = await squareClient.orders.retrieveOrder(payment.order_id);
+      // Use the correct API method
+      const orderResponse = await ordersApi.retrieveOrder(payment.order_id);
       const order = orderResponse.result.order;
       
       orderId = order.metadata?.orderId;
@@ -439,5 +488,6 @@ module.exports = {
   createCustomer,
   createCheckoutSession,
   verifyWebhookSignature,
-  handleWebhookEvent
+  handleWebhookEvent,
+  getOrder
 };
