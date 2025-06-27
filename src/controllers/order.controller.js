@@ -59,22 +59,23 @@ const createOrder = catchAsync(async (req, res) => {
   }
   // --- End DrChrono Integration ---
 
+  // Always send admin SMS notification on order creation
+  await sendSMSToContacts(
+    [{phone: config.clientPhone}, {phone: config.clientPhone2}],
+    `You have received an order from ${user.name ?? " "}. Please check admin panel.`
+  );
+
   // Only send notifications and create checkout if there are items
   if (items.length > 0) {
-    await sendSMSToContacts(
-      [{phone: config.clientPhone}, {phone: config.clientPhone2}],
-      `You have received an order from ${user.name ?? " "}. Please check admin panel.`
-    );
-
-      const updatedOrder = await orderService.getOrderById(order._id);
-      const html = await ejs.renderFile(path.join(__dirname, '../views/ordermail.ejs'), {order: updatedOrder});
-      await sendEmail({
-        to: user.email,
-        subject: "Welcome to MetabolixMD – Let's Get Started!",
-        html: html,
-        phone: user.phone,
-        smsContent: "Your order has been received! Please complete payment to proceed with your treatment."
-      });
+    const updatedOrder = await orderService.getOrderById(order._id);
+    const html = await ejs.renderFile(path.join(__dirname, '../views/ordermail.ejs'), {order: updatedOrder});
+    await sendEmail({
+      to: user.email,
+      subject: "Welcome to MetabolixMD – Let's Get Started!",
+      html: html,
+      phone: user.phone,
+      smsContent: "Your order has been received! Please complete payment to proceed with your treatment."
+    });
     const checkout = await createCheckoutSession(totalValue, user, order._id, order.orderItems);
     return res.status(200).send({status: true, data: checkout, message: "Order is created"});
   }

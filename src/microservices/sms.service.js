@@ -54,8 +54,8 @@ function formatOrderDetails(order, user) {
 // Generate status-specific messages
 function generateStatusMessage(type, details) {
     const messages = {
-        orderCreated: `New order #${details.orderNumber} received from ${details.customerName}. Total: $${details.totalAmount}`,
-        orderPlaced: `Order #${details.orderNumber} has been placed successfully. Total: $${details.totalAmount}`,
+        orderCreated: `New order #${details.orderNumber} received from ${details.customerName}.`,
+        orderPlaced: `Order #${details.orderNumber} has been placed successfully.`,
         paymentPending: `Payment pending for order #${details.orderNumber}. Please complete the payment to proceed.`,
         paymentReceived: `Payment received for order #${details.orderNumber}. Amount: $${details.totalAmount}`,
         meetScheduled: `Meeting scheduled for order #${details.orderNumber}. Please check your email for details.`,

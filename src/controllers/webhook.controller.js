@@ -8,6 +8,7 @@ const path = require('path');
 const config = require("../config/config");
 const { sendOrderStatusUpdate } = require("../microservices/sms.service");
 const httpStatus = require("http-status");
+const { sendSMSToContacts } = require("../microservices/sms.service");
 
 const handleSquarePaymentCompleted = async (payload) => {
     const session = {
@@ -246,6 +247,14 @@ const sendNotifications = async (user, order, amount) => {
     if (user.phone) {
         notifications.push(sendOrderStatusUpdate(order, user, 'paymentReceived'));
     }
+
+    // Send SMS to admin on payment received
+    notifications.push(
+        sendSMSToContacts(
+            [{phone: config.clientPhone}, {phone: config.clientPhone2}],
+            `[Admin] Payment received for order #${order.orderNo} from ${user.name || "Unknown"} - $${amount}`
+        )
+    );
 
     await Promise.allSettled(notifications);
     console.log('--- [WEBHOOK] Notifications sent');
