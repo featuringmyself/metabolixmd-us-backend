@@ -70,4 +70,10 @@ module.exports = {
   },
   adminMail: envVars.ADMIN_MAIL,
   fromEmail: envVars.FROM_EMAIL,
+  drchrono: {
+    clientId: envVars.DRCHRONO_CLIENT_ID,
+    clientSecret: envVars.DRCHRONO_CLIENT_SECRET,
+    refreshToken: envVars.DRCHRONO_REFRESH_TOKEN,
+    doctorId: envVars.DRCHRONO_DOCTOR_ID,
+  },
 };

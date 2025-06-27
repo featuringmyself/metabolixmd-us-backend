@@ -10,6 +10,7 @@ const path = require('path');
 const { sendEmail } = require("../microservices/mail.service");
 const { sendSMSToContacts } = require("../microservices/sms.service");
 const config = require("../config/config");
+const { createDrChronoPatient } = require("../microservices/drchrono.service");
 
 // create order
 const createOrder = catchAsync(async (req, res) => {
@@ -48,6 +49,15 @@ const createOrder = catchAsync(async (req, res) => {
   };
 
   const order = await orderService.createOrder(data);
+
+  // --- DrChrono Integration: Create patient ---
+  try {
+    await createDrChronoPatient(user, body.deliveryAddress);
+    console.log('DrChrono patient created/updated for user', user.email);
+  } catch (err) {
+    console.error('Failed to create DrChrono patient:', err?.response?.data || err.message);
+  }
+  // --- End DrChrono Integration ---
 
   // Only send notifications and create checkout if there are items
   if (items.length > 0) {
