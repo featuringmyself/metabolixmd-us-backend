@@ -37,7 +37,7 @@ async function getOrderById(id) {
   const order = await Order.findById(id)
     .populate({
       path: "user",
-      select: "name email phone detail"
+      select: "name email phone detail profilePic"
     })
     .populate("orderItems.product")
     .populate({
@@ -58,7 +58,7 @@ async function getOrderByUserId(user) {
   const orders = await Order.find({ user })
     .populate({
       path: "user",
-      select: "name email phone detail"
+      select: "name email phone detail profilePic"
     })
     .populate("orderItems.product")
     .populate({
@@ -78,7 +78,7 @@ async function getOrders(filters, options) {
   const populateOptions = [
     {
       path: "user",
-      select: "name email phone detail"
+      select: "name email phone detail profilePic"
     },
     {
       path: "orderItems.product",
@@ -134,7 +134,7 @@ async function updateOrderById(id, data) {
     )
     .populate({
       path: "user",
-      select: "name email phone detail"
+      select: "name email phone detail profilePic"
     })
     .populate("orderItems.product")
     .populate({
